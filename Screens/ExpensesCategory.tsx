@@ -1,24 +1,80 @@
-import React from "react";
+import React, { useState } from "react";
+import { ExpensesCategoryStyles as styles } from '../Styles';
 import { SafeAreaView, Text, View, TouchableOpacity, FlatList, StyleSheet } from "react-native";
-import type { StackScreenProps } from "@react-navigation/stack";
+import type { StackScreenProps } from '@react-navigation/stack';
 import { ExpensesCategoryParamList } from "../Types";
+import Ionicons from 'react-native-vector-icons/Ionicons'; 
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'; 
 
 type Props = StackScreenProps<ExpensesCategoryParamList, 'ExpensesCategory'>;
 
 const data = [
-  { expensesID: 1, expensesTitle: 'Lunch', expensesDescription: '', userID: 1 },
-  { expensesID: 2, expensesTitle: 'Dinner', expensesDescription: '', userID: 1 },
+  { 
+    expensesID: 1, 
+    expensesTitle: 'Breakfast', 
+    expensesDescription: 'A light morning meal', 
+    expensesDate: new Date(),
+    expensesAmount: 15.00,
+  },
+  { 
+    expensesID: 2, 
+    expensesTitle: 'Lunch', 
+    expensesDescription: 'A delicious lunch break', 
+    expensesDate: new Date(),
+    expensesAmount: 25.00, 
+  },
+  { 
+    expensesID: 3, 
+    expensesTitle: 'Dinner', 
+    expensesDescription: 'A hearty dinner', 
+    expensesDate: new Date(),
+    expensesAmount: 40.00,  
+  },
+  { 
+    expensesID: 4, 
+    expensesTitle: 'Groceries', 
+    expensesDescription: 'Food and household items', 
+    expensesDate: new Date(),
+    expensesAmount: 150.00,  
+  },
+  { 
+    expensesID: 5, 
+    expensesTitle: 'Transportation', 
+    expensesDescription: 'Public transport expenses', 
+    expensesDate: new Date(),
+    expensesAmount: 50.00,  
+  },
 ];
 
 const ExpensesCategory = ({ route, navigation }: Props) => {
+  const getIconForCategory = (category: string) => {
+    switch (category) {
+      case 'Breakfast':
+        return <MaterialIcons name="coffee" size={24} color="#393533" style={styles.icon} />;
+      case 'Lunch':
+        return <Ionicons name="fast-food" size={24} color="#393533" style={styles.icon} />;
+      case 'Dinner':
+        return <Ionicons name="wine" size={24} color="#393533" style={styles.icon} />;
+      case 'Groceries':
+        return <Ionicons name="cart" size={24} color="#393533" style={styles.icon} />;
+      case 'Transportation':
+        return <Ionicons name="car-sport" size={24} color="#393533" style={styles.icon} />;
+      default:
+        return <Ionicons name="file-tray" size={24} color="#393533" style={styles.icon} />;
+    }
+  };
+
+  const handleAddMore = () => {
+    navigation.navigate('AddExpensesCategory');
+  };
+
   return (
     <SafeAreaView style={styles.container}>
+      {/* Add Button */}
       <View style={styles.header}>
-        <View style={styles.rightActions}>
-          <TouchableOpacity onPress={() => navigation.navigate('AddExpensesCategory')}>
-            <Text style={styles.actionText}>Add More</Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity onPress={handleAddMore}>
+          <Text style={styles.actionText}>Add More</Text>
+        </TouchableOpacity>
       </View>
 
       {/* Expenses List */}
@@ -28,10 +84,15 @@ const ExpensesCategory = ({ route, navigation }: Props) => {
         keyExtractor={(item) => item.expensesID.toString()}
         renderItem={({ item }) => (
           <TouchableOpacity
-            onPress={() => navigation.navigate('ViewExpensesCategory', { expensesID: item.expensesID })}
+            onPress={() => navigation.navigate('ViewExpensesCategory', {
+              expensesTitle: item.expensesTitle,
+              expensesDescription: item.expensesDescription,
+              expensesDate: item.expensesDate.toISOString(),
+              expensesAmount: Number(item.expensesAmount),
+            })}
           >
             <View style={styles.itemRow}>
-              <View style={styles.iconPlaceholder} />
+              {getIconForCategory(item.expensesTitle)}
               <Text style={styles.itemText}>{item.expensesTitle}</Text>
             </View>
           </TouchableOpacity>
@@ -40,53 +101,5 @@ const ExpensesCategory = ({ route, navigation }: Props) => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f4f5f3',
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    paddingHorizontal: 20,
-    paddingTop: 20,
-    backgroundColor: '#f4f5f3',
-  },
-  rightActions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  actionText: {
-    fontSize: 14,
-    color: 'gray',
-    marginHorizontal: 5,
-  },
-  separator: {
-    fontSize: 14,
-    color: 'gray',
-  },
-  itemRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'white',
-    marginHorizontal: 20,
-    marginVertical: 8,
-    padding: 15,
-    borderRadius: 12,
-  },
-  iconPlaceholder: {
-    width: 30,
-    height: 30,
-    backgroundColor: '#ccc',
-    borderRadius: 6,
-    marginRight: 20,
-  },
-  itemText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: 'black',
-  },
-});
 
 export default ExpensesCategory;

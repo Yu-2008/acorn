@@ -1,5 +1,8 @@
-import React from "react";
-import { SafeAreaView, Text, View, TouchableOpacity, StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
+import { SettingStyles as styles } from '../Styles';
+import { SafeAreaView, Text, View, TouchableOpacity, StyleSheet, Animated, Switch } from "react-native";
+import Ionicons from 'react-native-vector-icons/Ionicons'; 
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import type { StackNavigationProp } from "@react-navigation/stack";
 import { SettingStackParamList } from "../Types";
 
@@ -11,12 +14,50 @@ type Props = {
   userName: string;
 };
 
-const Setting = ({ navigation, onSignOut, userName }: Props) => {
+const Setting = ({ navigation, onSignOut }: Props) => {
+  const [userName, setUserName] = useState('John Doe');
+  const [colorAnim] = useState(new Animated.Value(0)); 
+  
+  const [isNightMode, setIsNightMode] = useState(false);
+
+  useEffect(() => {
+    const startColorAnimation = () => {
+      Animated.loop(
+        Animated.sequence([ 
+          Animated.timing(colorAnim, {
+            toValue: 1,
+            duration: 2000, 
+            useNativeDriver: false, 
+          }),
+          Animated.timing(colorAnim, {
+            toValue: 0, 
+            duration: 2000, 
+            useNativeDriver: false, 
+          }),
+        ])
+      ).start();
+    };
+
+    startColorAnimation();
+  }, [colorAnim]);
+
+  const colorInterpolation = colorAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["#FF9068", "#FFB6B6"], 
+  });
+
+  // Toggle dark mode
+  const toggleDarkMode = () => {
+    setIsNightMode(prevMode => !prevMode);
+  };
+
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: isNightMode ? '#333' : '#FDE6F6' }]}>
       <View style={styles.header}>
         <Text style={styles.greeting}>Hello,</Text>
-        <Text style={styles.userName}>{userName}</Text>
+        <Animated.Text style={[styles.userName, { color: colorInterpolation }]}>
+          {userName}
+        </Animated.Text>
       </View>
 
       <View style={styles.section}>
@@ -25,15 +66,15 @@ const Setting = ({ navigation, onSignOut, userName }: Props) => {
         <TouchableOpacity 
           style={styles.row}
           onPress={() => navigation.navigate('GoExpensesCategory')}>
-          <View style={styles.iconPlaceholder} />
-          <Text style={styles.rowText}>Expenses</Text>
+          <MaterialIcons name= "trolley" size={24} color={isNightMode ? 'white' : '#393533'} style={styles.icon} />
+          <Text style={[styles.rowText, { color: isNightMode ? 'white' : 'black' }]}>Expenses</Text>
         </TouchableOpacity>
 
         <TouchableOpacity 
           style={styles.row}
           onPress={() => navigation.navigate('GoIncomeCategory')}>
-          <View style={styles.iconPlaceholder} />
-          <Text style={styles.rowText}>Income</Text>
+          <Ionicons name="cash-outline" size={24} color={isNightMode ? 'white' : '#393533'} style={styles.icon} />
+          <Text style={[styles.rowText, { color: isNightMode ? 'white' : 'black' }]}>Income</Text>
         </TouchableOpacity>
       </View>
 
@@ -43,68 +84,32 @@ const Setting = ({ navigation, onSignOut, userName }: Props) => {
         <TouchableOpacity 
           style={styles.row}
           onPress={() => navigation.navigate('GoBackUpCloud')}>
-          <View style={styles.iconPlaceholder} />
-          <Text style={styles.rowText}>Backup to Cloud</Text>
+          <Ionicons name="cloud-upload" size={24} color={isNightMode ? 'white' : '#393533'} style={styles.icon} />
+          <Text style={[styles.rowText, { color: isNightMode ? 'white' : 'black' }]}>Backup to Cloud</Text>
         </TouchableOpacity>
 
         <TouchableOpacity 
           style={styles.row}
           onPress={onSignOut}>
-          <View style={styles.iconPlaceholder} />
-          <Text style={styles.rowText}>Sign Out</Text>
+          <Ionicons name="log-out" size={24} color={isNightMode ? 'white' : '#393533'} style={styles.icon} />
+          <Text style={[styles.rowText, { color: isNightMode ? 'white' : 'black' }]}>Sign Out</Text>
         </TouchableOpacity>
+      </View>
+
+      {/* Toggle Dark Mode */}
+      <View style={styles.toggleContainer}>
+        <Text style={[styles.toggleText, { color: isNightMode ? 'white' : 'black' }]}>
+          {isNightMode ? 'Night Mode' : 'Day Mode'}
+        </Text>
+        <Switch
+          trackColor={{ false: "#FFDDDD", true: "#1E1E1E" }}
+          thumbColor={isNightMode ? "#FFFFFF" : "#F57CBB"}
+          onValueChange={toggleDarkMode}
+          value={isNightMode}
+        />
       </View>
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F5E8DD',
-    paddingHorizontal: 20,
-    paddingTop: 40,
-  },
-  header: {
-    marginBottom: 30,
-  },
-  greeting: {
-    fontSize: 18,
-    color: 'black',
-  },
-  userName: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: 'black',
-  },
-  section: {
-    marginBottom: 30,
-  },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: 'black',
-    marginBottom: 10,
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'white',
-    padding: 15,
-    marginBottom: 10,
-    borderRadius: 12,
-  },
-  iconPlaceholder: {
-    width: 30,
-    height: 30,
-    backgroundColor: '#ccc',
-    borderRadius: 6,
-    marginRight: 20,
-  },
-  rowText: {
-    fontSize: 16,
-    color: 'black',
-  },
-});
 
 export default Setting;

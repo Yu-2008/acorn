@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { SafeAreaView, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import {SignInUpstyles as styles} from '../Styles';
-import type { StackScreenProps } from '@react-navigation/stack';
+import { ForgetPasswordStyles as styles } from '../Styles';
+import {Image, SafeAreaView, Text, TextInput, TouchableOpacity, View, ScrollView, StyleSheet } from 'react-native';
+import { StackScreenProps } from '@react-navigation/stack';
 import { SignInUpStackParamList } from "../Types";
-
 
 type Props = StackScreenProps<SignInUpStackParamList, "ForgetPassword">
 
@@ -16,59 +15,78 @@ const ForgetPassword = ({route, navigation}: Props) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.innerContainer}>
-        <Text style={styles.title}>Forget Password</Text>
-        
-        <View style ={styles.formContainer}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContainer}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={styles.innerContainer}>
+          {/* Logo */}
+          <View style={styles.logoContainer}>
+              <Image source={require('../img/logo.jpg')} style={styles.logo} />
+          </View>
+
+          <Text style={styles.title}>Password Reset</Text>
+          <View style={styles.formContainer}>
+            {/* Email */}
             <Text style={styles.label}>Email</Text>
-            <TextInput
+            <View style={styles.inputWrapper}>
+              <TextInput
                 style={styles.input}
                 placeholder="Enter your email"
                 keyboardType="email-address"
                 autoCapitalize="none"
                 value={email}
                 onChangeText={setEmail}
-            />
+                placeholderTextColor="#aaa"
+              />
+            </View>
 
+            {/* Password */}
             <Text style={styles.label}>Password</Text>
-            <TextInput
+            <View style={styles.inputWrapper}>
+              <TextInput
                 style={styles.input}
                 placeholder="Enter your password"
                 secureTextEntry
                 value={password}
                 onChangeText={setPassword}
-            />
+                placeholderTextColor="#aaa"
+              />
+            </View>
+
+            {/* Confirm Password */}
             <Text style={styles.label}>Confirm Password</Text>
-            <TextInput
+            <View style={styles.inputWrapper}>
+              <TextInput
                 style={styles.input}
-                placeholder="Enter your password"
+                placeholder="Re-enter your password"
                 secureTextEntry
                 value={confirmPassword}
                 onChangeText={setConfirmPassword}
-            />
-
-            <TouchableOpacity style={styles.button} onPress={() => {
-                                              console.log("Update Password Successful");
-                                              navigation.navigate("SignIn");
-                                              }}>
-            <Text style={styles.buttonText}>Update Password</Text>
-            </TouchableOpacity>
-
-            <View style={styles.tipsText}>
-            <Text>Already have an account?</Text>
-            <TouchableOpacity onPress={() => 
-                                            navigation.navigate("SignIn")}>
-                <Text style={styles.tips}>Sign In</Text>
-            </TouchableOpacity>
+                placeholderTextColor="#aaa"
+              />
             </View>
-        </View>
 
-        
-      </View>
+            {/* Update Password Button */}
+            <TouchableOpacity style={styles.button} onPress={() => {
+                console.log("Update Password Successful");
+                navigation.navigate("SignIn");
+            }}>
+              <Text style={styles.buttonText}>Update Password</Text>
+            </TouchableOpacity>
+
+            {/* Already have an account */}
+            <View style={styles.tipsText}>
+              <Text>Already have an account?</Text>
+              <TouchableOpacity onPress={() => navigation.navigate("SignIn")}>
+                <Text style={styles.tips}>Sign In</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
-
-
 
 export default ForgetPassword;
