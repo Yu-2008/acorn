@@ -3,7 +3,7 @@ import { SafeAreaView, View, Text, TouchableOpacity, FlatList, TouchableHighligh
 import { HomeStyles as styles } from '../Styles';
 import type { StackScreenProps } from '@react-navigation/stack';
 import { MainStackParamList } from '../Types';
-import { DarkModeProvider } from '../DarkModeContext';
+//import { DarkModeProvider } from '../DarkModeContext';
 
 type Props = StackScreenProps<MainStackParamList, 'Home'>;
 
