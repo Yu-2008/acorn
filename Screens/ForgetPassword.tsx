@@ -13,6 +13,17 @@ const ForgetPassword = ({ route, navigation }: Props) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
+  {/**handle onPress */}
+  const handleUpdatePassword =()=>{
+    console.log("Updated Password pressed");
+    navigation.navigate('SignIn');
+  }
+
+  const handleSignIn =()=>{
+    console.log("Sign In pressed");
+    navigation.navigate('SignIn');
+  }
+
   return (
     <SafeAreaView
       style={[
@@ -89,6 +100,7 @@ const ForgetPassword = ({ route, navigation }: Props) => {
             </View>
 
             {/* Update Password Button */}
+<<<<<<< HEAD
             <TouchableOpacity
               style={styles.button}
               onPress={() => {
@@ -96,16 +108,25 @@ const ForgetPassword = ({ route, navigation }: Props) => {
                 navigation.navigate("SignIn");
               }}
             >
+=======
+            <TouchableOpacity style={styles.button} onPress={handleUpdatePassword}>
+>>>>>>> 751d2a58ff3aa7cddf7fb9430caf152ccfd187df
               <Text style={styles.buttonText}>Update Password</Text>
             </TouchableOpacity>
 
             {/* Already have an account */}
             <View style={styles.tipsText}>
+<<<<<<< HEAD
               <Text style={{ color: theme === 'dark' ? '#fff' : '#000' }}>Already have an account?</Text>
               <TouchableOpacity onPress={() => navigation.navigate("SignIn")}>
                 <Text style={[styles.tips, { color: theme === 'dark' ? '#fff' : '#000' }]}>
                   Sign In
                 </Text>
+=======
+              <Text>Already have an account?</Text>
+              <TouchableOpacity onPress={handleSignIn}>
+                <Text style={styles.tips}>Sign In</Text>
+>>>>>>> 751d2a58ff3aa7cddf7fb9430caf152ccfd187df
               </TouchableOpacity>
             </View>
           </View>

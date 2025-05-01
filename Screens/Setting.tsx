@@ -20,6 +20,25 @@ const Setting = ({ navigation, onSignOut }: Props) => {
   const [colorAnim] = useState(new Animated.Value(0)); 
   const { theme,toggleTheme } = useTheme();
 
+  {/**handle onPress */}
+  const handleExpensesCategory =()=>{
+    console.log('Expenses Category pressed');
+    navigation.navigate('GoExpensesCategory');
+  }
+  const handleIncomeCategory =()=>{
+    console.log('Income Category pressed');
+    navigation.navigate('GoIncomeCategory');
+    
+  }
+  const handleBackupCloud =()=>{
+    console.log("Backup Cloud pressed");
+    navigation.navigate('GoBackUpCloud')
+  }
+  const handleOnSignOut =()=>{
+    console.log("Sign Out pressed");
+    onSignOut();
+  }
+
   useEffect(() => {
     const startColorAnimation = () => {
       Animated.loop(
@@ -46,6 +65,16 @@ const Setting = ({ navigation, onSignOut }: Props) => {
     outputRange: ["#FF9068", "#FFB6B6"], 
   });
 
+<<<<<<< HEAD
+=======
+  // Toggle dark mode
+  const toggleDarkMode = () => {
+    setIsNightMode(prevMode => !prevMode);
+  };
+
+  
+
+>>>>>>> 751d2a58ff3aa7cddf7fb9430caf152ccfd187df
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme === 'dark' ? '#333' : '#FDE6F6' }]}>
       <View style={styles.header}>
@@ -59,6 +88,7 @@ const Setting = ({ navigation, onSignOut }: Props) => {
         <Text style={[styles.sectionTitle, { color: theme === 'dark' ? '#fff' : '#393533' }]}>Manage Categories</Text>
 
         <TouchableOpacity 
+<<<<<<< HEAD
           style={[styles.row, { backgroundColor: theme === 'dark' ? '#444' : '#FFC1DA' }]}
           onPress={() => navigation.navigate('GoExpensesCategory')}>
           <MaterialIcons name="trolley" size={24} color={theme === 'dark' ? 'white' : '#393533'} style={styles.icon} />
@@ -70,6 +100,19 @@ const Setting = ({ navigation, onSignOut }: Props) => {
           onPress={() => navigation.navigate('GoIncomeCategory')}>
           <Ionicons name="cash-outline" size={24} color={theme === 'dark' ? 'white' : '#393533'} style={styles.icon} />
           <Text style={[styles.rowText, { color: theme === 'dark' ? 'white' : 'black' }]}>Income</Text>
+=======
+          style={styles.row}
+          onPress={handleExpensesCategory}>
+          <MaterialIcons name= "trolley" size={24} color={isNightMode ? 'white' : '#393533'} style={styles.icon} />
+          <Text style={[styles.rowText, { color: isNightMode ? 'white' : 'black' }]}>Expenses Category</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity 
+          style={styles.row}
+          onPress={handleIncomeCategory}>
+          <Ionicons name="cash-outline" size={24} color={isNightMode ? 'white' : '#393533'} style={styles.icon} />
+          <Text style={[styles.rowText, { color: isNightMode ? 'white' : 'black' }]}>Income Category</Text>
+>>>>>>> 751d2a58ff3aa7cddf7fb9430caf152ccfd187df
         </TouchableOpacity>
       </View>
 
@@ -77,6 +120,7 @@ const Setting = ({ navigation, onSignOut }: Props) => {
         <Text style={[styles.sectionTitle, { color: theme === 'dark' ? '#fff' : '#393533' }]}>Account</Text>
 
         <TouchableOpacity 
+<<<<<<< HEAD
           style={[styles.row, { backgroundColor: theme === 'dark' ? '#444' : '#FFC1DA' }]}
           onPress={() => navigation.navigate('GoBackUpCloud')}>
           <Ionicons name="cloud-upload" size={24} color={theme === 'dark' ? 'white' : '#393533'} style={styles.icon} />
@@ -88,6 +132,19 @@ const Setting = ({ navigation, onSignOut }: Props) => {
           onPress={onSignOut}>
           <Ionicons name="log-out" size={24} color={theme === 'dark' ? 'white' : '#393533'} style={styles.icon} />
           <Text style={[styles.rowText, { color: theme === 'dark' ? 'white' : 'black' }]}>Sign Out</Text>
+=======
+          style={styles.row}
+          onPress={handleBackupCloud}>
+          <Ionicons name="cloud-upload" size={24} color={isNightMode ? 'white' : '#393533'} style={styles.icon} />
+          <Text style={[styles.rowText, { color: isNightMode ? 'white' : 'black' }]}>Backup to Cloud</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity 
+          style={styles.row}
+          onPress={handleOnSignOut}>
+          <Ionicons name="log-out" size={24} color={isNightMode ? 'white' : '#393533'} style={styles.icon} />
+          <Text style={[styles.rowText, { color: isNightMode ? 'white' : 'black' }]}>Sign Out</Text>
+>>>>>>> 751d2a58ff3aa7cddf7fb9430caf152ccfd187df
         </TouchableOpacity>
       </View>
 

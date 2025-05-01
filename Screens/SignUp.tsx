@@ -5,13 +5,29 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { SignInUpStackParamList } from '../Types';
 import { useTheme } from '../ThemeContext';
 
+<<<<<<< HEAD
 type Props = StackScreenProps<SignInUpStackParamList, "SignUp">;
+=======
+type Props = StackScreenProps<SignInUpStackParamList, "SignUp">
+
+const SignUp = ({route, navigation}: Props) => {
+>>>>>>> 751d2a58ff3aa7cddf7fb9430caf152ccfd187df
 
 const SignUp = ({ route, navigation }: Props) => {
   const { theme } = useTheme();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+
+  {/**handle onPress */}
+  const handleSignUp=()=>{
+    console.log("Sign Up pressed");
+    navigation.navigate("SignIn");
+  }
+  const handleSignIn=()=>{
+    console.log('Sign In pressed');
+    navigation.navigate("SignIn");
+  }
 
   return (
     <SafeAreaView
@@ -89,6 +105,7 @@ const SignUp = ({ route, navigation }: Props) => {
             </View>
 
             {/* Sign Up Button */}
+<<<<<<< HEAD
             <TouchableOpacity
               style={styles.button}
               onPress={() => {
@@ -96,11 +113,15 @@ const SignUp = ({ route, navigation }: Props) => {
                 navigation.navigate('SignIn');
               }}
             >
+=======
+            <TouchableOpacity style={styles.button} onPress={handleSignUp}>
+>>>>>>> 751d2a58ff3aa7cddf7fb9430caf152ccfd187df
               <Text style={styles.buttonText}>Sign Up</Text>
             </TouchableOpacity>
 
             {/* Already have an account */}
             <View style={styles.tipsText}>
+<<<<<<< HEAD
               <Text style={{ color: theme === 'dark' ? '#fff' : '#000' }}>Already have an account?</Text>
               <TouchableOpacity onPress={() => navigation.navigate('SignIn')}>
                 <Text
@@ -111,6 +132,11 @@ const SignUp = ({ route, navigation }: Props) => {
                 >
                   Sign In
                 </Text>
+=======
+              <Text>Already have an account?</Text>
+              <TouchableOpacity onPress={handleSignIn}>
+                <Text style={styles.tips}>Sign In</Text>
+>>>>>>> 751d2a58ff3aa7cddf7fb9430caf152ccfd187df
               </TouchableOpacity>
             </View>
           </View>

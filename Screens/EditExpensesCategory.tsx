@@ -31,6 +31,7 @@ const EditExpensesCategory = ({ route, navigation }: Props) => {
 
   const shouldWarnOnLeave = useRef(true);
 
+<<<<<<< HEAD
   const { theme } = useTheme();
 
   const onChangeDate = (event: any, selectedDate?: Date) => {
@@ -41,7 +42,11 @@ const EditExpensesCategory = ({ route, navigation }: Props) => {
     }
   };
 
+=======
+  {/**handle onPress */}
+>>>>>>> 751d2a58ff3aa7cddf7fb9430caf152ccfd187df
   const handleSave = () => {
+    console.log("Save edited expenses category")
     if (!title.trim() || !amount.trim()) {
       Alert.alert("Validation Error", "Title and amount are required!");
       return;
@@ -65,6 +70,15 @@ const EditExpensesCategory = ({ route, navigation }: Props) => {
 
     navigation.goBack();
   };
+
+  const onChangeDate = (event: any, selectedDate?: Date) => {
+    setShowDatePicker(Platform.OS === 'ios');
+    if (selectedDate) {
+      setDate(selectedDate);
+      setIsEdited(true);
+    }
+  };
+
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('beforeRemove', (e) => {

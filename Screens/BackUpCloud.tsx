@@ -13,15 +13,17 @@ const BackUpCloud = ({ route, navigation }: Props) => {
   const { theme } = useTheme();
   const [lastBackupTime, setLastBackupTime] = useState("Not yet backed up");
 
+  {/**handle onPress */}
   // Backup function
   const handleBackup = () => {
+    console.log("Backup to Cloud pressed");
     setLastBackupTime(new Date().toLocaleString()); 
-    console.log("Backing up data to the cloud...");
+    
   };
-
   // Restore function
   const handleRestore = () => {
-    console.log("Restoring data from the cloud...");
+    console.log("Restore pressed");
+    
   };
 
   return (
