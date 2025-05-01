@@ -51,6 +51,8 @@ const SignInUpStackNavigator = ({onSignIn}:{onSignIn:()=>void})=>{
 }
 
 const TabNavigator = ({ onSignOut }: { onSignOut: () => void }) => {
+  //as
+  
     return (
       <Tab.Navigator
         initialRouteName="AtMain"
