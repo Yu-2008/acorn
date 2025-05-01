@@ -1,10 +1,12 @@
-import React, { useState } from "react";
-import { SafeAreaView, Text, View, TextInput, TouchableOpacity, Platform, StyleSheet } from "react-native";
+import React, { useState, useContext } from "react";
+import { SafeAreaView, Text, View, TextInput, TouchableOpacity, Platform } from "react-native";
 import { AddExpensesStyles as styles } from '../Styles';
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { useTheme } from '../ThemeContext';
 
 const AddExpenses = ({ navigation }: any) => {
+  const { theme } = useTheme();
   const [category, setCategory] = useState('Lunch');
   const [amount, setAmount] = useState('');
   const [date, setDate] = useState(new Date());
@@ -23,13 +25,26 @@ const AddExpenses = ({ navigation }: any) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={[
+        styles.container,
+        { backgroundColor: theme === 'dark' ? '#333' : '#FDE6F6' }, 
+      ]}
+    >
       <View style={styles.formContainer}>
-        <Text style={styles.label}>Category</Text>
+        <Text
+          style={[
+            styles.label,
+            { color: theme === 'dark' ? '#fff' : '#000' }, 
+          ]}
+        >
+          Category
+        </Text>
         <View style={styles.pickerContainer}>
           <Picker
             selectedValue={category}
             onValueChange={(itemValue) => setCategory(itemValue)}
+            style={{ color: theme === 'dark' ? '#fff' : '#000' }}
           >
             <Picker.Item label="Breakfast" value="Breakfast" />
             <Picker.Item label="Lunch" value="Lunch" />
@@ -39,23 +54,42 @@ const AddExpenses = ({ navigation }: any) => {
           </Picker>
         </View>
 
-        <Text style={styles.label}>Amount</Text>
+        <Text
+          style={[
+            styles.label,
+            { color: theme === 'dark' ? '#fff' : '#000' }, 
+          ]}
+        >
+          Amount
+        </Text>
         <View style={styles.inputContainer}>
-          <Text style={styles.amountText}>RM</Text>
+          <Text style={[styles.amountText, { color: theme === 'dark' ? '#fff' : '#000' }]}>RM</Text>
           <TextInput
-            style={styles.textInput}
+            style={[
+              styles.textInput,
+              { color: theme === 'dark' ? '#fff' : '#000' }, 
+            ]}
             keyboardType="numeric"
             value={amount}
             onChangeText={setAmount}
           />
         </View>
 
-        <Text style={styles.label}>Date</Text>
+        <Text
+          style={[
+            styles.label,
+            { color: theme === 'dark' ? '#fff' : '#000' }, 
+          ]}
+        >
+          Date
+        </Text>
         <TouchableOpacity
           style={styles.datePickerButton}
           onPress={() => setShowDatePicker(true)}
         >
-          <Text style={styles.dateText}>{date.toDateString()}</Text>
+          <Text style={[styles.dateText, { color: theme === 'dark' ? '#fff' : '#000' }]}>
+            {date.toDateString()}
+          </Text>
         </TouchableOpacity>
 
         {showDatePicker && (
@@ -68,10 +102,14 @@ const AddExpenses = ({ navigation }: any) => {
         )}
 
         <TouchableOpacity
-          style={styles.doneButton}
+          style={[
+            styles.doneButton
+          ]}
           onPress={handleDone}
         >
-          <Text style={styles.doneButtonText}>Add</Text>
+          <Text style={[styles.doneButtonText, { color: theme === 'dark' ? '#fff' : '#000' }]}>
+            Add
+          </Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

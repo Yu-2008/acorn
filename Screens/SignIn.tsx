@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -7,10 +7,10 @@ import {
   TouchableOpacity,
   View,
   Image,
-  StyleSheet,
 } from 'react-native';
 import { SignInStyles as styles } from '../Styles';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useTheme } from '../ThemeContext';
 import type { StackScreenProps } from '@react-navigation/stack';
 import { SignInUpStackParamList } from "../Types";
 
@@ -19,12 +19,18 @@ type Props = StackScreenProps<SignInUpStackParamList, "SignIn"> & {
 };
 
 const SignIn = ({ navigation, onSignIn }: Props) => {
+  const { theme } = useTheme();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={[
+        styles.container,
+        { backgroundColor: theme === 'dark' ? '#333' : '#FDE6F6' }, 
+      ]}
+    >
       <ScrollView
         contentContainerStyle={styles.scrollContainer}
         keyboardShouldPersistTaps="handled"
@@ -35,10 +41,17 @@ const SignIn = ({ navigation, onSignIn }: Props) => {
             <Image source={require('../img/logo.jpg')} style={styles.logo} />
           </View>
 
-          <Text style={styles.title}>Welcome Back!</Text>
+          <Text
+            style={[
+              styles.title,
+              { color: theme === 'dark' ? '#fff' : '#000' }, 
+            ]}
+          >
+            Welcome Back!
+          </Text>
           <View style={styles.formContainer}>
             {/* Email */}
-            <Text style={styles.label}>Email/Username</Text>
+            <Text style={[styles.label, { color: theme === 'dark' ? '#fff' : '#000' }]}>Email/Username</Text>
             <View style={styles.inputWrapper}>
               <Icon
                 name="email-outline"
@@ -47,7 +60,7 @@ const SignIn = ({ navigation, onSignIn }: Props) => {
                 style={styles.inputIcon}
               />
               <TextInput
-                style={styles.input}
+                style={[styles.input, { color: theme === 'dark' ? '#fff' : '#000' }]} 
                 placeholder="Enter your Email/Username here"
                 keyboardType="email-address"
                 autoCapitalize="none"
@@ -58,7 +71,7 @@ const SignIn = ({ navigation, onSignIn }: Props) => {
             </View>
 
             {/* Password */}
-            <Text style={styles.label}>Password</Text>
+            <Text style={[styles.label, { color: theme === 'dark' ? '#fff' : '#000' }]}>Password</Text>
             <View style={styles.inputWrapper}>
               <Icon
                 name="lock-outline"
@@ -67,7 +80,7 @@ const SignIn = ({ navigation, onSignIn }: Props) => {
                 style={styles.inputIcon}
               />
               <TextInput
-                style={styles.input}
+                style={[styles.input, { color: theme === 'dark' ? '#fff' : '#000' }]} 
                 placeholder="Enter password"
                 secureTextEntry={!showPassword}
                 value={password}
@@ -116,4 +129,3 @@ const SignIn = ({ navigation, onSignIn }: Props) => {
 };
 
 export default SignIn;
-

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import { EditTransactionStyles as styles } from '../Styles';
 import {
   SafeAreaView,
@@ -16,6 +16,7 @@ import {
 import { StackScreenProps } from '@react-navigation/stack';
 import { MainStackParamList } from "../Types";
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { useTheme } from '../ThemeContext';
 
 type Props = StackScreenProps<MainStackParamList, "EditTransaction">;
 
@@ -30,6 +31,8 @@ const EditTransaction = ({ route, navigation }: Props) => {
   const [isEdited, setIsEdited] = useState(false);
 
   const shouldWarnOnLeave = useRef(true);
+
+  const { theme } = useTheme();
 
   const onChangeDate = (event: any, selectedDate?: Date) => {
     setShowDatePicker(Platform.OS === 'ios');
@@ -79,53 +82,55 @@ const EditTransaction = ({ route, navigation }: Props) => {
   }, [navigation, isEdited]);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme === 'dark' ? '#333' : '#FDE6F6' }]}>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
         <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 20 }}>
           <View style={styles.formContainer}>
-            <Text style={styles.label}>Transaction Title</Text>
+            <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Transaction Title</Text>
             <TextInput
               value={title}
               onChangeText={(text) => {
                 setTitle(text);
                 setIsEdited(true);
               }}
-              style={styles.input}
+              style={[styles.input, { backgroundColor: theme === 'dark' ? '#444' : '#fff', color: theme === 'dark' ? 'white' : 'black' }]}
               placeholder="Enter transaction title"
             />
 
-            <Text style={styles.label}>Transaction Type</Text>
+            <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Transaction Type</Text>
             <TextInput
               value={type}
               onChangeText={(text) => {
                 setType(text);
                 setIsEdited(true);
               }}
-              style={styles.input}
+              style={[styles.input, { backgroundColor: theme === 'dark' ? '#444' : '#fff', color: theme === 'dark' ? 'white' : 'black' }]}
               placeholder="Enter transaction type"
             />
 
-            <Text style={styles.label}>Amount</Text>
+            <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Amount</Text>
             <TextInput
               value={amount}
               onChangeText={(text) => {
                 setAmount(text);
                 setIsEdited(true);
               }}
-              style={styles.input}
+              style={[styles.input, { backgroundColor: theme === 'dark' ? '#444' : '#fff', color: theme === 'dark' ? 'white' : 'black' }]}
               keyboardType="numeric"
               placeholder="Enter amount"
             />
 
-            <Text style={styles.label}>Date</Text>
+            <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Date</Text>
             <TouchableOpacity
-              style={styles.datePickerButton}
+              style={[styles.datePickerButton, {
+                backgroundColor: theme === 'dark' ? '#444' : '#fff'
+              }]}
               onPress={() => setShowDatePicker(true)}
             >
-              <Text style={styles.dateText}>{date.toDateString()}</Text>
+              <Text style={[styles.dateText, { color: theme === 'dark' ? 'white' : 'black' }]}>{date.toDateString()}</Text>
             </TouchableOpacity>
 
             {showDatePicker && (
@@ -138,10 +143,7 @@ const EditTransaction = ({ route, navigation }: Props) => {
             )}
 
             <TouchableOpacity
-              style={[
-                styles.saveButton,
-                { backgroundColor: isEdited ? '#E69DB8' : '#d3d3d3' },
-              ]}
+              style={[styles.saveButton, { backgroundColor: isEdited ? '#E69DB8' : '#d3d3d3' }]}
               onPress={handleSave}
               disabled={!isEdited}
             >

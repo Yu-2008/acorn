@@ -1,85 +1,116 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { SignUpStyles as styles } from '../Styles';
-import { Image,SafeAreaView, Text, TextInput, TouchableOpacity, View, StyleSheet, ScrollView } from 'react-native';
+import { Image, SafeAreaView, Text, TextInput, TouchableOpacity, View, ScrollView } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { SignInUpStackParamList } from '../Types';
+import { useTheme } from '../ThemeContext';
 
-type Props = StackScreenProps<SignInUpStackParamList, "SignUp">
+type Props = StackScreenProps<SignInUpStackParamList, "SignUp">;
 
-const SignUp = ({route, navigation}: Props) => {
-  console.log("Go into Sign Up screen")
-
+const SignUp = ({ route, navigation }: Props) => {
+  const { theme } = useTheme();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView
-        contentContainerStyle={styles.scrollContainer}
-        keyboardShouldPersistTaps="handled"
-      >
+    <SafeAreaView
+      style={[
+        styles.container,
+        { backgroundColor: theme === 'dark' ? '#333' : '#FDE6F6' }, 
+      ]}
+    >
+      <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
         <View style={styles.innerContainer}>
           {/* Logo */}
           <View style={styles.logoContainer}>
-              <Image source={require('../img/logo.jpg')} style={styles.logo} />
+            <Image source={require('../img/logo.jpg')} style={styles.logo} />
           </View>
 
-          <Text style={styles.title}>Sign Up</Text>
+          <Text
+            style={[
+              styles.title,
+              { color: theme === 'dark' ? '#fff' : '#000' }, 
+            ]}
+          >
+            Sign Up
+          </Text>
           <View style={styles.formContainer}>
             {/* Email */}
-            <Text style={styles.label}>Email/Username</Text>
+            <Text
+              style={[styles.label, { color: theme === 'dark' ? '#fff' : '#000' }]} 
+            >
+              Email/Username
+            </Text>
             <View style={styles.inputWrapper}>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { color: theme === 'dark' ? '#fff' : '#000' }]} 
                 placeholder="Enter your Email/Username here"
                 keyboardType="email-address"
                 autoCapitalize="none"
                 value={email}
                 onChangeText={setEmail}
-                placeholderTextColor="#aaa"
+                placeholderTextColor={theme === 'dark' ? '#aaa' : '#aaa'}
               />
             </View>
 
             {/* Password */}
-            <Text style={styles.label}>Password</Text>
+            <Text
+              style={[styles.label, { color: theme === 'dark' ? '#fff' : '#000' }]} 
+            >
+              Password
+            </Text>
             <View style={styles.inputWrapper}>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { color: theme === 'dark' ? '#fff' : '#000' }]} 
                 placeholder="Enter your password"
                 secureTextEntry
                 value={password}
                 onChangeText={setPassword}
-                placeholderTextColor="#aaa"
+                placeholderTextColor={theme === 'dark' ? '#aaa' : '#aaa'}
               />
             </View>
 
             {/* Confirm Password */}
-            <Text style={styles.label}>Confirm Password</Text>
+            <Text
+              style={[styles.label, { color: theme === 'dark' ? '#fff' : '#000' }]} 
+            >
+              Confirm Password
+            </Text>
             <View style={styles.inputWrapper}>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { color: theme === 'dark' ? '#fff' : '#000' }]} 
                 placeholder="Re-enter your password"
                 secureTextEntry
                 value={confirmPassword}
                 onChangeText={setConfirmPassword}
-                placeholderTextColor="#aaa"
+                placeholderTextColor={theme === 'dark' ? '#aaa' : '#aaa'}
               />
             </View>
 
             {/* Sign Up Button */}
-            <TouchableOpacity style={styles.button} onPress={() => {
-                console.log("Sign Up Successful");
-                navigation.navigate("SignIn");
-            }}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => {
+                console.log('Sign Up Successful');
+                navigation.navigate('SignIn');
+              }}
+            >
               <Text style={styles.buttonText}>Sign Up</Text>
             </TouchableOpacity>
 
             {/* Already have an account */}
             <View style={styles.tipsText}>
-              <Text>Already have an account?</Text>
-              <TouchableOpacity onPress={() => navigation.navigate("SignIn")}>
-                <Text style={styles.tips}>Sign In</Text>
+              <Text style={{ color: theme === 'dark' ? '#fff' : '#000' }}>Already have an account?</Text>
+              <TouchableOpacity onPress={() => navigation.navigate('SignIn')}>
+                <Text
+                  style={[
+                    styles.tips,
+                    { color: theme === 'dark' ? '#fff' : '#000' }, 
+                  ]}
+                >
+                  Sign In
+                </Text>
               </TouchableOpacity>
             </View>
           </View>

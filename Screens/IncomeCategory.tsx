@@ -1,14 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { IncomeCategoryStyles as styles } from '../Styles';
 import { SafeAreaView, Text, View, TouchableOpacity, FlatList, StyleSheet } from "react-native";
 import type { StackScreenProps } from '@react-navigation/stack';
 import { IncomeCategoryParamList } from "../Types";
 import Ionicons from 'react-native-vector-icons/Ionicons'; 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { useTheme } from '../ThemeContext';
 
 type Props = StackScreenProps<IncomeCategoryParamList, 'IncomeCategory'>;
 
 const IncomeCategory = ({ route, navigation }: Props) => {
+  const { theme } = useTheme();
+
   const [data, setData] = useState([
     { 
       id: 1, 
@@ -41,13 +44,14 @@ const IncomeCategory = ({ route, navigation }: Props) => {
   ]);
 
   const getIconForCategory = (category: string) => {
+    const iconColor = theme === 'dark' ? 'white' : '#393533'; // Icon color based on theme
     switch (category) {
       case 'Salary':
-        return <Ionicons name="cash" size={24} color="#393533" style={styles.icon} />;
+        return <Ionicons name="cash" size={24} color={iconColor} style={styles.icon} />;
       case 'Side Income':
-        return <FontAwesome name="usd" size={24} color="#393533" style={styles.icon} />;
+        return <FontAwesome name="usd" size={24} color={iconColor} style={styles.icon} />;
       default:
-        return <Ionicons name="file-tray" size={24} color="#393533" style={styles.icon} />;
+        return <Ionicons name="file-tray" size={24} color={iconColor} style={styles.icon} />;
     }
   };
 
@@ -59,19 +63,26 @@ const IncomeCategory = ({ route, navigation }: Props) => {
         incomeDate: item.date.toISOString(), 
         incomeAmount: item.amount 
       })}
-      style={styles.itemRow}
+      style={[
+        styles.itemRow,
+        { backgroundColor: theme === 'dark' ? '#444' : '#FFC1DA' }  // Dynamic background color
+      ]}
     >
       {getIconForCategory(item.title)}
-      <Text style={styles.itemText}>{item.title}</Text>
+      <Text style={[styles.itemText, { color: theme === 'dark' ? 'white' : 'black' }]}>
+        {item.title}
+      </Text>
     </TouchableOpacity>
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme === 'dark' ? '#333' : '#FDE6F6' }]}>
       {/* Add Buttons */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.navigate('AddIncomeCategory')}>
-          <Text style={styles.actionText}>Add More</Text>
+          <Text style={[styles.actionText, { color: theme === 'dark' ? 'white' : '#393533' }]}>
+            Add More
+          </Text>
         </TouchableOpacity>
       </View>
 

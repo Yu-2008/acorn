@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { ExpensesCategoryStyles as styles } from '../Styles';
-import { SafeAreaView, Text, View, TouchableOpacity, FlatList, StyleSheet } from "react-native";
+import { SafeAreaView, Text, View, TouchableOpacity, FlatList } from "react-native";
 import type { StackScreenProps } from '@react-navigation/stack';
 import { ExpensesCategoryParamList } from "../Types";
 import Ionicons from 'react-native-vector-icons/Ionicons'; 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'; 
+import { useTheme } from '../ThemeContext';
 
 type Props = StackScreenProps<ExpensesCategoryParamList, 'ExpensesCategory'>;
 
@@ -47,20 +48,22 @@ const data = [
 ];
 
 const ExpensesCategory = ({ route, navigation }: Props) => {
+  const { theme } = useTheme();
+
   const getIconForCategory = (category: string) => {
     switch (category) {
       case 'Breakfast':
-        return <MaterialIcons name="coffee" size={24} color="#393533" style={styles.icon} />;
+        return <MaterialIcons name="coffee" size={24} color={theme === 'dark' ? 'white' : '#393533'} style={styles.icon} />;
       case 'Lunch':
-        return <Ionicons name="fast-food" size={24} color="#393533" style={styles.icon} />;
+        return <Ionicons name="fast-food" size={24} color={theme === 'dark' ? 'white' : '#393533'} style={styles.icon} />;
       case 'Dinner':
-        return <Ionicons name="wine" size={24} color="#393533" style={styles.icon} />;
+        return <Ionicons name="wine" size={24} color={theme === 'dark' ? 'white' : '#393533'} style={styles.icon} />;
       case 'Groceries':
-        return <Ionicons name="cart" size={24} color="#393533" style={styles.icon} />;
+        return <Ionicons name="cart" size={24} color={theme === 'dark' ? 'white' : '#393533'} style={styles.icon} />;
       case 'Transportation':
-        return <Ionicons name="car-sport" size={24} color="#393533" style={styles.icon} />;
+        return <Ionicons name="car-sport" size={24} color={theme === 'dark' ? 'white' : '#393533'} style={styles.icon} />;
       default:
-        return <Ionicons name="file-tray" size={24} color="#393533" style={styles.icon} />;
+        return <Ionicons name="file-tray" size={24} color={theme === 'dark' ? 'white' : '#393533'} style={styles.icon} />;
     }
   };
 
@@ -69,11 +72,11 @@ const ExpensesCategory = ({ route, navigation }: Props) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme === 'dark' ? '#333' : '#FDE6F6' }]}>
       {/* Add Button */}
       <View style={styles.header}>
         <TouchableOpacity onPress={handleAddMore}>
-          <Text style={styles.actionText}>Add More</Text>
+          <Text style={[styles.actionText, { color: theme === 'dark' ? '#fff' : '#f57cbb' }]}>Add More</Text>
         </TouchableOpacity>
       </View>
 
@@ -91,9 +94,9 @@ const ExpensesCategory = ({ route, navigation }: Props) => {
               expensesAmount: Number(item.expensesAmount),
             })}
           >
-            <View style={styles.itemRow}>
+            <View style={[styles.itemRow, { backgroundColor: theme === 'dark' ? '#444' : '#FFC1DA' }]}>
               {getIconForCategory(item.expensesTitle)}
-              <Text style={styles.itemText}>{item.expensesTitle}</Text>
+              <Text style={[styles.itemText, { color: theme === 'dark' ? 'white' : 'black' }]}>{item.expensesTitle}</Text>
             </View>
           </TouchableOpacity>
         )}

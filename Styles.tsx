@@ -1130,7 +1130,6 @@ export const SignUpStyles = StyleSheet.create({
 export const ViewExpensesCategoryStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FDE6F6',
     padding: 20,
     paddingHorizontal: 12,
   },
@@ -1149,7 +1148,6 @@ export const ViewExpensesCategoryStyles = StyleSheet.create({
   detailLabel: {
     marginBottom: 10,
     fontSize: 20,
-    color: 'black',
     fontFamily: 'WinkySans-VariableFont_wght',
   },
   detailBox: {
@@ -1161,15 +1159,14 @@ export const ViewExpensesCategoryStyles = StyleSheet.create({
   },
   detailText: {
     fontSize: 16,
-    color: 'black',
     fontFamily: 'WinkySans-VariableFont_wght',
   },
 });
 
+
 export const ViewIncomeCategoryStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FDE6F6',
     padding: 20,
     paddingHorizontal: 12,
   },
@@ -1182,7 +1179,6 @@ export const ViewIncomeCategoryStyles = StyleSheet.create({
   detailLabel: {
     marginBottom: 10,
     fontSize: 20,
-    color: 'black',
     fontFamily: 'WinkySans-VariableFont_wght',
   },
   detailBox: {
@@ -1194,15 +1190,14 @@ export const ViewIncomeCategoryStyles = StyleSheet.create({
   },
   detailText: {
     fontSize: 16,
-    color: 'black',
     fontFamily: 'WinkySans-VariableFont_wght',
   },
 });
 
+
 export const ViewTransactionStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FDE6F6',
     padding: 20,
     paddingHorizontal: 12,
   },
@@ -1233,7 +1228,6 @@ export const ViewTransactionStyles = StyleSheet.create({
   detailLabel: {
     marginBottom: 10,
     fontSize: 20,
-    color: 'black',
     fontFamily: 'WinkySans-VariableFont_wght',
   },
   detailBox: {
@@ -1245,7 +1239,6 @@ export const ViewTransactionStyles = StyleSheet.create({
   },
   detailText: {
     fontSize: 16,
-    color: 'black',
     fontFamily: 'WinkySans-VariableFont_wght',
   },
 });

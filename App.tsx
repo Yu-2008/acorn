@@ -23,7 +23,7 @@ import ForgetPasswordScreen from './Screens/ForgetPassword';
 import ViewExpensesCategoryScreen from './Screens/ViewExpensesCategory';
 import ViewIncomeCategoryScreen from './Screens/ViewIncomeCategory';
 import ViewTransactionScreen from './Screens/ViewTransaction';
-import { DarkModeProvider } from './DarkModeContext';
+import { ThemeProvider } from './ThemeContext';
 import {
   RootStackParamList,
   TabParamList,
@@ -233,6 +233,7 @@ const App = () => {
   };
 
   return (
+    <ThemeProvider>
     <NavigationContainer>
       <RootStack.Navigator screenOptions={{ headerShown: false }}>
         {isSignIn === false ? (
@@ -246,6 +247,7 @@ const App = () => {
         )}
       </RootStack.Navigator>
     </NavigationContainer>
+    </ThemeProvider>
   );
 };
 

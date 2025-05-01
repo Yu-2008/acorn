@@ -6,11 +6,13 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import type { StackScreenProps } from '@react-navigation/stack';
 import { MainStackParamList } from '../Types';
+import { useTheme } from '../ThemeContext';
 
 type Props = StackScreenProps<MainStackParamList, 'ViewTransaction'>;
 
 const ViewTransaction = ({ route, navigation }: Props) => {
   const { transTitle, transDate, transType, transAmount } = route.params;
+  const { theme } = useTheme();
 
   const actions = [
     {
@@ -38,33 +40,33 @@ const ViewTransaction = ({ route, navigation }: Props) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme === 'dark' ? '#333' : '#FDE6F6' }]}>
       <ScrollView contentContainerStyle={styles.scrollView}>
         <View style={styles.detailItem}>
-          <Text style={styles.detailLabel}>Transaction Title</Text>
-          <View style={styles.detailBox}>
-            <Text style={styles.detailText}>{transTitle}</Text>
+          <Text style={[styles.detailLabel, { color: theme === 'dark' ? 'white' : 'black' }]}>Transaction Title</Text>
+          <View style={[styles.detailBox, { backgroundColor: theme === 'dark' ? '#444' : '#fff' }]}>
+            <Text style={[styles.detailText, { color: theme === 'dark' ? 'white' : 'black' }]}>{transTitle}</Text>
           </View>
         </View>
 
         <View style={styles.detailItem}>
-          <Text style={styles.detailLabel}>Date</Text>
-          <View style={styles.detailBox}>
-            <Text style={styles.detailText}>{new Date(transDate).toDateString()}</Text>
+          <Text style={[styles.detailLabel, { color: theme === 'dark' ? 'white' : 'black' }]}>Date</Text>
+          <View style={[styles.detailBox, { backgroundColor: theme === 'dark' ? '#444' : '#fff' }]}>
+            <Text style={[styles.detailText, { color: theme === 'dark' ? 'white' : 'black' }]}>{new Date(transDate).toDateString()}</Text>
           </View>
         </View>
 
         <View style={styles.detailItem}>
-          <Text style={styles.detailLabel}>Transaction Type</Text>
-          <View style={styles.detailBox}>
-            <Text style={styles.detailText}>{transType}</Text>
+          <Text style={[styles.detailLabel, { color: theme === 'dark' ? 'white' : 'black' }]}>Transaction Type</Text>
+          <View style={[styles.detailBox, { backgroundColor: theme === 'dark' ? '#444' : '#fff' }]}>
+            <Text style={[styles.detailText, { color: theme === 'dark' ? 'white' : 'black' }]}>{transType}</Text>
           </View>
         </View>
 
         <View style={styles.detailItem}>
-          <Text style={styles.detailLabel}>Amount</Text>
-          <View style={styles.detailBox}>
-            <Text style={styles.detailText}>RM {transAmount.toFixed(2)}</Text>
+          <Text style={[styles.detailLabel, { color: theme === 'dark' ? 'white' : 'black' }]}>Amount</Text>
+          <View style={[styles.detailBox, { backgroundColor: theme === 'dark' ? '#444' : '#fff' }]}>
+            <Text style={[styles.detailText, { color: theme === 'dark' ? 'white' : 'black' }]}>RM {transAmount.toFixed(2)}</Text>
           </View>
         </View>
       </ScrollView>

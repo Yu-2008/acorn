@@ -6,12 +6,15 @@ import { IncomeCategoryParamList } from '../Types';
 import { FloatingAction } from "react-native-floating-action";
 import Ionicons from 'react-native-vector-icons/Ionicons'; 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'; 
+import { useTheme } from '../ThemeContext';
 
 type Props = StackScreenProps<IncomeCategoryParamList, 'ViewIncomeCategory'>;
 
 const ViewIncomeCategory = ({ route, navigation }: Props) => {
   const { incomeTitle, incomeDescription, incomeDate, incomeAmount } = route.params;
   const parsedDate = new Date(incomeDate);
+
+  const { theme } = useTheme();
 
   const actions = [
     {
@@ -32,40 +35,40 @@ const ViewIncomeCategory = ({ route, navigation }: Props) => {
 
   const handleActionPress = (name?: string) => {
     if (name === "edit") {
-      navigation.navigate('EditIncomeCategory', {incomeTitle, incomeDescription, incomeDate, incomeAmount });
+      navigation.navigate('EditIncomeCategory', { incomeTitle, incomeDescription, incomeDate, incomeAmount });
     } else if (name === "delete") {
       console.log(`Delete category ${incomeTitle}`);
     }
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme === 'dark' ? '#333' : '#FDE6F6' }]}>
       <ScrollView contentContainerStyle={styles.scrollView}>
         <View style={styles.detailItem}>
-          <Text style={styles.detailLabel}>Income Category</Text>
-          <View style={styles.detailBox}>
-            <Text style={styles.detailText}>{incomeTitle}</Text>
+          <Text style={[styles.detailLabel, { color: theme === 'dark' ? 'white' : 'black' }]}>Income Category</Text>
+          <View style={[styles.detailBox, { backgroundColor: theme === 'dark' ? '#444' : '#fff' }]}>
+            <Text style={[styles.detailText, { color: theme === 'dark' ? 'white' : 'black' }]}>{incomeTitle}</Text>
           </View>
         </View>
 
         <View style={styles.detailItem}>
-          <Text style={styles.detailLabel}>Description</Text>
-          <View style={styles.detailBox}>
-            <Text style={styles.detailText}>{incomeDescription}</Text>
+          <Text style={[styles.detailLabel, { color: theme === 'dark' ? 'white' : 'black' }]}>Description</Text>
+          <View style={[styles.detailBox, { backgroundColor: theme === 'dark' ? '#444' : '#fff' }]}>
+            <Text style={[styles.detailText, { color: theme === 'dark' ? 'white' : 'black' }]}>{incomeDescription}</Text>
           </View>
         </View>
 
         <View style={styles.detailItem}>
-          <Text style={styles.detailLabel}>Date</Text>
-          <View style={styles.detailBox}>
-            <Text style={styles.detailText}>{parsedDate.toDateString()}</Text>
+          <Text style={[styles.detailLabel, { color: theme === 'dark' ? 'white' : 'black' }]}>Date</Text>
+          <View style={[styles.detailBox, { backgroundColor: theme === 'dark' ? '#444' : '#fff' }]}>
+            <Text style={[styles.detailText, { color: theme === 'dark' ? 'white' : 'black' }]}>{parsedDate.toDateString()}</Text>
           </View>
         </View>
 
         <View style={styles.detailItem}>
-          <Text style={styles.detailLabel}>Amount</Text>
-          <View style={styles.detailBox}>
-            <Text style={styles.detailText}>RM {incomeAmount}</Text>
+          <Text style={[styles.detailLabel, { color: theme === 'dark' ? 'white' : 'black' }]}>Amount</Text>
+          <View style={[styles.detailBox, { backgroundColor: theme === 'dark' ? '#444' : '#fff' }]}>
+            <Text style={[styles.detailText, { color: theme === 'dark' ? 'white' : 'black' }]}>RM {incomeAmount}</Text>
           </View>
         </View>
       </ScrollView>
