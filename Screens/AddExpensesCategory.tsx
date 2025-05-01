@@ -25,10 +25,11 @@ const AddExpensesCategory = ({ route, navigation }: Props) => {
     { label: "Insurance", value: "Insurance", icon: <Ionicons name="shield" size={24} color="#393533" /> }, 
     { label: "Savings", value: "Savings", icon: <Ionicons name="save" size={24} color="#393533" /> }, 
   ];
-
+  
+  {/**handle onPress */}
   const handleSave = () => {
     // Save logic here (send to database or update state)
-    console.log("Saving:", selectedIcon, categoryName);
+    console.log("Add Expenses Category:", selectedIcon, categoryName);
     setConfirmationMessage(`Category '${selectedIcon}' saved successfully!`);
     navigation.goBack();
   };

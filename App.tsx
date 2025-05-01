@@ -23,7 +23,7 @@ import ForgetPasswordScreen from './Screens/ForgetPassword';
 import ViewExpensesCategoryScreen from './Screens/ViewExpensesCategory';
 import ViewIncomeCategoryScreen from './Screens/ViewIncomeCategory';
 import ViewTransactionScreen from './Screens/ViewTransaction';
-import { DarkModeProvider } from './DarkModeContext';
+//import { DarkModeProvider } from './DarkModeContext';
 import {
   RootStackParamList,
   TabParamList,
@@ -46,7 +46,7 @@ const ExpensesCategoryStack = createStackNavigator<ExpensesCategoryParamList>();
 const defaultHeaderOptions = {
   headerStyle: { backgroundColor: '#FFDDDD' },
   headerTintColor: '#393533',
-  headerTitleStyle: { fontWeight: '500', fontFamily: 'WinkySans-VariableFont_wght' },
+  headerTitleStyle: { fontWeight: '500' as '500', fontFamily: 'WinkySans-VariableFont_wght' },
 };
 
 const SignInUpStackNavigator = ({ onSignIn }: { onSignIn: () => void }) => {

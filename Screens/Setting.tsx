@@ -20,6 +20,25 @@ const Setting = ({ navigation, onSignOut }: Props) => {
   
   const [isNightMode, setIsNightMode] = useState(false);
 
+  {/**handle onPress */}
+  const handleExpensesCategory =()=>{
+    console.log('Expenses Category pressed');
+    navigation.navigate('GoExpensesCategory');
+  }
+  const handleIncomeCategory =()=>{
+    console.log('Income Category pressed');
+    navigation.navigate('GoIncomeCategory');
+    
+  }
+  const handleBackupCloud =()=>{
+    console.log("Backup Cloud pressed");
+    navigation.navigate('GoBackUpCloud')
+  }
+  const handleOnSignOut =()=>{
+    console.log("Sign Out pressed");
+    onSignOut();
+  }
+
   useEffect(() => {
     const startColorAnimation = () => {
       Animated.loop(
@@ -51,6 +70,8 @@ const Setting = ({ navigation, onSignOut }: Props) => {
     setIsNightMode(prevMode => !prevMode);
   };
 
+  
+
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: isNightMode ? '#333' : '#FDE6F6' }]}>
       <View style={styles.header}>
@@ -65,16 +86,16 @@ const Setting = ({ navigation, onSignOut }: Props) => {
 
         <TouchableOpacity 
           style={styles.row}
-          onPress={() => navigation.navigate('GoExpensesCategory')}>
+          onPress={handleExpensesCategory}>
           <MaterialIcons name= "trolley" size={24} color={isNightMode ? 'white' : '#393533'} style={styles.icon} />
-          <Text style={[styles.rowText, { color: isNightMode ? 'white' : 'black' }]}>Expenses</Text>
+          <Text style={[styles.rowText, { color: isNightMode ? 'white' : 'black' }]}>Expenses Category</Text>
         </TouchableOpacity>
 
         <TouchableOpacity 
           style={styles.row}
-          onPress={() => navigation.navigate('GoIncomeCategory')}>
+          onPress={handleIncomeCategory}>
           <Ionicons name="cash-outline" size={24} color={isNightMode ? 'white' : '#393533'} style={styles.icon} />
-          <Text style={[styles.rowText, { color: isNightMode ? 'white' : 'black' }]}>Income</Text>
+          <Text style={[styles.rowText, { color: isNightMode ? 'white' : 'black' }]}>Income Category</Text>
         </TouchableOpacity>
       </View>
 
@@ -83,14 +104,14 @@ const Setting = ({ navigation, onSignOut }: Props) => {
 
         <TouchableOpacity 
           style={styles.row}
-          onPress={() => navigation.navigate('GoBackUpCloud')}>
+          onPress={handleBackupCloud}>
           <Ionicons name="cloud-upload" size={24} color={isNightMode ? 'white' : '#393533'} style={styles.icon} />
           <Text style={[styles.rowText, { color: isNightMode ? 'white' : 'black' }]}>Backup to Cloud</Text>
         </TouchableOpacity>
 
         <TouchableOpacity 
           style={styles.row}
-          onPress={onSignOut}>
+          onPress={handleOnSignOut}>
           <Ionicons name="log-out" size={24} color={isNightMode ? 'white' : '#393533'} style={styles.icon} />
           <Text style={[styles.rowText, { color: isNightMode ? 'white' : 'black' }]}>Sign Out</Text>
         </TouchableOpacity>

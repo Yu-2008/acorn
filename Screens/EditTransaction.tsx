@@ -31,16 +31,9 @@ const EditTransaction = ({ route, navigation }: Props) => {
 
   const shouldWarnOnLeave = useRef(true);
 
-  const onChangeDate = (event: any, selectedDate?: Date) => {
-    setShowDatePicker(Platform.OS === 'ios');
-    if (selectedDate) {
-      setDate(selectedDate);
-      setIsEdited(true);
-    }
-  };
-
+  {/**handle onPress */}
   const handleSave = () => {
-    console.log("Saving:", title, type, amount, date);
+    console.log("Save edited transaction:", title, type, amount, date);
     shouldWarnOnLeave.current = false;
     setIsEdited(false);
 
@@ -52,6 +45,16 @@ const EditTransaction = ({ route, navigation }: Props) => {
 
     navigation.goBack(); 
   };
+
+  const onChangeDate = (event: any, selectedDate?: Date) => {
+    setShowDatePicker(Platform.OS === 'ios');
+    if (selectedDate) {
+      setDate(selectedDate);
+      setIsEdited(true);
+    }
+  };
+
+  
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('beforeRemove', (e) => {

@@ -13,6 +13,13 @@ const AddIncomeCategory = ({ route, navigation }: Props) => {
   const [categoryName, setCategoryName] = useState("");
   const [confirmationMessage, setConfirmationMessage] = useState("");
 
+  {/**handle onPress */}
+  const handleSave = () => {
+    console.log("Add income category:", selectedIcon, categoryName);
+    setConfirmationMessage(`Category '${selectedIcon}' saved successfully!`);
+    navigation.goBack();
+  };
+
   const iconOptions = [
     { label: "Salary", value: "Salary", icon: <Ionicons name="cash" size={24} color="#393533" /> },
     { label: "Side Income", value: "Side Income", icon: <FontAwesome name="usd" size={24} color="#393533" /> },
@@ -21,12 +28,7 @@ const AddIncomeCategory = ({ route, navigation }: Props) => {
     { label: "Business", value: "Business", icon: <Ionicons name="briefcase" size={24} color="#393533" /> },
   ];
 
-  const handleSave = () => {
-    console.log("Saving:", selectedIcon, categoryName);
-    setConfirmationMessage(`Category '${selectedIcon}' saved successfully!`);
-    navigation.goBack();
-  };
-
+  
   const renderItem = ({ item }: { item: { value: string, label: string, icon: React.ReactNode } }) => (
     <TouchableOpacity
       onPress={() => {

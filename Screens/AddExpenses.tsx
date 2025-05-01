@@ -10,16 +10,18 @@ const AddExpenses = ({ navigation }: any) => {
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
 
+  {/**handle onPress */}
+  const handleSave = () => {
+
+    console.log("Add expenses transaction:" + { category, amount, date });
+    navigation.goBack();
+  };
+
   const onChangeDate = (event: any, selectedDate?: Date) => {
     setShowDatePicker(Platform.OS === 'ios');
     if (selectedDate) {
       setDate(selectedDate);
     }
-  };
-
-  const handleDone = () => {
-    console.log({ category, amount, date });
-    navigation.goBack();
   };
 
   return (
@@ -69,9 +71,9 @@ const AddExpenses = ({ navigation }: any) => {
 
         <TouchableOpacity
           style={styles.doneButton}
-          onPress={handleDone}
+          onPress={handleSave}
         >
-          <Text style={styles.doneButtonText}>Add</Text>
+          <Text style={styles.doneButtonText}>Save</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

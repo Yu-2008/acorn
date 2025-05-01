@@ -23,6 +23,22 @@ const SignIn = ({ navigation, onSignIn }: Props) => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
+  {/**handle onPress */}
+  const handleSignIn =()=>{
+    console.log('Sign In pressed');
+    onSignIn();
+  }
+  const handleSignUp =()=>{
+    console.log('Sign Up pressed');
+    navigation.navigate("SignUp");
+
+  }
+  const handleForgetPassword =()=>{
+    console.log('Forget Password pressed');
+    navigation.navigate('ForgetPassword')
+
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -85,7 +101,7 @@ const SignIn = ({ navigation, onSignIn }: Props) => {
 
             {/* Forgot Password */}
             <View style={styles.forgotRow}>
-              <TouchableOpacity onPress={() => navigation.navigate('ForgetPassword')}>
+              <TouchableOpacity onPress={handleForgetPassword}>
                 <Text style={styles.forgotText}>Forgot Password?</Text>
               </TouchableOpacity>
             </View>
@@ -93,10 +109,7 @@ const SignIn = ({ navigation, onSignIn }: Props) => {
             {/* Sign In Button */}
             <TouchableOpacity
               style={styles.button}
-              onPress={() => {
-                console.log('Sign In pressed');
-                onSignIn();
-              }}
+              onPress={handleSignIn}
             >
               <Text style={styles.buttonText}>Sign in</Text>
             </TouchableOpacity>
@@ -104,8 +117,8 @@ const SignIn = ({ navigation, onSignIn }: Props) => {
             {/* Bottom Text */}
             <View style={styles.tipsText}>
               <Text style={styles.grayText}>Don't have an account?</Text>
-              <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
-                <Text style={styles.registerLink}> Register Here</Text>
+              <TouchableOpacity onPress={handleSignUp}>
+                <Text style={styles.registerLink}> Sign Up Here </Text>
               </TouchableOpacity>
             </View>
           </View>

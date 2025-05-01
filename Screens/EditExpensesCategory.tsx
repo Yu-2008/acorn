@@ -31,15 +31,9 @@ const EditExpensesCategory = ({ route, navigation }: Props) => {
 
   const shouldWarnOnLeave = useRef(true);
 
-  const onChangeDate = (event: any, selectedDate?: Date) => {
-    setShowDatePicker(Platform.OS === 'ios');
-    if (selectedDate) {
-      setDate(selectedDate);
-      setIsEdited(true);
-    }
-  };
-
+  {/**handle onPress */}
   const handleSave = () => {
+    console.log("Save edited expenses category")
     if (!title.trim() || !amount.trim()) {
       Alert.alert("Validation Error", "Title and amount are required!");
       return;
@@ -63,6 +57,15 @@ const EditExpensesCategory = ({ route, navigation }: Props) => {
 
     navigation.goBack();
   };
+
+  const onChangeDate = (event: any, selectedDate?: Date) => {
+    setShowDatePicker(Platform.OS === 'ios');
+    if (selectedDate) {
+      setDate(selectedDate);
+      setIsEdited(true);
+    }
+  };
+
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('beforeRemove', (e) => {

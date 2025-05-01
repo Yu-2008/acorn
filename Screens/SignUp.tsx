@@ -7,11 +7,20 @@ import { SignInUpStackParamList } from '../Types';
 type Props = StackScreenProps<SignInUpStackParamList, "SignUp">
 
 const SignUp = ({route, navigation}: Props) => {
-  console.log("Go into Sign Up screen")
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+
+  {/**handle onPress */}
+  const handleSignUp=()=>{
+    console.log("Sign Up pressed");
+    navigation.navigate("SignIn");
+  }
+  const handleSignIn=()=>{
+    console.log('Sign In pressed');
+    navigation.navigate("SignIn");
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -68,17 +77,14 @@ const SignUp = ({route, navigation}: Props) => {
             </View>
 
             {/* Sign Up Button */}
-            <TouchableOpacity style={styles.button} onPress={() => {
-                console.log("Sign Up Successful");
-                navigation.navigate("SignIn");
-            }}>
+            <TouchableOpacity style={styles.button} onPress={handleSignUp}>
               <Text style={styles.buttonText}>Sign Up</Text>
             </TouchableOpacity>
 
             {/* Already have an account */}
             <View style={styles.tipsText}>
               <Text>Already have an account?</Text>
-              <TouchableOpacity onPress={() => navigation.navigate("SignIn")}>
+              <TouchableOpacity onPress={handleSignIn}>
                 <Text style={styles.tips}>Sign In</Text>
               </TouchableOpacity>
             </View>

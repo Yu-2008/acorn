@@ -13,6 +13,17 @@ const ForgetPassword = ({route, navigation}: Props) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
+  {/**handle onPress */}
+  const handleUpdatePassword =()=>{
+    console.log("Updated Password pressed");
+    navigation.navigate('SignIn');
+  }
+
+  const handleSignIn =()=>{
+    console.log("Sign In pressed");
+    navigation.navigate('SignIn');
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -68,17 +79,14 @@ const ForgetPassword = ({route, navigation}: Props) => {
             </View>
 
             {/* Update Password Button */}
-            <TouchableOpacity style={styles.button} onPress={() => {
-                console.log("Update Password Successful");
-                navigation.navigate("SignIn");
-            }}>
+            <TouchableOpacity style={styles.button} onPress={handleUpdatePassword}>
               <Text style={styles.buttonText}>Update Password</Text>
             </TouchableOpacity>
 
             {/* Already have an account */}
             <View style={styles.tipsText}>
               <Text>Already have an account?</Text>
-              <TouchableOpacity onPress={() => navigation.navigate("SignIn")}>
+              <TouchableOpacity onPress={handleSignIn}>
                 <Text style={styles.tips}>Sign In</Text>
               </TouchableOpacity>
             </View>

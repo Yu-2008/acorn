@@ -64,9 +64,12 @@ const ExpensesCategory = ({ route, navigation }: Props) => {
     }
   };
 
+  {/**handle onPress */}
   const handleAddMore = () => {
+    console.log("Add more pressed")
     navigation.navigate('AddExpensesCategory');
   };
+
 
   return (
     <SafeAreaView style={styles.container}>

@@ -51,6 +51,12 @@ const IncomeCategory = ({ route, navigation }: Props) => {
     }
   };
 
+  {/**handle onPress */}
+  const handleAddMore =()=>{
+    console.log("Add More pressed");
+    navigation.navigate('AddIncomeCategory')
+  }
+
   const renderItem = ({ item }: { item: { id: number, title: string, description: string, date: Date, amount: number } }) => (
     <TouchableOpacity
       onPress={() => navigation.navigate('ViewIncomeCategory', { 
@@ -66,11 +72,13 @@ const IncomeCategory = ({ route, navigation }: Props) => {
     </TouchableOpacity>
   );
 
+  
+
   return (
     <SafeAreaView style={styles.container}>
       {/* Add Buttons */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.navigate('AddIncomeCategory')}>
+        <TouchableOpacity onPress={handleAddMore}>
           <Text style={styles.actionText}>Add More</Text>
         </TouchableOpacity>
       </View>

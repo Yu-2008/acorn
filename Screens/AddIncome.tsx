@@ -10,17 +10,19 @@ const AddIncome = ({ navigation }: any) => {
   const [transDate, setTransDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
 
+  {/**handle onPress */}
+  const handleSave = () => {
+    console.log("Add income transaction: " + { transCategory, transAmount, transDate });
+    navigation.goBack(); 
+  };
+
   const onChangeDate = (event: any, selectedDate?: Date) => {
     setShowDatePicker(Platform.OS === 'ios');
     if (selectedDate) {
       setTransDate(selectedDate);
     }
   };
-
-  const handleDone = () => {
-    console.log({ transCategory, transAmount, transDate });
-    navigation.goBack(); 
-  };
+  
 
   return (
     <SafeAreaView style={styles.container}>
@@ -67,9 +69,9 @@ const AddIncome = ({ navigation }: any) => {
 
         <TouchableOpacity
           style={styles.doneButton}
-          onPress={handleDone}
+          onPress={handleSave}
         >
-          <Text style={styles.doneButtonText}>Add</Text>
+          <Text style={styles.doneButtonText}>Save</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
