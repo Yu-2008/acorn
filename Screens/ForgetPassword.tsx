@@ -13,24 +13,19 @@ const ForgetPassword = ({ route, navigation }: Props) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  {/**handle onPress */}
-  const handleUpdatePassword =()=>{
+  // handle onPress for password update
+  const handleUpdatePassword = () => {
     console.log("Updated Password pressed");
     navigation.navigate('SignIn');
-  }
+  };
 
-  const handleSignIn =()=>{
+  const handleSignIn = () => {
     console.log("Sign In pressed");
     navigation.navigate('SignIn');
-  }
+  };
 
   return (
-    <SafeAreaView
-      style={[
-        styles.container,
-        { backgroundColor: theme === 'dark' ? '#333' : '#FDE6F6' }, 
-      ]}
-    >
+    <SafeAreaView style={[styles.container, { backgroundColor: theme === 'dark' ? '#333' : '#FDE6F6' }]}>
       <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
         <View style={styles.innerContainer}>
           {/* Logo */}
@@ -38,24 +33,17 @@ const ForgetPassword = ({ route, navigation }: Props) => {
             <Image source={require('../img/logo.jpg')} style={styles.logo} />
           </View>
 
-          <Text
-            style={[
-              styles.title,
-              { color: theme === 'dark' ? '#fff' : '#000' }, 
-            ]}
-          >
+          <Text style={[styles.title, { color: theme === 'dark' ? '#fff' : '#000' }]}>
             Password Reset
           </Text>
           <View style={styles.formContainer}>
             {/* Email */}
-            <Text
-              style={[styles.label, { color: theme === 'dark' ? '#fff' : '#000' }]} 
-            >
+            <Text style={[styles.label, { color: theme === 'dark' ? '#fff' : '#000' }]}>
               Email
             </Text>
             <View style={styles.inputWrapper}>
               <TextInput
-                style={[styles.input, { color: theme === 'dark' ? '#fff' : '#000' }]} 
+                style={[styles.input, { color: theme === 'dark' ? '#fff' : '#000' }]}
                 placeholder="Enter your email"
                 keyboardType="email-address"
                 autoCapitalize="none"
@@ -66,14 +54,12 @@ const ForgetPassword = ({ route, navigation }: Props) => {
             </View>
 
             {/* Password */}
-            <Text
-              style={[styles.label, { color: theme === 'dark' ? '#fff' : '#000' }]} 
-            >
+            <Text style={[styles.label, { color: theme === 'dark' ? '#fff' : '#000' }]}>
               Password
             </Text>
             <View style={styles.inputWrapper}>
               <TextInput
-                style={[styles.input, { color: theme === 'dark' ? '#fff' : '#000' }]} 
+                style={[styles.input, { color: theme === 'dark' ? '#fff' : '#000' }]}
                 placeholder="Enter your password"
                 secureTextEntry
                 value={password}
@@ -83,9 +69,7 @@ const ForgetPassword = ({ route, navigation }: Props) => {
             </View>
 
             {/* Confirm Password */}
-            <Text
-              style={[styles.label, { color: theme === 'dark' ? '#fff' : '#000' }]} 
-            >
+            <Text style={[styles.label, { color: theme === 'dark' ? '#fff' : '#000' }]}>
               Confirm Password
             </Text>
             <View style={styles.inputWrapper}>
@@ -100,33 +84,22 @@ const ForgetPassword = ({ route, navigation }: Props) => {
             </View>
 
             {/* Update Password Button */}
-<<<<<<< HEAD
             <TouchableOpacity
               style={styles.button}
-              onPress={() => {
-                console.log("Update Password Successful");
-                navigation.navigate("SignIn");
-              }}
+              onPress={handleUpdatePassword}
             >
-=======
-            <TouchableOpacity style={styles.button} onPress={handleUpdatePassword}>
->>>>>>> 751d2a58ff3aa7cddf7fb9430caf152ccfd187df
               <Text style={styles.buttonText}>Update Password</Text>
             </TouchableOpacity>
 
             {/* Already have an account */}
             <View style={styles.tipsText}>
-<<<<<<< HEAD
-              <Text style={{ color: theme === 'dark' ? '#fff' : '#000' }}>Already have an account?</Text>
-              <TouchableOpacity onPress={() => navigation.navigate("SignIn")}>
+              <Text style={{ color: theme === 'dark' ? '#fff' : '#000' }}>
+                Already have an account?
+              </Text>
+              <TouchableOpacity onPress={handleSignIn}>
                 <Text style={[styles.tips, { color: theme === 'dark' ? '#fff' : '#000' }]}>
                   Sign In
                 </Text>
-=======
-              <Text>Already have an account?</Text>
-              <TouchableOpacity onPress={handleSignIn}>
-                <Text style={styles.tips}>Sign In</Text>
->>>>>>> 751d2a58ff3aa7cddf7fb9430caf152ccfd187df
               </TouchableOpacity>
             </View>
           </View>

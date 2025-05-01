@@ -87,15 +87,10 @@ const IncomeCategory = ({ route, navigation }: Props) => {
     <SafeAreaView style={[styles.container, { backgroundColor: theme === 'dark' ? '#333' : '#FDE6F6' }]}>
       {/* Add Buttons */}
       <View style={styles.header}>
-<<<<<<< HEAD
         <TouchableOpacity onPress={() => navigation.navigate('AddIncomeCategory')}>
           <Text style={[styles.actionText, { color: theme === 'dark' ? 'white' : '#393533' }]}>
             Add More
           </Text>
-=======
-        <TouchableOpacity onPress={handleAddMore}>
-          <Text style={styles.actionText}>Add More</Text>
->>>>>>> 751d2a58ff3aa7cddf7fb9430caf152ccfd187df
         </TouchableOpacity>
       </View>
 

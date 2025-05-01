@@ -13,7 +13,7 @@ const AddExpenses = ({ navigation }: any) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   {/**handle onPress */}
-  const handleSave = () => {
+  const handleDone = () => {
 
     console.log("Add expenses transaction:" + { category, amount, date });
     navigation.goBack();

@@ -9,9 +9,9 @@ import {
   StyleSheet,
   Platform,
   Alert,
-  ToastAndroid,
-  KeyboardAvoidingView,
   ScrollView,
+  KeyboardAvoidingView,
+  ToastAndroid,
 } from "react-native";
 import { IncomeCategoryParamList } from "../Types";
 import { StackScreenProps } from "@react-navigation/stack";
@@ -30,8 +30,6 @@ const EditIncomeCategory = ({ route, navigation }: Props) => {
   const [isEdited, setIsEdited] = useState(false);
 
   const shouldWarnOnLeave = useRef(true);
-
-<<<<<<< HEAD
   const { theme } = useTheme();
 
   const onChangeDate = (event: any, selectedDate?: Date) => {
@@ -42,11 +40,8 @@ const EditIncomeCategory = ({ route, navigation }: Props) => {
     }
   };
 
-=======
-  {/**handle onPress */}
->>>>>>> 751d2a58ff3aa7cddf7fb9430caf152ccfd187df
   const handleSave = () => {
-    console.log("Save edited income category")
+    console.log("Save edited income category");
     if (!title.trim() || !amount.trim()) {
       Alert.alert("Validation Error", "Title and amount are required!");
       return;
@@ -68,17 +63,8 @@ const EditIncomeCategory = ({ route, navigation }: Props) => {
       Alert.alert("Success", "Income category saved successfully");
     }
 
-    navigation.goBack();
+    navigation.goBack(); 
   };
-
-  const onChangeDate = (event: any, selectedDate?: Date) => {
-    setShowDatePicker(Platform.OS === "ios");
-    if (selectedDate) {
-      setDate(selectedDate);
-      setIsEdited(true);
-    }
-  };
-
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("beforeRemove", (e) => {
@@ -110,9 +96,9 @@ const EditIncomeCategory = ({ route, navigation }: Props) => {
         behavior={Platform.OS === "ios" ? "padding" : undefined}
         style={{ flex: 1 }}
       >
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 20 }}>
           <View style={styles.formContainer}>
-            <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Category Title</Text>
+            <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Transaction Title</Text>
             <TextInput
               value={title}
               onChangeText={(text) => {
@@ -148,12 +134,10 @@ const EditIncomeCategory = ({ route, navigation }: Props) => {
 
             <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Date</Text>
             <TouchableOpacity
-              style={[styles.datePickerButton, {
-                backgroundColor: theme === 'dark' ? '#444' : '#fff'
-              }]}
+              style={[styles.datePickerButton, { backgroundColor: theme === 'dark' ? '#444' : '#fff' }]}
               onPress={() => setShowDatePicker(true)}
             >
-              <Text style={[styles.dateText, { color: theme === 'dark' ? 'white' : 'black' }]}>{date.toLocaleDateString()}</Text>
+              <Text style={[styles.dateText, { color: theme === 'dark' ? 'white' : 'black' }]}>{date.toDateString()}</Text>
             </TouchableOpacity>
 
             {showDatePicker && (

@@ -12,9 +12,9 @@ const AddIncome = ({ navigation }: any) => {
   const [transDate, setTransDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
 
-  {/**handle onPress */}
+  // Handle onPress
   const handleSave = () => {
-    console.log("Add income transaction: " + { transCategory, transAmount, transDate });
+    console.log("Add income transaction: ", { transCategory, transAmount, transDate });
     navigation.goBack(); 
   };
 
@@ -24,7 +24,6 @@ const AddIncome = ({ navigation }: any) => {
       setTransDate(selectedDate);
     }
   };
-  
 
   return (
     <SafeAreaView
@@ -102,21 +101,12 @@ const AddIncome = ({ navigation }: any) => {
         )}
 
         <TouchableOpacity
-<<<<<<< HEAD
-          style={[
-            styles.doneButton,
-          ]}
-          onPress={handleDone}
+          style={[styles.doneButton]}
+          onPress={handleSave}
         >
           <Text style={[styles.doneButtonText, { color: theme === 'dark' ? '#fff' : '#000' }]}>
             Add
           </Text>
-=======
-          style={styles.doneButton}
-          onPress={handleSave}
-        >
-          <Text style={styles.doneButtonText}>Save</Text>
->>>>>>> 751d2a58ff3aa7cddf7fb9430caf152ccfd187df
         </TouchableOpacity>
       </View>
     </SafeAreaView>
