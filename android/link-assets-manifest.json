@@ -1,4 +1,9 @@
 {
   "migIndex": 1,
-  "data": []
+  "data": [
+    {
+      "path": "assets/fonts/WinkySans-VariableFont_wght.ttf",
+      "sha1": "e8c67951cad530cb48d4eab81259fc10f47e0837"
+    }
+  ]
 }
