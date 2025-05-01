@@ -1,44 +1,72 @@
 import React, { useState } from "react";
-import { SafeAreaView, Text, View, TextInput, TouchableOpacity, StyleSheet } from "react-native";
-import { Picker } from "@react-native-picker/picker"; 
-import type { StackScreenProps } from "@react-navigation/stack";
+import { AddIncomeCategoryStyles as styles } from '../Styles';
+import { SafeAreaView, Text, View, TextInput, TouchableOpacity, StyleSheet, FlatList } from "react-native";
 import { IncomeCategoryParamList } from "../Types";
+import { StackScreenProps } from '@react-navigation/stack';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome'; 
 
 type Props = StackScreenProps<IncomeCategoryParamList, 'AddIncomeCategory'>;
 
 const AddIncomeCategory = ({ route, navigation }: Props) => {
-  const [selectedIcon, setSelectedIcon] = useState("Icon 1");
+  const [selectedIcon, setSelectedIcon] = useState("Salary");
   const [categoryName, setCategoryName] = useState("");
+  const [confirmationMessage, setConfirmationMessage] = useState("");
+
+  const iconOptions = [
+    { label: "Salary", value: "Salary", icon: <Ionicons name="cash" size={24} color="#393533" /> },
+    { label: "Side Income", value: "Side Income", icon: <FontAwesome name="usd" size={24} color="#393533" /> },
+    { label: "Investments", value: "Investments", icon: <Ionicons name="trending-up" size={24} color="#393533" /> },
+    { label: "Freelance", value: "Freelance", icon: <FontAwesome name="pencil" size={24} color="#393533" /> },
+    { label: "Business", value: "Business", icon: <Ionicons name="briefcase" size={24} color="#393533" /> },
+  ];
 
   const handleSave = () => {
-    // Save logic here (send to database or update state)
     console.log("Saving:", selectedIcon, categoryName);
-    navigation.goBack(); 
+    setConfirmationMessage(`Category '${selectedIcon}' saved successfully!`);
+    navigation.goBack();
   };
+
+  const renderItem = ({ item }: { item: { value: string, label: string, icon: React.ReactNode } }) => (
+    <TouchableOpacity
+      onPress={() => {
+        setSelectedIcon(item.value);
+        setConfirmationMessage(`You selected ${item.label} icon!`);  
+      }}
+      style={[
+        styles.itemRow,
+        selectedIcon === item.value && styles.selectedItem,
+      ]}
+    >
+      {item.icon}
+      <Text style={styles.itemText}>{item.label}</Text>
+    </TouchableOpacity>
+  );
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.card}>
-        <Text style={styles.label}>Icon</Text>
-        <View style={styles.pickerWrapper}>
-          <Picker
-            selectedValue={selectedIcon}
-            onValueChange={(itemValue) => setSelectedIcon(itemValue)}
-            style={styles.picker}
-          >
-            <Picker.Item label="Icon 1" value="Icon 1" />
-            <Picker.Item label="Icon 2" value="Icon 2" />
-            <Picker.Item label="Icon 3" value="Icon 3" />
-          </Picker>
+      <View style={styles.formContainer}>
+        <Text style={styles.label}>Select Icon</Text>
+        <View style={styles.pickerContainer}>
+          <FlatList
+            data={iconOptions}
+            renderItem={renderItem}
+            keyExtractor={item => item.value}
+          />
         </View>
 
-        <Text style={styles.label}>Category</Text>
+        <Text style={styles.label}>Category Name</Text>
         <TextInput
           placeholder="Enter category name"
           value={categoryName}
           onChangeText={setCategoryName}
           style={styles.input}
         />
+
+        {confirmationMessage ? (
+          <Text style={styles.confirmationMessage}>{confirmationMessage}</Text>  // Show confirmation message
+        ) : null}
+
         <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
           <Text style={styles.saveButtonText}>Save</Text>
         </TouchableOpacity>
@@ -46,56 +74,5 @@ const AddIncomeCategory = ({ route, navigation }: Props) => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f4f5f3',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  card: {
-    backgroundColor: 'white',
-    width: '90%',
-    padding: 20,
-    borderRadius: 16,
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginTop: 10,
-    marginBottom: 5,
-    color: 'black',
-  },
-  pickerWrapper: {
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 6,
-    overflow: 'hidden',
-  },
-  picker: {
-    height: 50,
-    width: '100%',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 6,
-    padding: 10,
-    marginTop: 5,
-    marginBottom: 20,
-  },
-  saveButton: {
-    backgroundColor: '#65B4E0',
-    paddingVertical: 15,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  saveButtonText: {
-    fontWeight: 'bold',
-    fontSize: 16,
-    color: 'black',
-  },
-});
 
 export default AddIncomeCategory;

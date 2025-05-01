@@ -1,57 +1,77 @@
 import React, { useState } from "react";
-import { SafeAreaView, Text, View, TouchableOpacity, FlatList } from "react-native";
+import { IncomeCategoryStyles as styles } from '../Styles';
+import { SafeAreaView, Text, View, TouchableOpacity, FlatList, StyleSheet } from "react-native";
 import type { StackScreenProps } from '@react-navigation/stack';
 import { IncomeCategoryParamList } from "../Types";
-import { IncomeCategoryStyles as styles } from "../Styles";
+import Ionicons from 'react-native-vector-icons/Ionicons'; 
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 type Props = StackScreenProps<IncomeCategoryParamList, 'IncomeCategory'>;
 
 const IncomeCategory = ({ route, navigation }: Props) => {
   const [data, setData] = useState([
-    { id: 1, title: 'Salary' },
-    { id: 2, title: 'Side Income' }
+    { 
+      id: 1, 
+      title: 'Salary', 
+      description: 'Monthly salary from full-time job', 
+      date: new Date(), 
+      amount: 5000 
+    },
+    { 
+      id: 2, 
+      title: 'Side Income', 
+      description: 'Freelance work and online sales', 
+      date: new Date(), 
+      amount: 1500 
+    },
+    { 
+      id: 3, 
+      title: 'Investments', 
+      description: 'Profit from stocks and bonds', 
+      date: new Date(), 
+      amount: 2000 
+    },
+    { 
+      id: 4, 
+      title: 'Business Income', 
+      description: 'Earnings from personal business', 
+      date: new Date(), 
+      amount: 2500 
+    },
   ]);
 
-
-
-  const handleAddMore = () => {
-    const newItem = { id: data.length + 1, title: `New Item ${data.length + 1}` };
-    setData([...data, newItem]);
+  const getIconForCategory = (category: string) => {
+    switch (category) {
+      case 'Salary':
+        return <Ionicons name="cash" size={24} color="#393533" style={styles.icon} />;
+      case 'Side Income':
+        return <FontAwesome name="usd" size={24} color="#393533" style={styles.icon} />;
+      default:
+        return <Ionicons name="file-tray" size={24} color="#393533" style={styles.icon} />;
+    }
   };
 
-  const handleDelete = () => {
-    setData(prev => prev.slice(0, -1));
-  };
-
-  const renderItem = ({ item }: { item: { id: number, title: string } }) => (
+  const renderItem = ({ item }: { item: { id: number, title: string, description: string, date: Date, amount: number } }) => (
     <TouchableOpacity
-      onPress={() => navigation.navigate('ViewIncomeCategory', { incomeID: item.id })}
-      style={{
-        backgroundColor: 'white',
-        marginVertical: 5,
-        marginHorizontal: 10,
-        borderRadius: 10,
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: 15,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-        elevation: 3,
-      }}
+      onPress={() => navigation.navigate('ViewIncomeCategory', { 
+        incomeTitle: item.title, 
+        incomeDescription: item.description, 
+        incomeDate: item.date.toISOString(), 
+        incomeAmount: item.amount 
+      })}
+      style={styles.itemRow}
     >
-      <View style={{ width: 30, height: 30, backgroundColor: '#E0E0E0', borderRadius: 5, marginRight: 10 }} />
-      <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'black' }}>{item.title}</Text>
+      {getIconForCategory(item.title)}
+      <Text style={styles.itemText}>{item.title}</Text>
     </TouchableOpacity>
   );
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#F3F5F2' }}>
+    <SafeAreaView style={styles.container}>
       {/* Add Buttons */}
-      <View style={{ flexDirection: 'row', justifyContent: 'flex-end', margin: 20 }}>
+      <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.navigate('AddIncomeCategory')}>
-          <Text style={{ color: 'grey', marginRight: 15 }}>Add More</Text>
+          <Text style={styles.actionText}>Add More</Text>
         </TouchableOpacity>
       </View>
 
@@ -61,6 +81,7 @@ const IncomeCategory = ({ route, navigation }: Props) => {
         keyExtractor={item => item.id.toString()}
         renderItem={renderItem}
         showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingVertical: 20 }}
       />
     </SafeAreaView>
   );

@@ -19,16 +19,24 @@ export type SignInUpStackParamList={
 
 }
 
-export type MainStackParamList={
-    Main: undefined,
+export type MainStackParamList = {
+    Home: undefined;
     ViewTransaction: {
-        transID: number,
-    },
+      transTitle: string;
+      transDate: string;
+      transType: string;
+      transAmount: number;
+    };
     EditTransaction: {
-        transID: number,
-    },
+        transTitle: string;
+        transDate: string;
+        transType: string;
+        transAmount: number;
+    };
+  };
+  
+  
 
-}
 
 export type SettingStackParamList={
     Settings: {onSignOut: ()=> void},
@@ -37,24 +45,38 @@ export type SettingStackParamList={
     GoBackUpCloud: undefined,
 }
 
-export type ExpensesCategoryParamList={
-    ExpensesCategory: undefined,
-    AddExpensesCategory: undefined,
-    ViewExpensesCategory: {
-        expensesID: number,
-    },
-    EditExpensesCategory: {
-        expensesID: number,
-    },
-}
+export type ExpensesCategoryParamList = {
+    ExpensesCategory: undefined;
+    AddExpensesCategory: undefined;
+    ViewExpensesCategory: {        
+      expensesTitle: string;        
+      expensesDescription: string;  
+      expensesDate: string;  
+      expensesAmount: number;        
+    };
+    EditExpensesCategory: {  
+      expensesTitle: string;        
+      expensesDescription: string;  
+      expensesDate: string;    
+      expensesAmount: number;       
+    };
+  };
+  
 
-export type IncomeCategoryParamList={
-    IncomeCategory: undefined,
-    AddIncomeCategory: undefined,
+export type IncomeCategoryParamList = {
+    IncomeCategory: undefined;
+    AddIncomeCategory: undefined;
     ViewIncomeCategory: {
-        incomeID: number,
-    },
+      incomeTitle: string;
+      incomeDescription: string;
+      incomeDate: string;
+      incomeAmount: number;
+    };
     EditIncomeCategory: {
-        incomeID: number,
-    },
-}
+      incomeTitle: string;
+      incomeDescription: string;
+      incomeDate: string;
+      incomeAmount: number;
+    };
+  };
+

@@ -1,80 +1,81 @@
 import React from "react";
-import { SafeAreaView, Text, View } from "react-native";
+import { ViewExpensesCategoryStyles as styles } from '../Styles';
+import { SafeAreaView, Text, View, StyleSheet, ScrollView } from "react-native";
 import type { StackScreenProps } from '@react-navigation/stack';
 import { ExpensesCategoryParamList } from '../Types';
 import { FloatingAction } from "react-native-floating-action";
+import Ionicons from 'react-native-vector-icons/Ionicons'; 
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'; 
 
 type Props = StackScreenProps<ExpensesCategoryParamList, 'ViewExpensesCategory'>;
 
-
-
-
 const ViewExpensesCategory = ({ route, navigation }: Props) => {
-  const { expensesID } = route.params;
-
+  const { expensesTitle, expensesDescription, expensesDate, expensesAmount } = route.params; 
+  const parsedDate = new Date(expensesDate);
 
   const actions = [
     {
       text: "Edit",
-      //icon: require("../assets/edit.png"), // Replace with your own icon path
       name: "edit",
       position: 1,
       color: '#007AFF',
+      icon: <Ionicons name="create" size={24} color="white" /> 
     },
     {
       text: "Delete",
-      //icon: require("../assets/delete.png"), // Replace with your own icon path
       name: "delete",
       position: 2,
       color: '#FF3B30',
+      icon: <MaterialIcons name="delete" size={24} color="white" /> 
     },
   ];
 
   const handleActionPress = (name?: string) => {
     if (name === "edit") {
-      navigation.navigate('EditExpensesCategory', { expensesID });
+      navigation.navigate('EditExpensesCategory', { expensesTitle, expensesDescription, expensesDate, expensesAmount });
     } else if (name === "delete") {
-      //call delete sql
-      console.log(`Delete category ${expensesID}`);
+      console.log(`Delete category ${expensesTitle}`);
     }
   };
 
-
-
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#F4F6F5', justifyContent: 'center', alignItems: 'center' }}>
-      <View style={{
-        width: '90%',
-        backgroundColor: 'white',
-        borderRadius: 15,
-        padding: 20,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
-        shadowRadius: 5,
-        elevation: 5,
-      }}>
-        <Text style={{ fontSize: 20, color: 'black', marginBottom: 20 }}>Category Details</Text>
-
-        <View style={{ marginBottom: 20 }}>
-          <Text style={{ fontSize: 16, color: 'gray' }}>Category ID</Text>
-          <View style={{
-            borderWidth: 1,
-            borderColor: '#ccc',
-            borderRadius: 8,
-            padding: 10,
-            marginTop: 5,
-          }}>
-            <Text style={{ fontSize: 18, color: 'black' }}>{expensesID}</Text>
+    <SafeAreaView style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollView}>
+        <View style={styles.detailItem}>
+          <Text style={styles.detailLabel}>Category Name</Text>
+          <View style={styles.detailBox}>
+            <Text style={styles.detailText}>{expensesTitle}</Text>
           </View>
         </View>
-    
-      </View>
+
+        <View style={styles.detailItem}>
+          <Text style={styles.detailLabel}>Description</Text>
+          <View style={styles.detailBox}>
+            <Text style={styles.detailText}>{expensesDescription}</Text>
+          </View>
+        </View>
+
+        <View style={styles.detailItem}>
+          <Text style={styles.detailLabel}>Date</Text>
+          <View style={styles.detailBox}>
+            <Text style={styles.detailText}>{parsedDate.toDateString()}</Text>
+          </View>
+        </View>
+
+        <View style={styles.detailItem}>
+          <Text style={styles.detailLabel}>Amount</Text>
+          <View style={styles.detailBox}>
+            <Text style={styles.detailText}>RM {expensesAmount}</Text>
+          </View>
+        </View>
+      </ScrollView>
+
+      {/* Floating Action Button for Edit and Delete */}
       <FloatingAction
         actions={actions}
         onPressItem={handleActionPress}
-        color="#007AFF"
-        />
+        color='#F17EA8'
+      />
     </SafeAreaView>
   );
 };

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { SafeAreaView, Text, View, TextInput, TouchableOpacity, Platform } from "react-native";
+import { AddIncomeStyles as styles } from '../Styles';
+import { SafeAreaView, Text, View, TextInput, TouchableOpacity, Platform, StyleSheet } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from '@react-native-community/datetimepicker';
 
@@ -22,10 +23,10 @@ const AddIncome = ({ navigation }: any) => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#F5E8DD', padding: 20 }}>
-      <View>
-        <Text style={{ fontSize: 16, color: 'black', marginBottom: 5 }}>Category</Text>
-        <View style={{ borderWidth: 3, borderColor: '#FFD0C7', borderRadius: 10, marginBottom: 15 }}>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.formContainer}>
+        <Text style={styles.label}>Category</Text>
+        <View style={styles.pickerContainer}>
           <Picker
             selectedValue={transCategory}
             onValueChange={(itemValue) => setTransCategory(itemValue)}
@@ -35,22 +36,24 @@ const AddIncome = ({ navigation }: any) => {
             <Picker.Item label="Wallet" value="Wallet" />
           </Picker>
         </View>
-        <Text style={{ fontSize: 16, color: 'black', marginBottom: 5 }}>Amount</Text>
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 15 }}>
-          <Text style={{ fontSize: 16, color: 'black', marginRight: 5 }}>RM</Text>
+
+        <Text style={styles.label}>Amount</Text>
+        <View style={styles.inputContainer}>
+          <Text style={styles.amountText}>RM</Text>
           <TextInput
-            style={{ flex: 1, borderWidth: 3, borderColor: '#FFD0C7', borderRadius: 5, paddingHorizontal: 10 }}
+            style={styles.textInput}
             keyboardType="numeric"
             value={transAmount}
             onChangeText={setTransAmount}
           />
         </View>
-        <Text style={{ fontSize: 16, color: 'black', marginBottom: 5 }}>Date</Text>
+
+        <Text style={styles.label}>Date</Text>
         <TouchableOpacity
-          style={{ borderWidth: 3, borderColor: '#FFD0C7', borderRadius: 5, padding: 15, marginBottom: 20 }}
+          style={styles.datePickerButton}
           onPress={() => setShowDatePicker(true)}
         >
-          <Text style={{ color: 'black' }}>{transDate.toDateString()}</Text>
+          <Text style={styles.dateText}>{transDate.toDateString()}</Text>
         </TouchableOpacity>
 
         {showDatePicker && (
@@ -61,13 +64,13 @@ const AddIncome = ({ navigation }: any) => {
             onChange={onChangeDate}
           />
         )}
+
         <TouchableOpacity
-          style={{ backgroundColor: '#E69DB8', padding: 15, borderRadius: 10, alignItems: 'center' }}
+          style={styles.doneButton}
           onPress={handleDone}
         >
-          <Text style={{ fontWeight: 'bold', color: 'black' }}>Add</Text>
+          <Text style={styles.doneButtonText}>Add</Text>
         </TouchableOpacity>
-
       </View>
     </SafeAreaView>
   );
