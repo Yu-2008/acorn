@@ -104,7 +104,7 @@ const AddIncome = ({ navigation }: any) => {
           style={[styles.doneButton]}
           onPress={handleSave}
         >
-          <Text style={[styles.doneButtonText, { color: theme === 'dark' ? '#fff' : '#000' }]}>
+          <Text style={[styles.doneButtonText]}>
             Add
           </Text>
         </TouchableOpacity>
