@@ -76,7 +76,7 @@ const SignIn = ({ navigation, onSignIn }: Props) => {
                 style={styles.inputIcon}
               />
               <TextInput
-                style={[styles.input, { color: theme === 'dark' ? '#fff' : '#000' }]} 
+                style={[styles.input]} 
                 placeholder="Enter your Email/Username here"
                 keyboardType="email-address"
                 autoCapitalize="none"
@@ -96,7 +96,7 @@ const SignIn = ({ navigation, onSignIn }: Props) => {
                 style={styles.inputIcon}
               />
               <TextInput
-                style={[styles.input, { color: theme === 'dark' ? '#fff' : '#000' }]} 
+                style={[styles.input]} 
                 placeholder="Enter password"
                 secureTextEntry={!showPassword}
                 value={password}
