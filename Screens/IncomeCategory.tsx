@@ -88,9 +88,7 @@ const IncomeCategory = ({ route, navigation }: Props) => {
       {/* Add Buttons */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.navigate('AddIncomeCategory')}>
-          <Text style={[styles.actionText, { color: theme === 'dark' ? 'white' : '#393533' }]}>
-            Add More
-          </Text>
+         <Text style={[styles.actionText, { color: theme === 'dark' ? '#fff' : '#f57cbb' }]}>Add More</Text>
         </TouchableOpacity>
       </View>
 

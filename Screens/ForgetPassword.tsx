@@ -43,7 +43,7 @@ const ForgetPassword = ({ route, navigation }: Props) => {
             </Text>
             <View style={styles.inputWrapper}>
               <TextInput
-                style={[styles.input, { color: theme === 'dark' ? '#fff' : '#000' }]}
+                style={[styles.input]}
                 placeholder="Enter your email"
                 keyboardType="email-address"
                 autoCapitalize="none"
@@ -59,7 +59,7 @@ const ForgetPassword = ({ route, navigation }: Props) => {
             </Text>
             <View style={styles.inputWrapper}>
               <TextInput
-                style={[styles.input, { color: theme === 'dark' ? '#fff' : '#000' }]}
+                style={[styles.input]}
                 placeholder="Enter your password"
                 secureTextEntry
                 value={password}
@@ -74,7 +74,7 @@ const ForgetPassword = ({ route, navigation }: Props) => {
             </Text>
             <View style={styles.inputWrapper}>
               <TextInput
-                style={[styles.input, { color: theme === 'dark' ? '#fff' : '#000' }]}
+                style={[styles.input]}
                 placeholder="Re-enter your password"
                 secureTextEntry
                 value={confirmPassword}

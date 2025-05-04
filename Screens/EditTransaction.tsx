@@ -20,9 +20,10 @@ import { useTheme } from '../ThemeContext';
 type Props = StackScreenProps<MainStackParamList, "EditTransaction">;
 
 const EditTransaction = ({ route, navigation }: Props) => {
-  const { transTitle, transDate, transType, transAmount } = route.params;
+  const { transTitle, transDate, transType, transAmount, transDescription } = route.params;
 
   const [title, setTitle] = useState(transTitle);
+  const [description, setDescription] = useState(transDescription);
   const [type, setType] = useState(transType);
   const [amount, setAmount] = useState(transAmount.toString());
   const [date, setDate] = useState(new Date(transDate));
@@ -87,7 +88,13 @@ const EditTransaction = ({ route, navigation }: Props) => {
       >
         <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 20 }}>
           <View style={styles.formContainer}>
-            <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Transaction Title</Text>
+          <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Transaction Type</Text>
+            <TextInput
+              value={type}
+              editable={false}
+              style={[styles.input, { backgroundColor: theme === 'dark' ? '#444' : '#fff', color: theme === 'dark' ? 'white' : 'black' }]}
+            />
+            <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Transaction Name</Text>
             <TextInput
               value={title}
               onChangeText={(text) => {
@@ -95,32 +102,8 @@ const EditTransaction = ({ route, navigation }: Props) => {
                 setIsEdited(true);
               }}
               style={[styles.input, { backgroundColor: theme === 'dark' ? '#444' : '#fff', color: theme === 'dark' ? 'white' : 'black' }]}
-              placeholder="Enter transaction title"
+              placeholder="Enter transaction name"
             />
-
-            <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Transaction Type</Text>
-            <TextInput
-              value={type}
-              onChangeText={(text) => {
-                setType(text);
-                setIsEdited(true);
-              }}
-              style={[styles.input, { backgroundColor: theme === 'dark' ? '#444' : '#fff', color: theme === 'dark' ? 'white' : 'black' }]}
-              placeholder="Enter transaction type"
-            />
-
-            <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Amount</Text>
-            <TextInput
-              value={amount}
-              onChangeText={(text) => {
-                setAmount(text);
-                setIsEdited(true);
-              }}
-              style={[styles.input, { backgroundColor: theme === 'dark' ? '#444' : '#fff', color: theme === 'dark' ? 'white' : 'black' }]}
-              keyboardType="numeric"
-              placeholder="Enter amount"
-            />
-
             <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Date</Text>
             <TouchableOpacity
               style={[styles.datePickerButton, { backgroundColor: theme === 'dark' ? '#444' : '#fff' }]}
@@ -138,6 +121,27 @@ const EditTransaction = ({ route, navigation }: Props) => {
               />
             )}
 
+            <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Amount</Text>
+            <TextInput
+              value={amount}
+              onChangeText={(text) => {
+                setAmount(text);
+                setIsEdited(true);
+              }}
+              style={[styles.input, { backgroundColor: theme === 'dark' ? '#444' : '#fff', color: theme === 'dark' ? 'white' : 'black' }]}
+              keyboardType="numeric"
+              placeholder="Enter amount"
+            />
+            <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Description (Optional)</Text>
+            <TextInput
+              value={description}
+              onChangeText={(text) => {
+                setDescription(text);
+                setIsEdited(true);
+              }}
+              style={[styles.input, { backgroundColor: theme === 'dark' ? '#444' : '#fff', color: theme === 'dark' ? 'white' : 'black' }]}
+              placeholder="Enter description"
+            />
             <TouchableOpacity
               style={[styles.saveButton, { backgroundColor: isEdited ? '#E69DB8' : '#d3d3d3' }]}
               onPress={handleSave}

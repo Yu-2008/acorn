@@ -30,7 +30,12 @@ const SignIn = ({ route, navigation }: Props) => {
   const auth = FIREBASE_AUTH;
 
   {/**handle onPress */}
-  const handleSignIn = async()=>{
+  const handleSignIn =async()=>{
+    if (!email || !password) {
+      Alert.alert("Error", "Email and password are required.");
+      return;
+    }
+    
     console.log('Sign In pressed');
     //onSignIn();
     setLoading(true);
@@ -93,7 +98,7 @@ const SignIn = ({ route, navigation }: Props) => {
                 style={styles.inputIcon}
               />
               <TextInput
-                style={[styles.input, { color: theme === 'dark' ? '#fff' : '#000' }]} 
+                style={[styles.input]} 
                 placeholder="Enter your Email/Username here"
                 keyboardType="email-address"
                 autoCapitalize="none"
@@ -113,7 +118,7 @@ const SignIn = ({ route, navigation }: Props) => {
                 style={styles.inputIcon}
               />
               <TextInput
-                style={[styles.input, { color: theme === 'dark' ? '#fff' : '#000' }]} 
+                style={[styles.input]} 
                 placeholder="Enter password"
                 secureTextEntry={!showPassword}
                 value={password}

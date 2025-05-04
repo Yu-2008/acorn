@@ -13,14 +13,16 @@ const data = [
     title: 'Lunch', 
     date: new Date('2025-01-31').toISOString(), 
     amount: 50.0, 
-    transactionType: 'Expenses' 
+    transactionType: 'Expenses',
+    description: "A light meal"
   },
   { 
     transID: 2, 
     title: 'Salary', 
     date: new Date('2025-01-30').toISOString(), 
     amount: 150.0, 
-    transactionType: 'Income' 
+    transactionType: 'Income' ,
+    description: "From Work"
   },
 ];
 
@@ -133,6 +135,7 @@ const Home = ({ route, navigation }: Props) => {
               transDate: item.date,
               transType: item.transactionType,
               transAmount: item.amount,
+              transDescription: item.description,
             });
           }}
           underlayColor="#FFCCCC"

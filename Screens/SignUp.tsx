@@ -19,13 +19,41 @@ const SignUp = ({ route, navigation }: Props) => {
   const [loading, setLoading] = useState(false);
   const auth = FIREBASE_AUTH;
 
+  const validateEmail = async(email: string): Promise<boolean> => {
+    try {
+      const url =  `https://emailvalidation.abstractapi.com/v1/?api_key=32bad148cbbc439d81a84df08cad81be&email=${email}`;
+      const response = await fetch(url);
+      const data = await response.json();
+      return data.is_valid_format.value;
+    } catch (error) {
+      console.error("Error validating email:", error);
+      return false;
+    }
+  };
+
   {/**handle onPress */}
   const handleSignUp = async() => {
     //console.log("Sign Up pressed");
     //navigation.navigate("SignIn");
 
     console.log('Sign Up pressed');
-    //onSignIn();
+    if (!email || !password || !confirmPassword) {
+      Alert.alert("All fields are required.");
+      return;
+    }
+    const isValid = await validateEmail(email);
+    
+    if (!isValid) {
+      Alert.alert("Invalid email format. Please enter a valid email address.");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      Alert.alert("Passwords do not match.");
+      return;
+    }
+    
+    
     setLoading(true);
     try{
       const response = await createUserWithEmailAndPassword(auth, email, password);
@@ -76,7 +104,7 @@ const SignUp = ({ route, navigation }: Props) => {
             </Text>
             <View style={styles.inputWrapper}>
               <TextInput
-                style={[styles.input, { color: theme === 'dark' ? '#fff' : '#000' }]} 
+                style={[styles.input]} 
                 placeholder="Enter your Email/Username here"
                 keyboardType="email-address"
                 autoCapitalize="none"
@@ -94,7 +122,7 @@ const SignUp = ({ route, navigation }: Props) => {
             </Text>
             <View style={styles.inputWrapper}>
               <TextInput
-                style={[styles.input, { color: theme === 'dark' ? '#fff' : '#000' }]} 
+                style={[styles.input]} 
                 placeholder="Enter your password"
                 secureTextEntry
                 value={password}
@@ -111,7 +139,7 @@ const SignUp = ({ route, navigation }: Props) => {
             </Text>
             <View style={styles.inputWrapper}>
               <TextInput
-                style={[styles.input, { color: theme === 'dark' ? '#fff' : '#000' }]} 
+                style={[styles.input]} 
                 placeholder="Re-enter your password"
                 secureTextEntry
                 value={confirmPassword}
