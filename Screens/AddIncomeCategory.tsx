@@ -1,6 +1,8 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
+import { 
+  ScrollView, SafeAreaView, Text, View, TextInput, TouchableOpacity 
+} from "react-native";
 import { AddIncomeCategoryStyles as styles } from '../Styles';
-import { SafeAreaView, Text, View, TextInput, TouchableOpacity, FlatList } from "react-native";
 import { IncomeCategoryParamList } from "../Types";
 import { StackScreenProps } from '@react-navigation/stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -15,7 +17,6 @@ const AddIncomeCategory = ({ route, navigation }: Props) => {
   const [confirmationMessage, setConfirmationMessage] = useState("");
   const { theme } = useTheme();
 
-  {/**handle onPress */}
   const handleSave = () => {
     console.log("Add income category:", selectedIcon, categoryName);
     setConfirmationMessage(`Category '${selectedIcon}' saved successfully!`);
@@ -30,34 +31,29 @@ const AddIncomeCategory = ({ route, navigation }: Props) => {
     { label: "Business", value: "Business", icon: <Ionicons name="briefcase" size={24} color={theme === 'dark' ? 'white' : '#393533'} /> },
   ];
 
-  
-  const renderItem = ({ item }: { item: { value: string, label: string, icon: React.ReactNode } }) => (
-    <TouchableOpacity
-      onPress={() => {
-        setSelectedIcon(item.value);
-        setConfirmationMessage(`You selected ${item.label} icon!`);
-      }}
-      style={[
-        styles.itemRow,
-        selectedIcon === item.value && styles.selectedItem,
-        { backgroundColor: theme === 'dark' ? '#444' : '#FDE6F6' }
-      ]}
-    >
-      {item.icon}
-      <Text style={[styles.itemText, { color: theme === 'dark' ? 'white' : 'black' }]}>{item.label}</Text>
-    </TouchableOpacity>
-  );
-
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme === 'dark' ? '#333' : '#FDE6F6' }]}>
-      <View style={styles.formContainer}>
+      <ScrollView contentContainerStyle={styles.formContainer}>
+
         <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Select Icon</Text>
         <View style={styles.pickerContainer}>
-          <FlatList
-            data={iconOptions}
-            renderItem={renderItem}
-            keyExtractor={item => item.value}
-          />
+          {iconOptions.map((item) => (
+            <TouchableOpacity
+              key={item.value}
+              onPress={() => {
+                setSelectedIcon(item.value);
+                setConfirmationMessage(`You selected ${item.label} icon!`);
+              }}
+              style={[
+                styles.itemRow,
+                selectedIcon === item.value && styles.selectedItem,
+                { backgroundColor: theme === 'dark' ? '#444' : '#FDE6F6' }
+              ]}
+            >
+              {item.icon}
+              <Text style={[styles.itemText, { color: theme === 'dark' ? 'white' : 'black' }]}>{item.label}</Text>
+            </TouchableOpacity>
+          ))}
         </View>
 
         <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Category Name</Text>
@@ -66,17 +62,29 @@ const AddIncomeCategory = ({ route, navigation }: Props) => {
           value={categoryName}
           onChangeText={setCategoryName}
           style={[styles.input, { color: theme === 'dark' ? 'white' : 'black' }]}  
-          placeholderTextColor={theme === 'dark' ? 'lightgray' : '#aaa'}  
+          placeholderTextColor={theme === 'dark' ? 'lightgray' : '#6E6E6E'}  
+        />
+
+        <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Description (optional)</Text>
+        <TextInput
+          placeholder="Enter description"
+          value={categoryName}
+          onChangeText={setCategoryName}
+          style={[styles.input, { color: theme === 'dark' ? 'white' : 'black' }]} 
+          placeholderTextColor={theme === 'dark' ? 'lightgray' : '#6E6E6E'} 
         />
 
         {confirmationMessage ? (
-          <Text style={[styles.confirmationMessage,{color: theme === 'dark' ? '#8FF479' : 'green'}]}>{confirmationMessage}</Text> // Show confirmation message           
+          <Text style={[styles.confirmationMessage, { color: theme === 'dark' ? '#8FF479' : 'green' }]}>
+            {confirmationMessage}
+          </Text>
         ) : null}
 
         <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
           <Text style={styles.saveButtonText}>Save</Text>
         </TouchableOpacity>
-      </View>
+
+      </ScrollView>
     </SafeAreaView>
   );
 };

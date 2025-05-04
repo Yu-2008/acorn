@@ -11,7 +11,7 @@ import { useTheme } from '../ThemeContext';
 type Props = StackScreenProps<MainStackParamList, 'ViewTransaction'>;
 
 const ViewTransaction = ({ route, navigation }: Props) => {
-  const { transTitle, transDate, transType, transAmount } = route.params;
+  const { transTitle, transDate, transType, transAmount, transDescription } = route.params;
   const { theme } = useTheme();
 
   const actions = [
@@ -33,7 +33,7 @@ const ViewTransaction = ({ route, navigation }: Props) => {
 
   const handleActionPress = (name?: string) => {
     if (name === "edit") {
-      navigation.navigate('EditTransaction', { transTitle, transDate, transType, transAmount });
+      navigation.navigate('EditTransaction', { transTitle, transDate, transType, transAmount, transDescription });
     } else if (name === "delete") {
       console.log(`Delete transaction: ${transTitle}`);
     }
@@ -42,8 +42,15 @@ const ViewTransaction = ({ route, navigation }: Props) => {
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme === 'dark' ? '#333' : '#FDE6F6' }]}>
       <ScrollView contentContainerStyle={styles.scrollView}>
+      <View style={styles.detailItem}>
+          <Text style={[styles.detailLabel, { color: theme === 'dark' ? 'white' : 'black' }]}>Transaction Type</Text>
+          <View style={[styles.detailBox, { backgroundColor: theme === 'dark' ? '#444' : '#fff' }]}>
+            <Text style={[styles.detailText, { color: theme === 'dark' ? 'white' : 'black' }]}>{transType}</Text>
+          </View>
+        </View>
+
         <View style={styles.detailItem}>
-          <Text style={[styles.detailLabel, { color: theme === 'dark' ? 'white' : 'black' }]}>Transaction Title</Text>
+          <Text style={[styles.detailLabel, { color: theme === 'dark' ? 'white' : 'black' }]}>Transaction Name</Text>
           <View style={[styles.detailBox, { backgroundColor: theme === 'dark' ? '#444' : '#fff' }]}>
             <Text style={[styles.detailText, { color: theme === 'dark' ? 'white' : 'black' }]}>{transTitle}</Text>
           </View>
@@ -57,18 +64,19 @@ const ViewTransaction = ({ route, navigation }: Props) => {
         </View>
 
         <View style={styles.detailItem}>
-          <Text style={[styles.detailLabel, { color: theme === 'dark' ? 'white' : 'black' }]}>Transaction Type</Text>
-          <View style={[styles.detailBox, { backgroundColor: theme === 'dark' ? '#444' : '#fff' }]}>
-            <Text style={[styles.detailText, { color: theme === 'dark' ? 'white' : 'black' }]}>{transType}</Text>
-          </View>
-        </View>
-
-        <View style={styles.detailItem}>
           <Text style={[styles.detailLabel, { color: theme === 'dark' ? 'white' : 'black' }]}>Amount</Text>
           <View style={[styles.detailBox, { backgroundColor: theme === 'dark' ? '#444' : '#fff' }]}>
             <Text style={[styles.detailText, { color: theme === 'dark' ? 'white' : 'black' }]}>RM {transAmount.toFixed(2)}</Text>
           </View>
         </View>
+
+        <View style={styles.detailItem}>
+          <Text style={[styles.detailLabel, { color: theme === 'dark' ? 'white' : 'black' }]}>Transaction Description (Optional)</Text>
+          <View style={[styles.detailBox, { backgroundColor: theme === 'dark' ? '#444' : '#fff' }]}>
+            <Text style={[styles.detailText, { color: theme === 'dark' ? 'white' : 'black' }]}>{transDescription}</Text>
+          </View>
+        </View>
+
       </ScrollView>
 
       <FloatingAction

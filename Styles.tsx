@@ -317,8 +317,6 @@ export const AddExpensesCategoryStyles = StyleSheet.create({
   },
   pickerContainer: {
     marginTop: 10,
-    borderWidth: 2,
-    borderColor: '#DBABA1',
     borderRadius: 10,
     marginBottom: 45,
     maxHeight: 200, 
@@ -349,7 +347,8 @@ export const AddExpensesCategoryStyles = StyleSheet.create({
     fontFamily: 'WinkySans-VariableFont_wght',
   },
   saveButton: {
-    marginTop: 40,
+    marginTop: 30,
+    marginBottom: 30,
     backgroundColor: '#E69DB8',
     padding: 15,
     borderRadius: 10,
@@ -458,8 +457,6 @@ export const AddIncomeCategoryStyles = StyleSheet.create({
   },
   pickerContainer: {
     marginTop: 10,
-    borderWidth: 2,
-    borderColor: '#DBABA1',
     borderRadius: 10,
     marginBottom: 45,
     maxHeight: 200, 
@@ -490,7 +487,8 @@ export const AddIncomeCategoryStyles = StyleSheet.create({
     fontFamily: 'WinkySans-VariableFont_wght',
   },
   saveButton: {
-    marginTop: 40,
+    marginTop: 30,
+    marginBottom: 30,
     backgroundColor: '#E69DB8',
     padding: 15,
     borderRadius: 10,
@@ -701,6 +699,7 @@ export const EditTransactionStyles = StyleSheet.create({
   },
   datePickerButton: {
     marginTop: 10,
+    marginBottom: 10,
     borderWidth: 2,
     borderColor: '#DBABA1',
     borderRadius: 5,

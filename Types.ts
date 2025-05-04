@@ -26,12 +26,14 @@ export type MainStackParamList = {
       transDate: string;
       transType: string;
       transAmount: number;
+      transDescription: string;
     };
     EditTransaction: {
         transTitle: string;
         transDate: string;
         transType: string;
         transAmount: number;
+        transDescription: string;
     };
   };
   
