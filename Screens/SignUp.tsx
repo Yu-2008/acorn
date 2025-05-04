@@ -1,9 +1,13 @@
 import React, { useState, useContext } from 'react';
-import { SafeAreaView, Text, View, TextInput, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { SafeAreaView, Text, View, TextInput, TouchableOpacity, Image, ScrollView, ActivityIndicator, Alert } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { SignInUpStackParamList } from '../Types';
 import { useTheme } from '../ThemeContext';
 import { SignUpStyles as styles } from '../Styles';
+
+import { FIREBASE_AUTH } from '../FirebaseConfig';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+
 
 type Props = StackScreenProps<SignInUpStackParamList, "SignUp">;
 
@@ -12,11 +16,28 @@ const SignUp = ({ route, navigation }: Props) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const auth = FIREBASE_AUTH;
 
   {/**handle onPress */}
-  const handleSignUp = () => {
-    console.log("Sign Up pressed");
-    navigation.navigate("SignIn");
+  const handleSignUp = async() => {
+    //console.log("Sign Up pressed");
+    //navigation.navigate("SignIn");
+
+    console.log('Sign Up pressed');
+    //onSignIn();
+    setLoading(true);
+    try{
+      const response = await createUserWithEmailAndPassword(auth, email, password);
+      console.log(response);
+      Alert.alert("Sign Up successful.\nPlease check your email.");
+      //navigation.navigate("SignIn");
+    }catch(error: any){
+      console.log(error);
+      Alert.alert("Sign Up failed: " + error.message);
+    }finally{
+      setLoading(false);
+    }
   };
 
   const handleSignIn = () => {
@@ -100,12 +121,26 @@ const SignUp = ({ route, navigation }: Props) => {
             </View>
 
             {/* Sign Up Button */}
+            {loading? <ActivityIndicator size="large" color="#0000ff" />
+                          : <>
+            
+                          <TouchableOpacity
+                            style={styles.button}
+                            onPress={handleSignUp}
+                          >
+                            <Text style={styles.buttonText}>Sign Up</Text>
+                          </TouchableOpacity>
+                          
+            </>}
+
+            {/** 
             <TouchableOpacity
               style={styles.button}
               onPress={handleSignUp}
             >
               <Text style={styles.buttonText}>Sign Up</Text>
             </TouchableOpacity>
+            */}
 
             {/* Already have an account */}
             <View style={styles.tipsText}>

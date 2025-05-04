@@ -6,16 +6,16 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import type { StackNavigationProp } from "@react-navigation/stack";
 import { SettingStackParamList } from "../Types";
 import { useTheme } from '../ThemeContext';
+import { FIREBASE_AUTH } from "../FirebaseConfig";
 
 type SettingScreenNavigationProp = StackNavigationProp<SettingStackParamList, 'Settings'>;
 
 type Props = {
   navigation: SettingScreenNavigationProp;
-  onSignOut: () => void;
   userName: string;
 };
 
-const Setting = ({ navigation, onSignOut }: Props) => {
+const Setting = ({ navigation }: Props) => {
   const [userName, setUserName] = useState('John Doe');
   const [colorAnim] = useState(new Animated.Value(0)); 
   const { theme,toggleTheme } = useTheme();
@@ -34,9 +34,15 @@ const Setting = ({ navigation, onSignOut }: Props) => {
     console.log("Backup Cloud pressed");
     navigation.navigate('GoBackUpCloud')
   }
-  const handleOnSignOut =()=>{
+  const handleOnSignOut = async()=>{
     console.log("Sign Out pressed");
-    onSignOut();
+    try {
+      console.log("Sign Out pressed");
+      await FIREBASE_AUTH.signOut();
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+    //onSignOut();
   }
 
   useEffect(() => {
@@ -104,7 +110,7 @@ const Setting = ({ navigation, onSignOut }: Props) => {
 
         <TouchableOpacity 
           style={[styles.row, { backgroundColor: theme === 'dark' ? '#444' : '#FFC1DA' }]}
-          onPress={onSignOut}>
+          onPress={handleOnSignOut}>
           <Ionicons name="log-out" size={24} color={theme === 'dark' ? 'white' : '#393533'} style={styles.icon} />
           <Text style={[styles.rowText, { color: theme === 'dark' ? 'white' : 'black' }]}>Sign Out</Text>
         </TouchableOpacity>

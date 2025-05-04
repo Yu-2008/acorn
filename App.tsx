@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -34,6 +34,9 @@ import {
   MainStackParamList,
 } from './Types';
 
+import { onAuthStateChanged, User } from 'firebase/auth';
+import { FIREBASE_AUTH } from './FirebaseConfig';
+
 const RootStack = createStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<TabParamList>();
 const SignInUpStack = createStackNavigator<SignInUpStackParamList>();
@@ -49,11 +52,11 @@ const defaultHeaderOptions = {
   headerTitleStyle: { fontWeight: '500' as '500', fontFamily: 'WinkySans-VariableFont_wght' },
 };
 
-const SignInUpStackNavigator = ({ onSignIn }: { onSignIn: () => void }) => {
+const SignInUpStackNavigator = () => {
   return (
     <SignInUpStack.Navigator initialRouteName="SignIn" screenOptions={{ headerShown: false }}>
       <SignInUpStack.Screen name="SignIn">
-        {(props: any) => <SignInScreen {...props} onSignIn={onSignIn} />}
+        {(props: any) => <SignInScreen {...props} />}
       </SignInUpStack.Screen>
       <SignInUpStack.Screen name="SignUp" component={SignUpScreen} />
       <SignInUpStack.Screen name="ForgetPassword" component={ForgetPasswordScreen} />
@@ -61,7 +64,7 @@ const SignInUpStackNavigator = ({ onSignIn }: { onSignIn: () => void }) => {
   );
 };
 
-const TabNavigator = ({ onSignOut }: { onSignOut: () => void }) => {
+const TabNavigator = () => {
   return (
     <Tab.Navigator
       initialRouteName="AtMain"
@@ -131,7 +134,7 @@ const TabNavigator = ({ onSignOut }: { onSignOut: () => void }) => {
           headerShown: false,
         }}
       >
-        {(props: any) => <SettingStackNavigator {...props} onSignOut={onSignOut} />}
+        {(props: any) => <SettingStackNavigator {...props}  />}
       </Tab.Screen>
     </Tab.Navigator>
   );
@@ -196,11 +199,11 @@ const ExpensesCategoryStackNavigator = () => {
   );
 };
 
-const SettingStackNavigator = ({ onSignOut }: { onSignOut: () => void }) => {
+const SettingStackNavigator = () => {
   return (
     <SettingStack.Navigator initialRouteName="Settings" screenOptions={{ headerShown: false }}>
       <SettingStack.Screen name="Settings" options={{ headerShown: true, ...defaultHeaderOptions }}>
-        {(props: any) => <SettingScreen {...props} onSignOut={onSignOut} />}
+        {(props: any) => <SettingScreen {...props} />}
       </SettingStack.Screen>
       <SettingStack.Screen name="GoIncomeCategory">
         {(props: any) => <IncomeCategoryStackNavigator {...props} />}
@@ -222,8 +225,24 @@ const SettingStackNavigator = ({ onSignOut }: { onSignOut: () => void }) => {
 };
 
 const App = () => {
-  const [isSignIn, setIsSignIn] = useState<Boolean>(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [initializing, setInitializing] = useState(true);
 
+
+  useEffect(()=>{
+
+    const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, (user)=>{
+      console.log("User: ", user);
+      setUser(user);
+      if (initializing) setInitializing(false);
+    });
+
+    return unsubscribe;
+  },[])
+
+  if (initializing) return null;
+
+  {/**
   const handleSignIn = () => {
     setIsSignIn(true);
   };
@@ -231,19 +250,22 @@ const App = () => {
   const handleSignOut = () => {
     setIsSignIn(false);
   };
+   */}
 
   return (
     <ThemeProvider>
     <NavigationContainer>
-      <RootStack.Navigator screenOptions={{ headerShown: false }}>
-        {isSignIn === false ? (
-          <RootStack.Screen name="AuthorizedSignIn">
-            {() => <SignInUpStackNavigator onSignIn={handleSignIn} />}
-          </RootStack.Screen>
-        ) : (
+      <RootStack.Navigator screenOptions={{ headerShown: false }} initialRouteName='AuthorizedSignIn'>
+        { user ? (
           <RootStack.Screen name="GoMain">
-            {() => <TabNavigator onSignOut={handleSignOut} />}
+            {(props: any) => <TabNavigator  {...props}/>}
           </RootStack.Screen>
+          
+        ) : (
+          <RootStack.Screen name="AuthorizedSignIn">
+            {(props: any) => <SignInUpStackNavigator  {...props}/>}
+          </RootStack.Screen>
+          
         )}
       </RootStack.Navigator>
     </NavigationContainer>

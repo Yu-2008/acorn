@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   View,
   Image,
+  ActivityIndicator,
+  Alert,
 } from 'react-native';
 import { SignInStyles as styles } from '../Styles';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -14,21 +16,36 @@ import { useTheme } from '../ThemeContext';
 import type { StackScreenProps } from '@react-navigation/stack';
 import { SignInUpStackParamList } from "../Types";
 
-type Props = StackScreenProps<SignInUpStackParamList, "SignIn"> & {
-  onSignIn: () => void;
-};
+import { FIREBASE_AUTH } from '../FirebaseConfig';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
-const SignIn = ({ navigation, onSignIn }: Props) => {
+type Props = StackScreenProps<SignInUpStackParamList, "SignIn"> 
+
+const SignIn = ({ route, navigation }: Props) => {
   const { theme } = useTheme();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const auth = FIREBASE_AUTH;
 
   {/**handle onPress */}
-  const handleSignIn =()=>{
+  const handleSignIn = async()=>{
     console.log('Sign In pressed');
-    onSignIn();
+    //onSignIn();
+    setLoading(true);
+    try{
+      const response = await signInWithEmailAndPassword(auth, email, password);
+      console.log(response);
+      //onSignIn();
+    }catch(error: any){
+      console.log(error);
+      Alert.alert("Sign in failed: " + error.message);
+    }finally{
+     setLoading(false);
+    }
   }
+
   const handleSignUp =()=>{
     console.log('Sign Up pressed');
     navigation.navigate("SignUp");
@@ -119,13 +136,22 @@ const SignIn = ({ navigation, onSignIn }: Props) => {
               </TouchableOpacity>
             </View>
 
+
+
             {/* Sign In Button */}
-            <TouchableOpacity
-              style={styles.button}
-              onPress={handleSignIn}
-            >
-              <Text style={styles.buttonText}>Sign in</Text>
-            </TouchableOpacity>
+            {loading? <ActivityIndicator size="large" color="#0000ff" />
+                        : <>
+
+                          <TouchableOpacity
+                            style={styles.button}
+                            onPress={handleSignIn}
+                          >
+                            <Text style={styles.buttonText}>Sign in</Text>
+                          </TouchableOpacity>
+              
+              </>}
+
+            
 
             {/* Bottom Text */}
             <View style={styles.tipsText}>
