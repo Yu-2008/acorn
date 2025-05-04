@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   View,
   Image,
+  Alert,
 } from 'react-native';
 import { SignInStyles as styles } from '../Styles';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -26,6 +27,11 @@ const SignIn = ({ navigation, onSignIn }: Props) => {
 
   {/**handle onPress */}
   const handleSignIn =()=>{
+    if (!email || !password) {
+      Alert.alert("Error", "Email and password are required.");
+      return;
+    }
+    
     console.log('Sign In pressed');
     onSignIn();
   }
