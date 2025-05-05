@@ -4,38 +4,100 @@ import { HomeStyles as styles } from '../Styles';
 import type { StackScreenProps } from '@react-navigation/stack';
 import { MainStackParamList } from '../Types';
 import { useTheme } from '../ThemeContext';
+import { useUser } from '../UserContext';
+import { getUsernameById, getTransactionHistoryById } from "../SQLite";
+import { useFocusEffect } from "@react-navigation/native";
+import { Picker } from '@react-native-picker/picker';
 
 type Props = StackScreenProps<MainStackParamList, 'Home'>;
 
-const data = [
-  { 
-    transID: 1, 
-    title: 'Lunch', 
-    date: new Date('2025-01-31').toISOString(), 
-    amount: 50.0, 
-    transactionType: 'Expenses',
-    description: "A light meal"
-  },
-  { 
-    transID: 2, 
-    title: 'Salary', 
-    date: new Date('2025-01-30').toISOString(), 
-    amount: 150.0, 
-    transactionType: 'Income' ,
-    description: "From Work"
-  },
-];
+type Transaction = {
+  transID: number;
+  transType: 0 | 1;
+  transTitle: string;
+  transactionDate: number;
+  amount: number;
+  description: string | null;
+}
 
 
-const Home = ({ route, navigation }: Props) => {
-  const [userName, setUserName] = useState('John Doe');
+const Home = ({ navigation }: Props) => {
+  const { userID } = useUser();
+  const [username, setUsername] = useState('');
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [totalBalance, setTotalBalance] = useState(100.0);
   const [income, setIncome] = useState(150.0);
   const [expenses, setExpenses] = useState(50.0);
-  const [periodText, setPeriodText] = useState('Weekly');
   const { theme } = useTheme();
 
   const colorAnim = new Animated.Value(0); 
+  const periodOptions = ['Today','Weekly','Monthly','Yearly','All'] as const;
+  type Period = typeof periodOptions[number]
+  const [period, setPeriod] = useState<Period>('Weekly');
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const loadUsername = async () => {
+        if (userID) {
+          const user = await getUsernameById(userID);
+          setUsername(user ?? ' '); 
+        } else {
+          console.error("Cannot get user ID.");
+        }
+      };
+      loadUsername();
+    }, [userID])
+  );
+
+  const loadTransHistory = async (selectedPeriod: Period) => {
+    if (userID) {
+      const now = Date.now();
+      let cutoff = 0;
+      switch (selectedPeriod) {
+        case 'Today':
+          const d = new Date(); d.setHours(0,0,0,0);
+          cutoff = d.getTime();
+          break;
+        case 'Weekly':
+          cutoff = now - 7*24*60*60*1000;
+          break;
+        case 'Monthly':
+          const m = new Date(); m.setDate(1); m.setHours(0,0,0,0);
+          cutoff = m.getTime();
+          break;
+        case 'Yearly':
+          const y = new Date(); y.setMonth(0,0); y.setHours(0,0,0,0);
+          cutoff = y.getTime();
+          break;
+        case 'All':
+          cutoff = 0;
+          break;
+      }
+
+      const trans = await getTransactionHistoryById(userID, cutoff);
+      setTransactions(trans);
+      
+      let inc = 0;
+      let exp = 0;
+      trans.forEach(tr => {
+        {tr.transType === 0? inc += tr.amount : exp += tr.amount};
+      })
+      setIncome(inc);
+      setExpenses(exp);
+      setTotalBalance(inc-exp);
+    } else {
+      console.error("Cannot get user ID.");
+    }   
+  };
+
+
+
+  useFocusEffect(
+    React.useCallback(() => {
+      loadTransHistory(period);
+    }, [userID, period])
+  );
+
 
   useEffect(() => {
     const startColorAnimation = () => {
@@ -82,12 +144,25 @@ const Home = ({ route, navigation }: Props) => {
           <Animated.Text
             style={[styles.userName, { fontFamily: 'WinkySans-VariableFont_wght', color: colorInterpolation }]} // Animated color
           >
-            {userName}
+            {username}
           </Animated.Text>
         </View>
-        <TouchableOpacity style={styles.periodSelector}>
-          <Text style={[styles.periodText, { fontFamily: 'WinkySans-VariableFont_wght' }]}>{periodText}</Text>
-        </TouchableOpacity>
+
+        <View style={styles.periodPickerContainer}>
+          <Picker
+            selectedValue={period}
+            onValueChange={(value) => {
+              setPeriod(value);
+              loadTransHistory(value);
+            }}
+            mode="dropdown"
+            style={{ width: 150, color: theme === 'dark' ? 'white' : 'black' }} 
+          >
+            {periodOptions.map(p => (
+              <Picker.Item key={p} label={p} value={p} />
+            ))}
+          </Picker>
+        </View>
       </View>
 
       {/* Balance Section */}
@@ -126,16 +201,19 @@ const Home = ({ route, navigation }: Props) => {
       {/* Transaction List */}
       <FlatList
       style={{ flex: 1 }}
-      data={data}
+      data={transactions}
+      ListEmptyComponent={
+        <View style={styles.emptyContainer}>
+          <Text style={[styles.emptyText, { color: theme === 'dark' ? 'white' : '#424242' }]}>
+            -----No transactions yet-----
+          </Text>
+        </View>
+      }
       renderItem={({ item }) => (
         <TouchableHighlight
           onPress={() => {
             navigation.navigate('ViewTransaction', {
-              transTitle: item.title,
-              transDate: item.date,
-              transType: item.transactionType,
-              transAmount: item.amount,
-              transDescription: item.description,
+              transID: item.transID,
             });
           }}
           underlayColor="#FFCCCC"
@@ -144,22 +222,22 @@ const Home = ({ route, navigation }: Props) => {
           <View style={[styles.transactionBox,{ backgroundColor: theme === 'dark' ? '#5D5D5D' : '#FFC1DA' }]}>
             <View style={styles.transactionInfo}>
               <Text style={[styles.transactionTitle, { fontFamily: 'WinkySans-VariableFont_wght' },{ color: theme === 'dark' ? 'white' : '#424242' }]}>
-                {item.title} 
+                {item.transTitle} 
               </Text>
               <Text style={[styles.transactionDate, { fontFamily: 'WinkySans-VariableFont_wght' },{ color: theme === 'dark' ? '#DEDEDE' : '#424242' }]}>
-                {formatDate(item.date)} 
+              {formatDate(new Date(item.transactionDate).toISOString())} 
               </Text>
             </View>
             <Text
               style={{
-                color: item.transactionType === 'Income' ? '#2ecc71' : '#e74c3c',
+                color: item.transType === 0 ? '#2ecc71' : '#e74c3c',
                 fontSize: 16,
                 fontWeight: '500',
                 fontFamily: 'WinkySans-VariableFont_wght',
                 alignSelf: 'flex-end',
               }}
             >
-              {item.transactionType === 'Income' ? '+' : '-'} RM {item.amount.toFixed(2)}
+             {item.transType === 0 ? '+' : '-'} RM {item.amount.toFixed(2)}
             </Text>
           </View>
         </TouchableHighlight>

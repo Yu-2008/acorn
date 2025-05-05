@@ -222,8 +222,43 @@ export const HomeStyles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: '#f0f0f0',
   },
+  emptyContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+  },
+  emptyText: {
+    fontSize: 16,
+    fontStyle: 'italic',
+  },
   navIcon: {
     padding: 10,
+  },
+  periodPickerContainer: {
+    flexDirection: 'row',
+    marginVertical: 12,
+  },
+  periodOption: {
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: '#DBABA1',
+    marginRight: 8,
+  },
+  periodOptionSelected: {
+    backgroundColor: '#E69DB8',
+    borderColor: '#E69DB8',
+  },
+  periodOptionText: {
+    fontSize: 14,
+    fontFamily: 'WinkySans-VariableFont_wght',
+    color: '#424242',
+  },
+  periodOptionTextSelected: {
+    color: 'white',
+    fontWeight: 'bold',
   },
 });
 

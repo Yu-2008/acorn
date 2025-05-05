@@ -17,53 +17,48 @@ import { IncomeCategoryParamList } from "../Types";
 import { StackScreenProps } from "@react-navigation/stack";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useTheme } from '../ThemeContext';
+import { updateIncomeCategory } from "../SQLite";
 
 type Props = StackScreenProps<IncomeCategoryParamList, "EditIncomeCategory">;
 
 const EditIncomeCategory = ({ route, navigation }: Props) => {
-  const { incomeTitle, incomeDescription, incomeDate, incomeAmount } = route.params;
+  const { incomeID, incomeTitle, incomeDescription } = route.params;
+  const [id, setID] = useState(incomeID);
   const [title, setTitle] = useState(incomeTitle);
   const [description, setDescription] = useState(incomeDescription);
-  const [amount, setAmount] = useState(incomeAmount.toString());
-  const [date, setDate] = useState(new Date(incomeDate));
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [isEdited, setIsEdited] = useState(false);
+
 
   const shouldWarnOnLeave = useRef(true);
   const { theme } = useTheme();
 
-  const onChangeDate = (event: any, selectedDate?: Date) => {
-    setShowDatePicker(Platform.OS === "ios");
-    if (selectedDate) {
-      setDate(selectedDate);
-      setIsEdited(true);
-    }
-  };
+  // Handle Save
+  const handleSave = async() => {
 
-  const handleSave = () => {
-    console.log("Save edited income category");
-    if (!title.trim() || !amount.trim()) {
-      Alert.alert("Validation Error", "Title and amount are required!");
+    if (!title.trim() ) {
+      Alert.alert("Input Error", "Category title are required!");
       return;
     }
 
-    const numericAmount = parseFloat(amount);
-    if (isNaN(numericAmount)) {
-      Alert.alert("Validation Error", "Amount must be a valid number.");
-      return;
+    try {
+      await updateIncomeCategory({id, title, description});
+      shouldWarnOnLeave.current = false;
+      setIsEdited(false);
+  
+      if (Platform.OS === "android") {
+        ToastAndroid.show("Income category details updated successfully", ToastAndroid.SHORT);
+      } else {
+        Alert.alert("Success", "Income category details updated successfully");
+      }
+  
+      navigation.goBack(); 
+
+      console.log("Update income category details for:", id, title, description);
+    } catch(error) {
+      console.error("Update income category error: ", error);
     }
-
-    console.log("Saving:", title, description, numericAmount, date);
-    shouldWarnOnLeave.current = false;
-    setIsEdited(false);
-
-    if (Platform.OS === "android") {
-      ToastAndroid.show("Income category saved successfully", ToastAndroid.SHORT);
-    } else {
-      Alert.alert("Success", "Income category saved successfully");
-    }
-
-    navigation.goBack(); 
+    
   };
 
   useEffect(() => {
@@ -98,7 +93,7 @@ const EditIncomeCategory = ({ route, navigation }: Props) => {
       >
         <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 20 }}>
           <View style={styles.formContainer}>
-            <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Transaction Title</Text>
+            <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Category Title</Text>
             <TextInput
               value={title}
               onChangeText={(text) => {
@@ -120,34 +115,6 @@ const EditIncomeCategory = ({ route, navigation }: Props) => {
               placeholder="Enter description"
             />
 
-            <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Amount</Text>
-            <TextInput
-              value={amount}
-              onChangeText={(text) => {
-                setAmount(text);
-                setIsEdited(true);
-              }}
-              style={[styles.input, { backgroundColor: theme === 'dark' ? '#444' : '#fff', color: theme === 'dark' ? 'white' : 'black' }]}
-              keyboardType="numeric"
-              placeholder="Enter amount"
-            />
-
-            <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Date</Text>
-            <TouchableOpacity
-              style={[styles.datePickerButton, { backgroundColor: theme === 'dark' ? '#444' : '#fff' }]}
-              onPress={() => setShowDatePicker(true)}
-            >
-              <Text style={[styles.dateText, { color: theme === 'dark' ? 'white' : 'black' }]}>{date.toDateString()}</Text>
-            </TouchableOpacity>
-
-            {showDatePicker && (
-              <DateTimePicker
-                value={date}
-                mode="date"
-                display="default"
-                onChange={onChangeDate}
-              />
-            )}
 
             <TouchableOpacity
               style={[styles.saveButton, { backgroundColor: isEdited ? '#E69DB8' : '#d3d3d3' }]}

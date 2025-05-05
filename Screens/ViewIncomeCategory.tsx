@@ -1,20 +1,36 @@
-import React from "react";
+import React, { useEffect, useContext, useState} from "react";
 import { ViewIncomeCategoryStyles as styles } from '../Styles';
-import { SafeAreaView, Text, View, StyleSheet, ScrollView } from "react-native";
+import { SafeAreaView, Text, View, StyleSheet, ScrollView, Alert } from "react-native";
 import type { StackScreenProps } from '@react-navigation/stack';
 import { IncomeCategoryParamList } from '../Types';
 import { FloatingAction } from "react-native-floating-action";
 import Ionicons from 'react-native-vector-icons/Ionicons'; 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'; 
 import { useTheme } from '../ThemeContext';
+import { getIncomeCategoryById, deleteIncomeCategory } from "../SQLite";
+import { useFocusEffect } from "@react-navigation/native";
 
 type Props = StackScreenProps<IncomeCategoryParamList, 'ViewIncomeCategory'>;
 
 const ViewIncomeCategory = ({ route, navigation }: Props) => {
-  const { incomeTitle, incomeDescription, incomeDate, incomeAmount } = route.params;
-  const parsedDate = new Date(incomeDate);
-
+  const { incomeID } = route.params;
+  const [title, setTitle] = useState(route.params.incomeTitle);
+  const [description, setDescription] = useState(route.params.incomeDescription);
   const { theme } = useTheme();
+
+  useFocusEffect(
+    React.useCallback(() => {
+      let active = true;
+      (async () => {
+        const fresh = await getIncomeCategoryById(incomeID);
+        if (fresh && active) {
+          setTitle(fresh.title);
+          setDescription(fresh.description);
+        }
+      })();
+      return () => { active = false; };
+    }, [incomeID])
+  );
 
   const actions = [
     {
@@ -35,9 +51,33 @@ const ViewIncomeCategory = ({ route, navigation }: Props) => {
 
   const handleActionPress = (name?: string) => {
     if (name === "edit") {
-      navigation.navigate('EditIncomeCategory', { incomeTitle, incomeDescription, incomeDate, incomeAmount });
+      navigation.navigate('EditIncomeCategory', { 
+        incomeID, 
+        incomeTitle: title, 
+        incomeDescription: description,
+       });
     } else if (name === "delete") {
-      console.log(`Delete category ${incomeTitle}`);
+      console.log(`Delete category ${title}`);
+      Alert.alert(
+        "Delete income category?",
+        `Are you sure you want to delete "${title}"?`,
+        [
+          {text: "Cancel", style: "cancel"},
+          {
+            text: "Delete",
+            style: "destructive",
+            onPress: async()=>{
+              try{
+                await deleteIncomeCategory(incomeID);
+                console.log(`Income category "${title}" deleted.`)
+                navigation.goBack();
+              }catch(error){
+                console.log("Delete income category error: ", error);
+              }
+            }
+          }
+        ]
+      )
     }
   };
 
@@ -47,32 +87,21 @@ const ViewIncomeCategory = ({ route, navigation }: Props) => {
         <View style={styles.detailItem}>
           <Text style={[styles.detailLabel, { color: theme === 'dark' ? 'white' : 'black' }]}>Income Category</Text>
           <View style={[styles.detailBox, { backgroundColor: theme === 'dark' ? '#444' : '#fff' }]}>
-            <Text style={[styles.detailText, { color: theme === 'dark' ? 'white' : 'black' }]}>{incomeTitle}</Text>
+            <Text style={[styles.detailText, { color: theme === 'dark' ? 'white' : 'black' }]}>{title}</Text>
           </View>
         </View>
 
         <View style={styles.detailItem}>
           <Text style={[styles.detailLabel, { color: theme === 'dark' ? 'white' : 'black' }]}>Description</Text>
           <View style={[styles.detailBox, { backgroundColor: theme === 'dark' ? '#444' : '#fff' }]}>
-            <Text style={[styles.detailText, { color: theme === 'dark' ? 'white' : 'black' }]}>{incomeDescription}</Text>
+            <Text style={[styles.detailText, { color: theme === 'dark' ? 'white' : 'black' }]}>{description}</Text>
           </View>
         </View>
 
-        <View style={styles.detailItem}>
-          <Text style={[styles.detailLabel, { color: theme === 'dark' ? 'white' : 'black' }]}>Date</Text>
-          <View style={[styles.detailBox, { backgroundColor: theme === 'dark' ? '#444' : '#fff' }]}>
-            <Text style={[styles.detailText, { color: theme === 'dark' ? 'white' : 'black' }]}>{parsedDate.toDateString()}</Text>
-          </View>
-        </View>
-
-        <View style={styles.detailItem}>
-          <Text style={[styles.detailLabel, { color: theme === 'dark' ? 'white' : 'black' }]}>Amount</Text>
-          <View style={[styles.detailBox, { backgroundColor: theme === 'dark' ? '#444' : '#fff' }]}>
-            <Text style={[styles.detailText, { color: theme === 'dark' ? 'white' : 'black' }]}>RM {incomeAmount}</Text>
-          </View>
-        </View>
+        
       </ScrollView>
 
+      {/* Floating Action Button for Edit and Delete */}
       <FloatingAction
         actions={actions}
         onPressItem={handleActionPress}

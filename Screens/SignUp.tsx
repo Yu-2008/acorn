@@ -42,8 +42,10 @@ const SignUp = ({ route, navigation }: Props) => {
  
     console.log('Sign Up pressed');
     setLoading(true);
+    
     if (!email || !username || !password || !confirmPassword) {
       Alert.alert("All fields are required.");
+      setLoading(false);
       return;
     }
 
@@ -51,11 +53,13 @@ const SignUp = ({ route, navigation }: Props) => {
     
     if (!isValid) {
       Alert.alert("Invalid email format. Please enter a valid email address.");
+      setLoading(false);
       return;
     }
 
     if (password !== confirmPassword) {
       Alert.alert("Passwords do not match.");
+      setLoading(false);
       return;
     }
     

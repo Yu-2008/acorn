@@ -5,101 +5,144 @@ import {
   View,
   TextInput,
   TouchableOpacity,
-  FlatList
+  FlatList,
+  ScrollView
 } from "react-native";
 import type { StackScreenProps } from '@react-navigation/stack';
 import { ExpensesCategoryParamList } from "../Types";
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'; 
 import { AddExpensesCategoryStyles as styles } from '../Styles';
 import { useTheme } from '../ThemeContext';
+import { useUser } from "../UserContext";
+import { insertExpensesCategory } from "../SQLite";
 
 type Props = StackScreenProps<ExpensesCategoryParamList, 'AddExpensesCategory'>;
 
-const AddExpensesCategory = ({ navigation }: Props) => {
-  const [selectedIcon, setSelectedIcon] = useState("Breakfast");
+const AddExpensesCategory = ({ route, navigation }: Props) => {
+  const { userID } = useUser();
+  const [iconName, setIconName] = useState("");
+  const [iconLibrary, setIconLibrary] = useState("");
   const [categoryName, setCategoryName] = useState("");
+  const [categoryDescription, setCategoryDescription] = useState("");
   const [confirmationMessage, setConfirmationMessage] = useState("");
   const { theme } = useTheme();
 
+
+  const handleSave = async () => {
+    if (!categoryName || !iconName || !iconLibrary) {
+      setConfirmationMessage("Please make sure your are already select an icon and fill in Category Name.");
+      return;
+    }
+
+    if (!userID) {
+      setConfirmationMessage("User not signed in. Cannot save category.");
+      return;
+    }
+
+    try {
+      await insertExpensesCategory({
+        title: categoryName,
+        description: categoryDescription,
+        expensesIconName: iconName,
+        expensesIconLibrary: iconLibrary,
+        userID: userID,
+      });
+      setConfirmationMessage(`Category '${categoryName}' saved successfully!`);
+
+      console.log('Inserting category:', {
+        title: categoryName,
+        description: categoryDescription,
+        expensesIconName: iconName,
+        expensesIconLibrary: iconLibrary,
+        userID: userID,
+      });
+      
+      navigation.goBack();
+    } catch (error) {
+        console.log("Error saving expenses category:", error);
+        setConfirmationMessage("Failed to save category.");
+    }
+  };
+  const handleSelectIcon = (item: { iconName: string; iconLibrary: string; label: string }) => {
+    setIconName(item.iconName);
+    setIconLibrary(item.iconLibrary);
+    setConfirmationMessage(`You selected ${item.label} icon!`);
+  }
+
   const iconOptions = [
-    { label: "Medical", value: "Medical", icon: <Ionicons name="medkit" size={24} color={theme === 'dark' ? 'white' : '#393533'} /> },
-    { label: "Utilities", value: "Utilities", icon: <Ionicons name="flash" size={24} color={theme === 'dark' ? 'white' : '#393533'} /> },
-    { label: "Entertainment", value: "Entertainment", icon: <Ionicons name="film" size={24} color={theme === 'dark' ? 'white' : '#393533'} /> },
-    { label: "Shopping", value: "Shopping", icon: <Ionicons name="shirt" size={24} color={theme === 'dark' ? 'white' : '#393533'} /> },
-    { label: "Education", value: "Education", icon: <Ionicons name="school" size={24} color={theme === 'dark' ? 'white' : '#393533'} /> },
-    { label: "Miscellaneous", value: "Miscellaneous", icon: <Ionicons name="apps" size={24} color={theme === 'dark' ? 'white' : '#393533'} /> },
-    { label: "Housing", value: "Housing", icon: <Ionicons name="home" size={24} color={theme === 'dark' ? 'white' : '#393533'} /> },
-    { label: "Debt", value: "Debt", icon: <Ionicons name="card" size={24} color={theme === 'dark' ? 'white' : '#393533'} /> },
-    { label: "Insurance", value: "Insurance", icon: <Ionicons name="shield" size={24} color={theme === 'dark' ? 'white' : '#393533'} /> },
-    { label: "Savings", value: "Savings", icon: <Ionicons name="save" size={24} color={theme === 'dark' ? 'white' : '#393533'} /> },
+    { label: "Salary", iconName: "cash", iconLibrary: "Ionicons" },
+    { label: "Side Income", iconName: "usd", iconLibrary: "FontAwesome" },
+    { label: "Investments", iconName: "trending-up", iconLibrary: "Ionicons" },
+    { label: "Freelance", iconName: "pencil", iconLibrary: "FontAwesome" },
+    { label: "Business", iconName: "briefcase", iconLibrary: "Ionicons" },
   ];
 
-  const handleSave = () => {
-    console.log("Add Expenses Category:", selectedIcon, categoryName);
-    setConfirmationMessage(`Category '${selectedIcon}' saved successfully!`);
-    navigation.goBack();
-  };
+  const renderIcon = (iconName: string, iconLibrary: string) => {
+    const color = theme === 'dark' ? 'white' : '#393533';
+    const size = 24;
 
-  const renderItem = ({ item }: { item: { value: string, label: string, icon: React.ReactNode } }) => (
-    <TouchableOpacity
-      onPress={() => {
-        setSelectedIcon(item.value);
-        setConfirmationMessage(`You selected ${item.label} icon!`);
-      }}
-      style={[
-        styles.itemRow,
-        selectedIcon === item.value && styles.selectedItem,
-        { backgroundColor: theme === 'dark' ? '#444' : '#FDE6F6' }
-      ]}
-    >
-      {item.icon}
-      <Text style={[styles.itemText, { color: theme === 'dark' ? 'white' : 'black' }]}>{item.label}</Text>
-    </TouchableOpacity>
-  );
+    if (iconLibrary === "Ionicons") {
+      return <Ionicons name={iconName} size={size} color={color} />;
+    } else if (iconLibrary === "MaterialIcons") {
+      return <MaterialIcons name={iconName} size={size} color={color} />;
+    } else {
+      return null;
+    }
+  };
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme === 'dark' ? '#444' : '#FDE6F6' }]}>
-      <FlatList
-        data={iconOptions}
-        keyExtractor={item => item.value}
-        renderItem={renderItem}
-        ListHeaderComponent={
-          <View style={styles.formContainer}>
-            <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Select Icon</Text>
-          </View>
-        }
-        ListFooterComponent={
-          <View style={styles.formContainer}>
-            <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Category Name</Text>
-            <TextInput
-              placeholder="Enter category name"
-              value={categoryName}
-              onChangeText={setCategoryName}
-              style={[styles.input, { color: theme === 'dark' ? 'white' : 'black' }]}
-              placeholderTextColor={theme === 'dark' ? 'lightgray' : '#6E6E6E'}
-            />
+      <ScrollView contentContainerStyle={styles.formContainer}>
 
-            <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Description (optional)</Text>
-            <TextInput
-              placeholder="Enter description"
-              value={categoryName}
-              onChangeText={setCategoryName}
-              style={[styles.input, { color: theme === 'dark' ? 'white' : 'black' }]}
-              placeholderTextColor={theme === 'dark' ? 'lightgray' : '#6E6E6E'}
-            />
-
-            {confirmationMessage ? (
-              <Text style={[styles.confirmationMessage, { color: theme === 'dark' ? '#8FF479' : 'green' }]}>
-                {confirmationMessage}
-              </Text>
-            ) : null}
-
-            <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-              <Text style={styles.saveButtonText}>Save</Text>
+        <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Select Icon</Text>
+        <View style={styles.pickerContainer}>
+          {iconOptions.map((item) => (
+            <TouchableOpacity
+              key={item.label}
+              onPress={()=>handleSelectIcon(item)}
+              style={[
+                styles.itemRow,
+                iconName === item.iconName && iconLibrary === item.iconLibrary && styles.selectedItem,
+                { backgroundColor: theme === 'dark' ? '#444' : '#FDE6F6' }
+              ]}
+            >
+              {renderIcon(item.iconName, item.iconLibrary)}
+              <Text style={[styles.itemText, { color: theme === 'dark' ? 'white' : 'black' }]}>{item.label}</Text>
             </TouchableOpacity>
-          </View>
-        }
-      />
+          ))}
+        </View>
+
+        <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Category Name</Text>
+        <TextInput
+          placeholder="Enter category name"
+          value={categoryName}
+          onChangeText={setCategoryName}
+          style={[styles.input, { color: theme === 'dark' ? 'white' : 'black' }]}  
+          placeholderTextColor={theme === 'dark' ? 'lightgray' : '#6E6E6E'}  
+        />
+
+        <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Description (optional)</Text>
+        <TextInput
+          placeholder="Enter description"
+          value={categoryDescription}
+          onChangeText={setCategoryDescription}
+          style={[styles.input, { color: theme === 'dark' ? 'white' : 'black' }]} 
+          placeholderTextColor={theme === 'dark' ? 'lightgray' : '#6E6E6E'} 
+        />
+
+        {confirmationMessage ? (
+          <Text style={[styles.confirmationMessage, { color: theme === 'dark' ? '#8FF479' : 'green' }]}>
+            {confirmationMessage}
+          </Text>
+        ) : null}
+
+        <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+          <Text style={styles.saveButtonText}>Save</Text>
+        </TouchableOpacity>
+
+      </ScrollView>   
+        
     </SafeAreaView>
   );
 };

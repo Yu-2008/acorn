@@ -8,7 +8,7 @@ export type TabParamList={
     AtMain: undefined,
     AddExpenses: undefined,
     AddIncome: undefined,
-    GoSetting: undefined,   
+    GoSetting: undefined,
     
 }
 
@@ -22,13 +22,10 @@ export type SignInUpStackParamList={
 export type MainStackParamList = {
     Home: undefined;
     ViewTransaction: {
-      transTitle: string;
-      transDate: string;
-      transType: string;
-      transAmount: number;
-      transDescription: string;
+      transID: number;
     };
     EditTransaction: {
+        transID: number;
         transTitle: string;
         transDate: string;
         transType: string;
@@ -50,17 +47,15 @@ export type SettingStackParamList={
 export type ExpensesCategoryParamList = {
     ExpensesCategory: undefined;
     AddExpensesCategory: undefined;
-    ViewExpensesCategory: {        
+    ViewExpensesCategory: {  
+      expensesID: number,      
       expensesTitle: string;        
-      expensesDescription: string;  
-      expensesDate: string;  
-      expensesAmount: number;        
+      expensesDescription: string;        
     };
-    EditExpensesCategory: {  
+    EditExpensesCategory: { 
+      expensesID: number, 
       expensesTitle: string;        
-      expensesDescription: string;  
-      expensesDate: string;    
-      expensesAmount: number;       
+      expensesDescription: string;     
     };
   };
   
@@ -69,16 +64,14 @@ export type IncomeCategoryParamList = {
     IncomeCategory: undefined;
     AddIncomeCategory: undefined;
     ViewIncomeCategory: {
+      incomeID: number
       incomeTitle: string;
       incomeDescription: string;
-      incomeDate: string;
-      incomeAmount: number;
     };
     EditIncomeCategory: {
+      incomeID: number;
       incomeTitle: string;
       incomeDescription: string;
-      incomeDate: string;
-      incomeAmount: number;
     };
   };
 

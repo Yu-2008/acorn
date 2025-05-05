@@ -1,22 +1,79 @@
-import React, { useState } from "react";
-import { SafeAreaView, Text, View, TextInput, TouchableOpacity, Platform } from "react-native";
+import React, { useEffect, useState } from "react";
+import { SafeAreaView, Text, View, TextInput, TouchableOpacity, Platform, Alert } from "react-native";
 import { AddIncomeStyles as styles } from '../Styles';
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useTheme } from '../ThemeContext';
+import { getIncomeCategories, insertTransactionHistory } from "../SQLite";
+import { useUser } from "../UserContext";
 
 const AddIncome = ({ navigation }: any) => {
+  const { userID } = useUser();
   const { theme } = useTheme();
-  const [transCategory, setTransCategory] = useState('Cash');
-  const [transAmount, setTransAmount] = useState('');
+  const [categories, setCategories] = useState<{ id: number; title: string }[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+  const [transTitle, setTransTitle] = useState("");
+  const [transAmount, setTransAmount] = useState("");
   const [transDate, setTransDate] = useState(new Date());
+  const [transDescription, setTransDescription] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
 
+
   // Handle onPress
-  const handleSave = () => {
-    console.log("Add income transaction: ", { transCategory, transAmount, transDate });
-    navigation.goBack(); 
+  const handleSave = async() => {
+
+    if (!userID) {
+      Alert.alert("User not signed in. Cannot add transaction.");
+      return;
+    }
+    
+    if (!selectedCategory || !transTitle || !transAmount) {
+      Alert.alert("Please fill in category, title, and amount.");
+      return;
+    }
+
+    const amount = parseFloat(transAmount);
+    if (isNaN(amount)) {
+      Alert.alert("Please enter a valid amount.");
+      return;
+    }
+
+    try {
+      await insertTransactionHistory({
+        transType: 0, // income
+        transCategory: selectedCategory ? selectedCategory.toString() : "",
+        transTitle: transTitle,
+        transactionDate: transDate.getTime(), // timestamp
+        amount: amount,
+        description: transDescription || 'No description', // Optional description, can be added if needed
+        userID,
+      });
+      console.log("Income added successfully.");
+      setSelectedCategory(categories.length > 0 ? categories[0].id : null);
+      setTransTitle("");
+      setTransAmount("");
+      setTransDescription("");
+      setTransDate(new Date());
+      navigation.goBack(); 
+
+    } catch (error) {
+      console.error("Add income transaction error: ", error);
+    }
+    
   };
+
+  useEffect(() => {
+    if (!userID) {
+      Alert.alert("User not signed in. Cannot save category.");
+      return;
+    }
+    const loadCategories = async () => {
+      const data = await getIncomeCategories(userID);
+      setCategories(data);
+      if (data.length > 0) setSelectedCategory(data[0].id);
+    };
+    loadCategories();
+  }, [userID]);
 
   const onChangeDate = (event: any, selectedDate?: Date) => {
     setShowDatePicker(Platform.OS === 'ios');
@@ -43,14 +100,28 @@ const AddIncome = ({ navigation }: any) => {
         </Text>
         <View style={styles.pickerContainer}>
           <Picker
-            selectedValue={transCategory}
-            onValueChange={(itemValue) => setTransCategory(itemValue)}
-            style={{ color: theme === 'dark' ? '#fff' : '#000' }} 
+            selectedValue={selectedCategory}
+            onValueChange={(itemValue) => setSelectedCategory(itemValue)}
+            style={{ color: theme === 'dark' ? '#fff' : '#000' }}
           >
-            <Picker.Item label="Cash" value="Cash" />
-            <Picker.Item label="Bank" value="Bank" />
-            <Picker.Item label="Wallet" value="Wallet" />
+            {categories.map((cat) => (
+              <Picker.Item key={cat.id} label={cat.title} value={cat.id} />
+            ))}
           </Picker>
+        </View>
+
+        
+        <Text style={[styles.label, { color: theme === 'dark' ? '#fff' : '#000' }]}>
+            Title
+          </Text>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={[styles.textInput, { color: theme === 'dark' ? '#fff' : '#000' }]}
+              placeholder="e.g. Fast food"
+              placeholderTextColor={theme === 'dark' ? '#aaa' : '#666'}
+              value={transTitle}
+              onChangeText={setTransTitle}
+            />
         </View>
 
         <Text
@@ -72,6 +143,19 @@ const AddIncome = ({ navigation }: any) => {
             value={transAmount}
             onChangeText={setTransAmount}
           />
+        </View>
+
+        <Text style={[styles.label, { color: theme === 'dark' ? '#fff' : '#000' }]}>
+            Description
+        </Text>
+        <View style={styles.inputContainer}>
+            <TextInput
+              style={[styles.textInput, { color: theme === 'dark' ? '#fff' : '#000' }]}
+              placeholder="Yummy"
+              placeholderTextColor={theme === 'dark' ? '#aaa' : '#666'}
+              value={transDescription}
+              onChangeText={setTransDescription}
+            />
         </View>
 
         <Text
@@ -99,6 +183,8 @@ const AddIncome = ({ navigation }: any) => {
             onChange={onChangeDate}
           />
         )}
+
+        
 
         <TouchableOpacity
           style={[styles.doneButton]}

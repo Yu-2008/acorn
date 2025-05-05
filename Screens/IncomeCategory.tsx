@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useState, useEffect } from "react";
 import { IncomeCategoryStyles as styles } from '../Styles';
 import { SafeAreaView, Text, View, TouchableOpacity, FlatList, StyleSheet } from "react-native";
 import type { StackScreenProps } from '@react-navigation/stack';
@@ -6,80 +6,86 @@ import { IncomeCategoryParamList } from "../Types";
 import Ionicons from 'react-native-vector-icons/Ionicons'; 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useTheme } from '../ThemeContext';
-
+import { useUser } from "../UserContext";
+import { useFocusEffect } from "@react-navigation/native";
+import { getIncomeCategories } from "../SQLite";
 type Props = StackScreenProps<IncomeCategoryParamList, 'IncomeCategory'>;
 
+type IncomeCategory = {
+  id: number;
+  title: string;
+  description: string;
+  icon: string; 
+  iconLibrary: string; 
+}
+
+
 const IncomeCategory = ({ route, navigation }: Props) => {
+  const { userID } = useUser();
   const { theme } = useTheme();
+  const [data, setData] = useState<IncomeCategory[]>([]);
 
-  const [data, setData] = useState([
-    { 
-      id: 1, 
-      title: 'Salary', 
-      description: 'Monthly salary from full-time job', 
-      date: new Date(), 
-      amount: 5000 
-    },
-    { 
-      id: 2, 
-      title: 'Side Income', 
-      description: 'Freelance work and online sales', 
-      date: new Date(), 
-      amount: 1500 
-    },
-    { 
-      id: 3, 
-      title: 'Investments', 
-      description: 'Profit from stocks and bonds', 
-      date: new Date(), 
-      amount: 2000 
-    },
-    { 
-      id: 4, 
-      title: 'Business Income', 
-      description: 'Earnings from personal business', 
-      date: new Date(), 
-      amount: 2500 
-    },
-  ]);
 
-  const getIconForCategory = (category: string) => {
-    const iconColor = theme === 'dark' ? 'white' : '#393533'; // Icon color based on theme
-    switch (category) {
-      case 'Salary':
-        return <Ionicons name="cash" size={24} color={iconColor} style={styles.icon} />;
-      case 'Side Income':
-        return <FontAwesome name="usd" size={24} color={iconColor} style={styles.icon} />;
-      default:
-        return <Ionicons name="file-tray" size={24} color={iconColor} style={styles.icon} />;
-    }
-  };
+  useFocusEffect(
+    React.useCallback(() => {
+      const loadIncomeCategories = async () => {
+        if (userID) {
+          const categories = await getIncomeCategories(userID);
+          categories.sort((a, b) => a.title.localeCompare(b.title));
+          setData(categories); 
+        } else {
+          console.error("Cannot get user ID.");
+        }
+      };
+      
+      loadIncomeCategories();
+    }, [userID])
+  );
+  
+
 
   {/**handle onPress */}
   const handleAddMore =()=>{
     console.log("Add More pressed");
     navigation.navigate('AddIncomeCategory')
   }
+  const handleView =(item: any)=>{
+    navigation.navigate('ViewIncomeCategory', { 
+      incomeID: item.id,
+      incomeTitle: item.title, 
+      incomeDescription: item.description
+    })
 
-  const renderItem = ({ item }: { item: { id: number, title: string, description: string, date: Date, amount: number } }) => (
+  }
+
+  const getIconForCategory = (iconName: string, iconLibrary: string) => {
+    const iconColor = theme === 'dark' ? 'white' : '#393533'; // Icon color based on theme
+    
+    if (iconLibrary === 'Ionicons') {
+      return <Ionicons name={iconName} size={24} color={iconColor} style={styles.icon} />;
+    } else if (iconLibrary === 'FontAwesome') {
+      return <FontAwesome name={iconName} size={24} color={iconColor} style={styles.icon} />;
+    } else {
+      return <Ionicons name="file-tray" size={24} color={iconColor} style={styles.icon} />;
+    }
+  };
+
+  
+  const renderItem = ({ item }: { item: IncomeCategory }) => (
     <TouchableOpacity
-      onPress={() => navigation.navigate('ViewIncomeCategory', { 
-        incomeTitle: item.title, 
-        incomeDescription: item.description, 
-        incomeDate: item.date.toISOString(), 
-        incomeAmount: item.amount 
-      })}
+      onPress={() => handleView(item)}
       style={[
         styles.itemRow,
         { backgroundColor: theme === 'dark' ? '#444' : '#FFC1DA' }  // Dynamic background color
       ]}
     >
-      {getIconForCategory(item.title)}
+      {getIconForCategory(item.icon, item.iconLibrary)}
       <Text style={[styles.itemText, { color: theme === 'dark' ? 'white' : 'black' }]}>
         {item.title}
       </Text>
     </TouchableOpacity>
   );
+  
 
   
 
@@ -87,7 +93,7 @@ const IncomeCategory = ({ route, navigation }: Props) => {
     <SafeAreaView style={[styles.container, { backgroundColor: theme === 'dark' ? '#333' : '#FDE6F6' }]}>
       {/* Add Buttons */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.navigate('AddIncomeCategory')}>
+        <TouchableOpacity onPress={handleAddMore}>
          <Text style={[styles.actionText, { color: theme === 'dark' ? '#fff' : '#f57cbb' }]}>Add More</Text>
         </TouchableOpacity>
       </View>

@@ -24,6 +24,8 @@ import ViewExpensesCategoryScreen from './Screens/ViewExpensesCategory';
 import ViewIncomeCategoryScreen from './Screens/ViewIncomeCategory';
 import ViewTransactionScreen from './Screens/ViewTransaction';
 import { ThemeProvider } from './ThemeContext';
+import { UserProvider } from './UserContext';
+import { useUser } from './UserContext';
 import {
   RootStackParamList,
   TabParamList,
@@ -226,20 +228,29 @@ const SettingStackNavigator = () => {
   );
 };
 
-const App = () => {
+
+const AuthLogic =()=> {
   const [user, setUser] = useState<User | null>(null);
   const [initializing, setInitializing] = useState(true);
-
+  const { setUserID } = useUser();
 
   useEffect(()=>{
     const init = async()=>{
       await initDB();
     }
     init();
-    
+
     const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, (user)=>{
       console.log("User: ", user);
-      setUser(user);
+      if(user){
+        setUser(user);
+        setUserID(user?.uid??null);
+      }else{
+        console.log("Cannot get user. Set user to null.");
+        setUser(null);
+        setUserID(null);
+      }
+      
       if (initializing) setInitializing(false);
     });
 
@@ -248,35 +259,40 @@ const App = () => {
 
   if (initializing) return null;
 
-  {/**
-  const handleSignIn = () => {
-    setIsSignIn(true);
-  };
-
-  const handleSignOut = () => {
-    setIsSignIn(false);
-  };
-   */}
 
   return (
-    <ThemeProvider>
-    <NavigationContainer>
-      <RootStack.Navigator screenOptions={{ headerShown: false }} initialRouteName='AuthorizedSignIn'>
-        { user ? (
-          <RootStack.Screen name="GoMain">
-            {(props: any) => <TabNavigator  {...props}/>}
-          </RootStack.Screen>
+    
+    <RootStack.Navigator screenOptions={{ headerShown: false }} initialRouteName='AuthorizedSignIn'>
+      { user ? (
+        <RootStack.Screen name="GoMain">
+          {(props: any) => <TabNavigator  {...props}/>}
+        </RootStack.Screen>
+        
+      ) : (
+        <RootStack.Screen name="AuthorizedSignIn">
+          {(props: any) => <SignInUpStackNavigator  {...props}/>}
+        </RootStack.Screen>
+        
+      )}
+    </RootStack.Navigator>
           
-        ) : (
-          <RootStack.Screen name="AuthorizedSignIn">
-            {(props: any) => <SignInUpStackNavigator  {...props}/>}
-          </RootStack.Screen>
-          
-        )}
-      </RootStack.Navigator>
-    </NavigationContainer>
-    </ThemeProvider>
   );
+
+}
+
+
+
+const App = () => {
+  return (
+    <UserProvider>
+      <ThemeProvider>
+        <NavigationContainer>
+          <AuthLogic />
+        </NavigationContainer>
+      </ThemeProvider>
+    </UserProvider>
+  );
+  
 };
 
 export default App;

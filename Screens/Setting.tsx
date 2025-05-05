@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useId } from "react";
 import { SettingStyles as styles } from '../Styles';
 import { SafeAreaView, Text, View, TouchableOpacity, Animated, Switch } from "react-native";
 import Ionicons from 'react-native-vector-icons/Ionicons'; 
@@ -6,7 +6,10 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import type { StackNavigationProp } from "@react-navigation/stack";
 import { SettingStackParamList } from "../Types";
 import { useTheme } from '../ThemeContext';
+import { useUser } from "../UserContext";
 import { FIREBASE_AUTH } from "../FirebaseConfig";
+import { getUsernameById } from "../SQLite";
+import { useFocusEffect } from "@react-navigation/native";
 
 type SettingScreenNavigationProp = StackNavigationProp<SettingStackParamList, 'Settings'>;
 
@@ -16,9 +19,25 @@ type Props = {
 };
 
 const Setting = ({ navigation }: Props) => {
-  const [userName, setUserName] = useState('John Doe');
+  const { userID } = useUser();
+  const [username, setUsername] = useState('');
   const [colorAnim] = useState(new Animated.Value(0)); 
   const { theme,toggleTheme } = useTheme();
+
+  useFocusEffect(
+      React.useCallback(() => {
+        const loadIncomeCategories = async () => {
+          if (userID) {
+            const user = await getUsernameById(userID);
+            setUsername(user ?? ' '); 
+          } else {
+            console.error("Cannot get user ID.");
+          }
+        };
+        
+        loadIncomeCategories();
+      }, [userID])
+  );
 
   {/**handle onPress */}
   const handleExpensesCategory =()=>{
@@ -37,12 +56,13 @@ const Setting = ({ navigation }: Props) => {
   const handleOnSignOut = async()=>{
     console.log("Sign Out pressed");
     try {
-      console.log("Sign Out pressed");
+      
       await FIREBASE_AUTH.signOut();
+      console.log(`Sign out successfully for user ${username}.`);
+      
     } catch (error) {
       console.error("Error signing out:", error);
     }
-    //onSignOut();
   }
 
   useEffect(() => {
@@ -76,7 +96,7 @@ const Setting = ({ navigation }: Props) => {
       <View style={styles.header}>
         <Text style={[styles.greeting, { color: theme === 'dark' ? '#fff' : '#393533' }]}>Hello,</Text>
         <Animated.Text style={[styles.userName, { color: colorInterpolation }]}>
-          {userName}
+          {username}
         </Animated.Text>
       </View>
 
@@ -85,14 +105,14 @@ const Setting = ({ navigation }: Props) => {
 
         <TouchableOpacity 
           style={[styles.row, { backgroundColor: theme === 'dark' ? '#444' : '#FFC1DA' }]}
-          onPress={() => navigation.navigate('GoExpensesCategory')}>
+          onPress={handleExpensesCategory}>
           <MaterialIcons name="trolley" size={24} color={theme === 'dark' ? 'white' : '#393533'} style={styles.icon} />
           <Text style={[styles.rowText, { color: theme === 'dark' ? 'white' : 'black' }]}>Expenses</Text>
         </TouchableOpacity>
 
         <TouchableOpacity 
           style={[styles.row, { backgroundColor: theme === 'dark' ? '#444' : '#FFC1DA' }]}
-          onPress={() => navigation.navigate('GoIncomeCategory')}>
+          onPress={handleIncomeCategory}>
           <Ionicons name="cash-outline" size={24} color={theme === 'dark' ? 'white' : '#393533'} style={styles.icon} />
           <Text style={[styles.rowText, { color: theme === 'dark' ? 'white' : 'black' }]}>Income</Text>
         </TouchableOpacity>
@@ -103,7 +123,7 @@ const Setting = ({ navigation }: Props) => {
 
         <TouchableOpacity 
           style={[styles.row, { backgroundColor: theme === 'dark' ? '#444' : '#FFC1DA' }]}
-          onPress={() => navigation.navigate('GoBackUpCloud')}>
+          onPress={handleBackupCloud}>
           <Ionicons name="cloud-upload" size={24} color={theme === 'dark' ? 'white' : '#393533'} style={styles.icon} />
           <Text style={[styles.rowText, { color: theme === 'dark' ? 'white' : 'black' }]}>Backup to Cloud</Text>
         </TouchableOpacity>
