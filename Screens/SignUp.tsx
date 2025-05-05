@@ -24,7 +24,11 @@ const SignUp = ({ route, navigation }: Props) => {
       const url =  `https://emailvalidation.abstractapi.com/v1/?api_key=32bad148cbbc439d81a84df08cad81be&email=${email}`;
       const response = await fetch(url);
       const data = await response.json();
-      return data.is_valid_format.value;
+
+      const isValidFormat = data.is_valid_format?.value;
+      const isMxFound = data.is_mx_found?.value;
+
+      return isValidFormat && isMxFound;
     } catch (error) {
       console.error("Error validating email:", error);
       return false;
