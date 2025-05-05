@@ -37,6 +37,8 @@ import {
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { FIREBASE_AUTH } from './FirebaseConfig';
 
+import { initDB } from './SQLite';
+
 const RootStack = createStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<TabParamList>();
 const SignInUpStack = createStackNavigator<SignInUpStackParamList>();
@@ -230,7 +232,11 @@ const App = () => {
 
 
   useEffect(()=>{
-
+    const init = async()=>{
+      await initDB();
+    }
+    init();
+    
     const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, (user)=>{
       console.log("User: ", user);
       setUser(user);

@@ -8,12 +8,14 @@ import { SignUpStyles as styles } from '../Styles';
 import { FIREBASE_AUTH } from '../FirebaseConfig';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 
+import { insertUser } from '../SQLite';
 
 type Props = StackScreenProps<SignInUpStackParamList, "SignUp">;
 
 const SignUp = ({ route, navigation }: Props) => {
   const { theme } = useTheme();
   const [email, setEmail] = useState('');
+  const [ username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -33,14 +35,14 @@ const SignUp = ({ route, navigation }: Props) => {
 
   {/**handle onPress */}
   const handleSignUp = async() => {
-    //console.log("Sign Up pressed");
-    //navigation.navigate("SignIn");
-
+ 
     console.log('Sign Up pressed');
-    if (!email || !password || !confirmPassword) {
+    setLoading(true);
+    if (!email || !username || !password || !confirmPassword) {
       Alert.alert("All fields are required.");
       return;
     }
+
     const isValid = await validateEmail(email);
     
     if (!isValid) {
@@ -53,13 +55,17 @@ const SignUp = ({ route, navigation }: Props) => {
       return;
     }
     
-    
-    setLoading(true);
+  
     try{
       const response = await createUserWithEmailAndPassword(auth, email, password);
       console.log(response);
+      const userID = response.user.uid;
+      console.log("Firebase signup success. UID:", userID);
+
+      await insertUser(userID, username);
+      console.log("Insert new user success. UID:", userID);
       Alert.alert("Sign Up successful.\nPlease check your email.");
-      //navigation.navigate("SignIn");
+      
     }catch(error: any){
       console.log(error);
       Alert.alert("Sign Up failed: " + error.message);
@@ -96,20 +102,41 @@ const SignUp = ({ route, navigation }: Props) => {
             Sign Up
           </Text>
           <View style={styles.formContainer}>
+
+
             {/* Email */}
             <Text
               style={[styles.label, { color: theme === 'dark' ? '#fff' : '#000' }]} 
             >
-              Email/Username
+              Email
             </Text>
             <View style={styles.inputWrapper}>
               <TextInput
                 style={[styles.input]} 
-                placeholder="Enter your Email/Username here"
+                placeholder="Enter your Email here"
                 keyboardType="email-address"
                 autoCapitalize="none"
                 value={email}
                 onChangeText={setEmail}
+                placeholderTextColor={theme === 'dark' ? '#aaa' : '#aaa'}
+              />
+            </View>
+
+
+            {/* Username */}
+            <Text
+              style={[styles.label, { color: theme === 'dark' ? '#fff' : '#000' }]} 
+            >
+              Username
+            </Text>
+            <View style={styles.inputWrapper}>
+              <TextInput
+                style={[styles.input]} 
+                placeholder="Enter your Username here"
+                keyboardType="default"
+                autoCapitalize="none"
+                value={username}
+                onChangeText={setUsername}
                 placeholderTextColor={theme === 'dark' ? '#aaa' : '#aaa'}
               />
             </View>
@@ -173,7 +200,7 @@ const SignUp = ({ route, navigation }: Props) => {
             {/* Already have an account */}
             <View style={styles.tipsText}>
               <Text style={{ color: theme === 'dark' ? '#fff' : '#000' }}>Already have an account?</Text>
-              <TouchableOpacity onPress={() => navigation.navigate('SignIn')}>
+              <TouchableOpacity onPress={handleSignIn}>
                 <Text
                   style={[
                     styles.tips,
