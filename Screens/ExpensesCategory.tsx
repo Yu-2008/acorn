@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React from "react";
 import { ExpensesCategoryStyles as styles } from '../Styles';
 import { SafeAreaView, Text, View, TouchableOpacity, FlatList } from "react-native";
 import type { StackScreenProps } from '@react-navigation/stack';

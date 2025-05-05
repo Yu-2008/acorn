@@ -1,22 +1,52 @@
-import React, { useState, useContext } from 'react';
+import React, { useState} from 'react';
 import { ForgetPasswordStyles as styles } from '../Styles';
-import { Image, SafeAreaView, Text, TextInput, TouchableOpacity, View, ScrollView } from 'react-native';
+import { Image, SafeAreaView, Text, TextInput, TouchableOpacity, View, ScrollView, ActivityIndicator, Alert } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { SignInUpStackParamList } from "../Types";
 import { useTheme } from '../ThemeContext';
+
+import { sendPasswordResetEmail } from 'firebase/auth';
+import { FIREBASE_AUTH } from '../FirebaseConfig';
 
 type Props = StackScreenProps<SignInUpStackParamList, "ForgetPassword">;
 
 const ForgetPassword = ({ route, navigation }: Props) => {
   const { theme } = useTheme();
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  //const [password, setPassword] = useState('');
+  //const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+
 
   // handle onPress for password update
-  const handleUpdatePassword = () => {
+  const handleUpdatePassword = async() => {
     console.log("Updated Password pressed");
-    navigation.navigate('SignIn');
+    if(!email){
+      Alert.alert("Password cannot be empty.\nPlease enter your password.");
+      return;
+    }
+    //if(!confirmPassword || !(confirmPassword===password)){
+    //  Alert.alert("Confirm password is not same as your password.\nPlease ensure confirm password is same as your password.");
+    //  return;
+    //}
+    setLoading(true);
+    try{
+      await sendPasswordResetEmail(FIREBASE_AUTH, email);
+      Alert.alert("Password reset email sent!", "Please check your inbox.");
+      navigation.navigate('SignIn');
+    }catch(error: any){
+      console.log("Forget password:" + error);
+      if (error.code === 'auth/invalid-email') {
+        Alert.alert("Invalid Email", "Please enter a valid email address.");
+      } else {
+        Alert.alert("Error", error.message);
+      }
+
+      
+    }finally{
+      setLoading(false);
+    }
+    
   };
 
   const handleSignIn = () => {
@@ -53,7 +83,8 @@ const ForgetPassword = ({ route, navigation }: Props) => {
               />
             </View>
 
-            {/* Password */}
+            
+            {/* Password 
             <Text style={[styles.label, { color: theme === 'dark' ? '#fff' : '#000' }]}>
               Password
             </Text>
@@ -67,8 +98,9 @@ const ForgetPassword = ({ route, navigation }: Props) => {
                 placeholderTextColor={theme === 'dark' ? '#aaa' : '#aaa'}
               />
             </View>
+            */}
 
-            {/* Confirm Password */}
+            {/* Confirm Password 
             <Text style={[styles.label, { color: theme === 'dark' ? '#fff' : '#000' }]}>
               Confirm Password
             </Text>
@@ -82,14 +114,28 @@ const ForgetPassword = ({ route, navigation }: Props) => {
                 placeholderTextColor={theme === 'dark' ? '#aaa' : '#aaa'}
               />
             </View>
+            */}
 
             {/* Update Password Button */}
+            {loading? <ActivityIndicator size="large" color="#0000ff" />
+                                      : <>
+                        
+                                      <TouchableOpacity
+                                        style={styles.button}
+                                        onPress={handleUpdatePassword}
+                                      >
+                                        <Text style={styles.buttonText}>Send reset password link to your email.</Text>
+                                      </TouchableOpacity>
+                                      
+                        </>}
+            {/**             
             <TouchableOpacity
               style={styles.button}
               onPress={handleUpdatePassword}
             >
               <Text style={styles.buttonText}>Update Password</Text>
             </TouchableOpacity>
+            */}
 
             {/* Already have an account */}
             <View style={styles.tipsText}>

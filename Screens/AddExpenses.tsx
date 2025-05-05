@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { SafeAreaView, Text, View, TextInput, TouchableOpacity, Platform } from "react-native";
 import { AddExpensesStyles as styles } from '../Styles';
 import { Picker } from "@react-native-picker/picker";
