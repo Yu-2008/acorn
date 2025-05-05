@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { SettingStyles as styles } from '../Styles';
 import { SafeAreaView, Text, View, TouchableOpacity, Animated, Switch } from "react-native";
 import Ionicons from 'react-native-vector-icons/Ionicons'; 

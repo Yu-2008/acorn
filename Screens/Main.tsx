@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect} from 'react';
 import { SafeAreaView, View, Text, TouchableOpacity, FlatList, TouchableHighlight, Animated } from 'react-native';
 import { HomeStyles as styles } from '../Styles';
 import type { StackScreenProps } from '@react-navigation/stack';

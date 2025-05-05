@@ -5,7 +5,6 @@ import {
   View,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
   FlatList
 } from "react-native";
 import type { StackScreenProps } from '@react-navigation/stack';

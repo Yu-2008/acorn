@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState} from 'react';
 import { ForgetPasswordStyles as styles } from '../Styles';
 import { Image, SafeAreaView, Text, TextInput, TouchableOpacity, View, ScrollView } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
