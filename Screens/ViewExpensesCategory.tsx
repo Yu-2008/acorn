@@ -1,6 +1,6 @@
 import React from "react";
 import { ViewExpensesCategoryStyles as styles } from '../Styles';
-import { SafeAreaView, Text, View, StyleSheet, ScrollView } from "react-native";
+import { SafeAreaView, Text, View,ScrollView } from "react-native";
 import type { StackScreenProps } from '@react-navigation/stack';
 import { ExpensesCategoryParamList } from '../Types';
 import { FloatingAction } from "react-native-floating-action";

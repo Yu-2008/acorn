@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState} from "react";
 import { BackUpCloudStyles as styles } from '../Styles';
 import { SafeAreaView, Text, View, TouchableOpacity, Platform } from "react-native";
 import { StackScreenProps } from '@react-navigation/stack';

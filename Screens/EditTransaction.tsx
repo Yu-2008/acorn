@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useContext } from "react";
+import React, { useState, useRef, useEffect} from "react";
 import { EditTransactionStyles as styles } from '../Styles';
 import {
   SafeAreaView,
