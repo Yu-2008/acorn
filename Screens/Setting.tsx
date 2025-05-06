@@ -107,7 +107,7 @@ const GeolocationPage = () => {
     Linking.openURL(mapLink);
   }
 const handleContactUs = () => {
-  const whatsappLink = "https://chat.whatsapp.com/JOzzVznb1YCL9CGpLQKMZM";
+  const whatsappLink = "https://chat.whatsapp.com/DXH6ke53Zsa93oRyfZRlAX";
   Linking.openURL(whatsappLink);
 };
   return (
