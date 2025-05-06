@@ -54,6 +54,7 @@ export const initDB = async () => {
             transactionDate INTEGER NOT NULL, -- Unix timestamp (e.g. from Date.now())
             amount REAL NOT NULL,
             description TEXT,
+            location TEXT,
             userID TEXT NOT NULL,
             FOREIGN KEY (userID) REFERENCES userAcc(userID) ON DELETE CASCADE
             );
@@ -141,6 +142,7 @@ export const insertTransactionHistory = async ({
     transactionDate,
     amount,
     description,
+    location,
     userID,
   }: {
     transType: 0 | 1; // 0 = income, 1 = expenses
@@ -149,13 +151,14 @@ export const insertTransactionHistory = async ({
     transactionDate: number; // Unix timestamp (e.g., from Date.now())
     amount: number;
     description?: string;
+    location?: string;
     userID: string;
   }) => {
     try {
       const database = await db;
       await database.executeSql(
-        `INSERT INTO transactionHistory (transType, transCategory, transTitle, transactionDate, amount, description, userID)
-         VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        `INSERT INTO transactionHistory (transType, transCategory, transTitle, transactionDate, amount, description, location, userID)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           transType,
           transCategory,
@@ -163,6 +166,7 @@ export const insertTransactionHistory = async ({
           transactionDate,
           amount,
           description || null,
+          location || null,
           userID,
         ]
       );
@@ -331,6 +335,7 @@ export const getTransactionByTransId = async (transID: number) => {
         transactionDate: row.transactionDate,
         amount: row.amount,
         description: row.description,
+        location: row.location,
         userID: row.userID,
       };
     } catch (error) {
@@ -406,6 +411,7 @@ export const getTransactionHistoryById = async (
         transactionDate: number;
         amount: number;
         description: string | null;
+        location: string | null;
       }[] = [];
       for (let i = 0; i < result.rows.length; i++) {
         const row = result.rows.item(i);
@@ -417,6 +423,7 @@ export const getTransactionHistoryById = async (
           transactionDate: row.transactionDate,
           amount: row.amount,
           description: row.description,
+          location: row.location,
         });
       }
       return transactions;
