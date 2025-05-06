@@ -532,3 +532,50 @@ export const deleteExpensesCategory = async (id: number) => {
     }
     
 };
+
+
+
+//for back up JSON file
+export const exportAllTablesToJson = async (): Promise<string> => {
+  try {
+    const database = await db;
+    const result: Record<string, any[]> = {};
+    const tables = ['userAcc', 'incomeCategory', 'expensesCategory', 'transactionHistory'];
+
+    for (const table of tables) {
+      const [res] = await database.executeSql(`SELECT * FROM ${table}`);
+      const arr: any[] = [];
+      for (let i = 0; i < res.rows.length; i++) {
+        arr.push(res.rows.item(i));
+      }
+      result[table] = arr;
+    }
+
+    return JSON.stringify(result, null, 2); // prettified JSON
+  } catch (error) {
+    console.error('EXPORT DB TO JSON ERROR: ', error);
+    return '{}';
+  }
+};
+
+
+export const restoreFromJson = async (data: Record<string, any[]>) => {
+  try {
+    const database = await db;
+
+    for (const [table, rows] of Object.entries(data)) {
+      for (const row of rows) {
+        const keys = Object.keys(row);
+        const values = keys.map(key => row[key]);
+        const placeholders = keys.map(() => '?').join(', ');
+
+        const sql = `INSERT OR REPLACE INTO ${table} (${keys.join(', ')}) VALUES (${placeholders})`;
+        await database.executeSql(sql, values);
+      }
+    }
+
+    console.log("Database restored from JSON.");
+  } catch (error) {
+    console.error("RESTORE DB FROM JSON ERROR: ", error);
+  }
+};
