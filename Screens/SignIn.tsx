@@ -91,7 +91,6 @@ const SignIn = ({ route, navigation }: Props) => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      {/* Apply LinearGradient to wrap the entire screen */}
       <LinearGradient
         colors={gradientColors}
         style={{ flex: 1 }}

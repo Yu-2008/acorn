@@ -592,7 +592,7 @@ export const BackUpCloudStyles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 16,
-    color: 'white',
+    color: 'black',
     marginLeft: 10,
     fontFamily: 'WinkySans-VariableFont_wght',
   },
@@ -985,6 +985,33 @@ export const SettingStyles = StyleSheet.create({
   toggleText: {
     fontSize: 18,
     fontFamily: 'WinkySans-VariableFont_wght',
+  },
+  button: {
+    flexDirection: 'row',
+    backgroundColor: '#E69DB8',
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginBottom: 20,
+    marginLeft: 50,
+    width: 250,
+    justifyContent: 'center',
+  },
+  buttonText: {
+    fontSize: 16,
+    color: 'black',
+    marginLeft: 10,
+    fontFamily: 'WinkySans-VariableFont_wght',
+  },
+  logoContainer: {
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  logo: {
+    width: 210,
+    height: 210,
+    marginTop: 30,
+    borderRadius: 170,
   },
 });
 
