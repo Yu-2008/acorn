@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { SafeAreaView, Text, View, TextInput, TouchableOpacity, Platform, Alert, ScrollView } from "react-native";
+import { SafeAreaView, Text, View, TextInput, TouchableOpacity, Platform, Alert, ScrollView} from "react-native";
 import { AddExpensesStyles as styles } from '../Styles';
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useTheme } from '../ThemeContext';
 import { getExpensesCategories, insertTransactionHistory } from "../SQLite";
 import { useUser } from "../UserContext";
+import CheckBox from '@react-native-community/checkbox'; 
 
 const AddExpenses = ({ navigation }: any) => {
   const { userID } = useUser();
@@ -17,6 +18,9 @@ const AddExpenses = ({ navigation }: any) => {
   const [transDate, setTransDate] = useState(new Date());
   const [transDescription, setTransDescription] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
+
+  const [isLocationChecked, setIsLocationChecked] = useState(false);
+  const [location, setLocation] = useState('');
 
   {/**handle onPress */}
   const handleSave = async() => {
@@ -37,13 +41,20 @@ const AddExpenses = ({ navigation }: any) => {
     }
 
     try {
+
+      let locationToSave = '';
+      if (isLocationChecked) {
+        locationToSave = location;
+      }
+
       await insertTransactionHistory({
         transType: 1, 
         transCategory: selectedCategory ? selectedCategory.toString() : "",
         transTitle: transTitle,
         transactionDate: transDate.getTime(), // timestamp
         amount: amount,
-        description: transDescription || 'No description', // Optional description, can be added if needed
+        description: transDescription, // Optional description, can be added if needed
+        location: locationToSave,
         userID,
       });
       console.log("Expenses added successfully.");
@@ -52,6 +63,7 @@ const AddExpenses = ({ navigation }: any) => {
       setTransAmount("");
       setTransDescription("");
       setTransDate(new Date());
+      setLocation("");
       navigation.goBack(); 
     } catch (error) {
       console.error("Add expenses transaction error: ", error);
@@ -176,6 +188,27 @@ const AddExpenses = ({ navigation }: any) => {
               onChange={onChangeDate}
             />
           )}
+
+          <Text style={[styles.label, { color: theme === 'dark' ? '#fff' : '#000' }]}>Record Current Location</Text>
+          <View style={styles.checkboxContainer}>
+            <CheckBox
+              value={isLocationChecked}
+              onValueChange={setIsLocationChecked}
+            />
+            <Text style={{ color: theme === 'dark' ? '#fff' : '#000' }}>
+              Do you want to record current location?
+            </Text>
+          </View>
+
+          {isLocationChecked ? (
+            <Text style={{ color: theme === 'dark' ? '#fff' : '#000' }}>
+              {location || 'Fetching current location...'}
+            </Text>
+          ) : (
+            <Text style={{ color: theme === 'dark' ? '#fff' : '#000' }}>Not showing location.</Text>
+          )}
+
+
 
           <TouchableOpacity
             style={[styles.doneButton]}

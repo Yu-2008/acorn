@@ -52,7 +52,7 @@ const SignUp = ({ route, navigation }: Props) => {
     const isValid = await validateEmail(email);
 
     if (!isValid) {
-      Alert.alert("Invalid email format. Please enter a valid email address.");
+      Alert.alert("Invalid email", "Please enter a valid email address.\n(E.g. gmail).");
       setLoading(false);
       return;
     }

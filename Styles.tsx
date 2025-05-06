@@ -331,6 +331,12 @@ export const AddExpensesStyles = StyleSheet.create({
     color: '#393533',
     fontFamily: 'WinkySans-VariableFont_wght', 
   },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 15,
+    marginBottom: 15,
+  },
 });
 
 export const AddExpensesCategoryStyles = StyleSheet.create({
