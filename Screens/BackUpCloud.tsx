@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useEffect, useState} from "react";
 import { BackUpCloudStyles as styles } from '../Styles';
 import { SafeAreaView, Text, View, TouchableOpacity, Platform } from "react-native";
 import { StackScreenProps } from '@react-navigation/stack';
@@ -6,6 +6,7 @@ import { SettingStackParamList } from "../Types";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { useTheme } from '../ThemeContext';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type Props = StackScreenProps<SettingStackParamList, 'GoBackUpCloud'>;
 
@@ -13,17 +14,42 @@ const BackUpCloud = ({ route, navigation }: Props) => {
   const { theme } = useTheme();
   const [lastBackupTime, setLastBackupTime] = useState("Not yet backed up");
 
+  useEffect(() => {
+    const loadBackupTime = async () => {
+      try{
+        const storedTime = await AsyncStorage.getItem('lastBackupTime');
+        if (storedTime) {
+          setLastBackupTime(storedTime);
+        }
+      } catch (error) {
+        console.error("Error loading backup time: ", error);
+      }
+    };
+    loadBackupTime();
+  }, []);
+
   {/**handle onPress */}
   // Backup function
-  const handleBackup = () => {
-    console.log("Backup to Cloud pressed");
-    setLastBackupTime(new Date().toLocaleString()); 
-    
+  const handleBackup = async () => {
+    const currentTime = new Date().toLocaleString();
+    setLastBackupTime(currentTime);
+    await AsyncStorage.setItem('lastBackupTime', currentTime);
+    console.log("Backup to Cloud pressed"); 
   };
+
   // Restore function
-  const handleRestore = () => {
-    console.log("Restore pressed");
-    
+  const handleRestore = async() => {
+    try {
+      const storedTime = await AsyncStorage.getItem('lastBackupTime');
+      if (storedTime) {
+        setLastBackupTime(storedTime);
+        console.log("Restored backup time: ", storedTime);
+      } else {
+        console.log("No backup found to restore.");
+      }
+    } catch (error) {
+      console.error("Error restoring backup:", error);
+    }
   };
 
   return (
