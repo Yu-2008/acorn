@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useEffect, useState} from "react";
 import { BackUpCloudStyles as styles } from '../Styles';
 import { SafeAreaView, Text, View, TouchableOpacity, Platform, Alert } from "react-native";
 import { StackScreenProps } from '@react-navigation/stack';
@@ -6,19 +6,23 @@ import { SettingStackParamList } from "../Types";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { useTheme } from '../ThemeContext';
+
 import { useUser } from "../UserContext";
 
 import { exportAllTablesToJson, restoreFromJson } from "../SQLite";
 
 import { FIREBASE_DB } from "../FirebaseConfig";
 import { doc, setDoc, getDoc } from 'firebase/firestore';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 type Props = StackScreenProps<SettingStackParamList, 'GoBackUpCloud'>;
 
-const BackUpCloud = ({ route, navigation }: Props) => {
+const BackUpCloud = ({ navigation }: Props) => {
   const { theme } = useTheme();
   const { userID } = useUser();
   const [lastBackupTime, setLastBackupTime] = useState("Not yet backed up");
+
  
   {/**handle onPress */}
   // Backup function
@@ -39,15 +43,38 @@ const BackUpCloud = ({ route, navigation }: Props) => {
       });
   
       setLastBackupTime(new Date().toLocaleString());
+
+      const currentTime = new Date().toLocaleString();
+      setLastBackupTime(currentTime);
+      await AsyncStorage.setItem('lastBackupTime', currentTime);
+      console.log("Backup successful:", currentTime); 
       Alert.alert("Success", "Backup to cloud completed.");
       console.log("Backup uploaded:", jsonData);
     } catch (error) {
       console.error("Backup Error:", error);
       Alert.alert("Error", "Failed to back up data.");
     }
-  };
+  }
+
+
+  useEffect(() => {
+    const loadBackupTime = async () => {
+      try{
+        const storedTime = await AsyncStorage.getItem('lastBackupTime');
+        if (storedTime) {
+          setLastBackupTime(storedTime);
+        }
+      } catch (error) {
+        console.error("Error loading backup time: ", error);
+      }
+    };
+    loadBackupTime();
+  }, []);
+
+
 
   // Restore function
+
   const handleRestore = async () => {
   
     if (!userID) {
@@ -56,15 +83,21 @@ const BackUpCloud = ({ route, navigation }: Props) => {
     }
 
     try {
+
+      const storedTime = await AsyncStorage.getItem('lastBackupTime');
+      if (storedTime) {
+        setLastBackupTime(storedTime);
+        console.log("Restored backup time: ", storedTime);
+      } else {
+        console.log("No backup found to restore.");
+      }
+
       const docRef = doc(FIREBASE_DB, "backups", userID);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
         const backupData = docSnap.data();
         const tables = backupData.data;
-
-        // Clear old data if necessary (optional and depends on your logic)
-        // Then restore:
         await restoreFromJson(tables);
 
         Alert.alert("Success", "Restore completed from cloud.");
@@ -76,7 +109,7 @@ const BackUpCloud = ({ route, navigation }: Props) => {
       console.error("Restore Error:", error);
       Alert.alert("Error", "Failed to restore data.");
     }
-  };
+  }
 
 
   return (

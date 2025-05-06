@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
+import { CommonActions } from '@react-navigation/native';
 import { SignInStyles as styles } from '../Styles';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useTheme } from '../ThemeContext';
@@ -19,6 +20,7 @@ import { SignInUpStackParamList } from "../Types";
 import { FIREBASE_AUTH } from '../FirebaseConfig';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import LinearGradient from 'react-native-linear-gradient'; // Import the LinearGradient
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type Props = StackScreenProps<SignInUpStackParamList, "SignIn">;
 
@@ -41,9 +43,31 @@ const SignIn = ({ route, navigation }: Props) => {
     setLoading(true);
     try {
       const response = await signInWithEmailAndPassword(auth, email, password);
-      console.log(response);
+      console.log("Login success:", response.user.email);
+
+      const savedTheme = await AsyncStorage.getItem('userTheme');
+      if (savedTheme) {
+        console.log("User preferred theme:", savedTheme);
+      }
+
+      const backupTime = await AsyncStorage.getItem('lastBackupTime');
+      if (!backupTime) {
+        const now = new Date().toLocaleString();
+        await AsyncStorage.setItem('lastBackupTime', now);
+        console.log("Initialized backup time for new user:", now);
+      } else {
+        console.log("Last backup time:", backupTime);
+      }
+
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{name: 'Home'}],
+        })
+      );
+
     } catch (error: any) {
-      console.log(error);
+      console.log("Login error:", error);
       Alert.alert("Sign in failed: " + error.message);
     } finally {
       setLoading(false);
