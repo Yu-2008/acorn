@@ -24,12 +24,12 @@ const SignUp = ({ route, navigation }: Props) => {
 
   const validateEmail = async (email: string): Promise<boolean> => {
     try {
-      const url = `https://emailreputation.abstractapi.com/v1/?api_key=107927a1742f4302a85e0dea445460e8&email=${email}`;
+      const url = `https://emailvalidation.abstractapi.com/v1/?api_key=711372f9b8114ed1a7a52568bdbd0c16&email=${email}`;
       const response = await fetch(url);
       const data = await response.json();
 
-      const isValidFormat = data.email_deliverability?.is_format_valid;
-      const isMxFound = data.email_deliverability?.is_mx_valid;
+      const isValidFormat = data.is_valid_format?.value;
+      const isMxFound = data.is_mx_found?.value;
 
       return isValidFormat && isMxFound;
     } catch (error) {
