@@ -28,8 +28,8 @@ const SignUp = ({ route, navigation }: Props) => {
       const response = await fetch(url);
       const data = await response.json();
 
-      const isValidFormat = data.is_valid_format?.value;
-      const isMxFound = data.is_mx_found?.value;
+      const isValidFormat = data.email_deliverability?.is_format_valid;
+      const isMxFound = data.email_deliverability?.is_mx_valid;
 
       return isValidFormat && isMxFound;
     } catch (error) {

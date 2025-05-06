@@ -71,7 +71,14 @@ export const initDB = async () => {
 const predefinedIncomeCategories = [
     { title: "Salary", iconName: "wallet", iconLibrary: "Ionicons" },
     { title: "Side Income", iconName: "cash", iconLibrary: "Ionicons" },
+    { title: "Freelancing", iconName: "laptop", iconLibrary: "Ionicons" },
     { title: "Investment", iconName: "chart-line", iconLibrary: "FontAwesome5" },
+    { title: "Gifts", iconName: "gift", iconLibrary: "Ionicons"},
+    { title: "Dividents", iconName: "money-bill-wave", iconLibrary: "FontAwesome5" },
+    { title: "Government Aid", iconName: "business", iconLibrary: "Ionicons" },
+    { title: "Scholarship", iconName: "ribbon", iconLibrary: "Ionicons" },
+    { title: "Tips", iconName: "thumbs-up", iconLibrary: "Ionicons" },
+    { title: "Intellectual Property", iconName: "bulb", iconLibrary: "Ionicons" },
     { title: "Others", iconName: "ellipsis-h", iconLibrary: "FontAwesome5" },
   ];
   
@@ -80,7 +87,15 @@ const predefinedIncomeCategories = [
     { title: "Utilities", iconName: "flash", iconLibrary: "Ionicons" },
     { title: "Entertainment", iconName: "game-controller", iconLibrary: "Ionicons" },
     { title: "Education", iconName: "school", iconLibrary: "Ionicons" },
+    { title: "Childcare", iconName: "baby", iconLibrary: "FontAwesome5" },
+    { title: "Clothing", iconName: "shirt", iconLibrary: "Ionicons" },
+    { title: "Personal Care", iconName: "cut", iconLibrary: "Ionicons" },
+    { title: "Transportation", iconName: "car", iconLibrary: "Ionicons" },
     { title: "Medication", iconName: "medkit", iconLibrary: "Ionicons" },
+    { title: "Insurance", iconName: "paper", iconLibrary: "Ionicons" },
+    { title: "Pets", iconName: "paw", iconLibrary: "FontAwesome5" },
+    { title: "Travel", iconName: "airplane", iconLibrary: "Ionicons" },
+    { title: "Subscription", iconName: "logo-youtube", iconLibrary: "Ionicons" },
     { title: "Others", iconName: "ellipsis-h", iconLibrary: "FontAwesome5" },
   ];
 
