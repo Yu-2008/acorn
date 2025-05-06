@@ -443,7 +443,8 @@ export const updateTransactionById = async ({
     transTitle,
     transactionDate,
     amount,
-    description
+    description,
+    location,
   }: {
     transID: number;
     transType: 0 | 1;
@@ -452,12 +453,13 @@ export const updateTransactionById = async ({
     transactionDate: number;
     amount: number;
     description?: string;
+    location?: string;
   }) => {
     try {
       const database = await db;
       await database.executeSql(
         `UPDATE transactionHistory
-         SET transType = ?, transCategory = ?, transTitle = ?, transactionDate = ?, amount = ?, description = ?
+         SET transType = ?, transCategory = ?, transTitle = ?, transactionDate = ?, amount = ?, description = ?, location = ?
          WHERE transID = ?`,
         [transType, transCategory, transTitle, transactionDate, amount, description || null, transID]
       );

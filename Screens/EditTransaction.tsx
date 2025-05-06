@@ -23,7 +23,7 @@ import { Picker } from "@react-native-picker/picker";
 type Props = StackScreenProps<MainStackParamList, "EditTransaction">;
 
 const EditTransaction = ({ route, navigation }: Props) => {
-  const { transID }= route.params;
+  const { transID, transLocation }= route.params;
   const [title, setTitle] = useState(route.params.transTitle);
   const [type, setType] = useState(route.params.transType);
   const [description, setDescription] = useState(route.params.transDescription);
@@ -34,6 +34,7 @@ const EditTransaction = ({ route, navigation }: Props) => {
   const [isEdited, setIsEdited] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(route.params.transCategory);
+
 
   const shouldWarnOnLeave = useRef(true);
   const { userID } = useUser();
@@ -68,7 +69,8 @@ const EditTransaction = ({ route, navigation }: Props) => {
         transTitle: title,
         transactionDate: date.getTime(), // converting Date object to timestamp
         amount: parsedAmount,
-        description: description || ""
+        description: description || "",
+        location: transLocation || "",
       });
   
       shouldWarnOnLeave.current = false;
@@ -245,7 +247,7 @@ const EditTransaction = ({ route, navigation }: Props) => {
             />
             <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Description (Optional)</Text>
             <TextInput
-              value={description ?? ""}
+              value={description ?? "No description"}
               onChangeText={(text) => {
                 setDescription(text);
                 setIsEdited(true);
@@ -253,6 +255,15 @@ const EditTransaction = ({ route, navigation }: Props) => {
               style={[styles.input, { backgroundColor: theme === 'dark' ? '#444' : '#fff', color: theme === 'dark' ? 'white' : 'black' }]}
               placeholder="Enter description"
             />
+
+            <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Location</Text>
+            <TextInput
+              value={transLocation ?? "No location"}
+              editable={false}
+              style={[styles.input, { backgroundColor: theme === 'dark' ? '#444' : '#fff', color: theme === 'dark' ? 'white' : 'black' }]}
+              placeholder="No location"
+            />
+            
 
             <TouchableOpacity
               style={[styles.saveButton, { backgroundColor: isEdited ? '#E69DB8' : '#d3d3d3' }]}

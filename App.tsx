@@ -40,6 +40,15 @@ import { onAuthStateChanged, User } from 'firebase/auth';
 import { FIREBASE_AUTH } from './FirebaseConfig';
 
 import { initDB } from './SQLite';
+import { PubNubProvider } from 'pubnub-react';
+import PubNub from 'pubnub';
+
+
+const pubnub = new PubNub({
+  publishKey: 'pub-c-cf0b55ea-29d2-4169-96ec-90dbc6245c27',
+  subscribeKey: 'sub-c-249e82b7-53f8-4399-b070-8fbea7f745c2',
+  uuid: PubNub.generateUUID()
+});
 
 const RootStack = createStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<TabParamList>();
@@ -70,77 +79,79 @@ const SignInUpStackNavigator = () => {
 
 const TabNavigator = () => {
   return (
-    <Tab.Navigator
-      initialRouteName="AtMain"
-      screenOptions={({ route }) => ({
-        tabBarLabel: 'Home',
-        headerShown: false,
-        tabBarIcon: ({ focused, color, size }) => {
-          let iconName = '';
-          let IconComponent: any = Ionicons;
-
-          if (route.name === 'AtMain') {
-            iconName = focused ? 'home' : 'home-outline';
-          } else if (route.name === 'AddIncome') {
-            iconName = 'money-bill-transfer';
-            IconComponent = FontAwesome6;
-          } else if (route.name === 'AddExpenses') {
-            iconName = 'shopping-basket-add';
-            IconComponent = Fontisto;
-          } else if (route.name === 'GoSetting') {
-            iconName = focused ? 'settings' : 'settings-outline';
-          }
-
-          return <IconComponent name={iconName} size={size} color={color} solid={focused} />;
-        },
-        tabBarActiveTintColor: '#C4371B',
-        tabBarInactiveTintColor: '#D39285',
-        tabBarStyle: {
-          backgroundColor: '#FFDDDD',
-          height: 60,
-          paddingBottom: 8,
-          paddingTop: 4,
-        },
-        tabBarLabelStyle: {
-          fontSize: 12,
-          fontFamily: 'WinkySans-VariableFont_wght',
-        },
-      })}
-    >
-      <Tab.Screen name="AtMain">{(props: any) => <MainStackNavigator {...props} />}</Tab.Screen>
-
-      <Tab.Screen
-        name="AddIncome"
-        component={AddIncomeScreen}
-        options={{
-          tabBarLabel: 'Income',
-          headerShown: true,
-          title: 'Add Income Transaction',
-          ...defaultHeaderOptions,
-        }}
-      />
-
-      <Tab.Screen
-        name="AddExpenses"
-        component={AddExpensesScreen}
-        options={{
-          tabBarLabel: 'Expenses',
-          headerShown: true,
-          title: 'Add Expenses Transaction',
-          ...defaultHeaderOptions,
-        }}
-      />
-
-      <Tab.Screen
-        name="GoSetting"
-        options={{
-          tabBarLabel: 'Settings',
+    <PubNubProvider client={pubnub}>
+      <Tab.Navigator
+        initialRouteName="AtMain"
+        screenOptions={({ route }) => ({
+          tabBarLabel: 'Home',
           headerShown: false,
-        }}
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName = '';
+            let IconComponent: any = Ionicons;
+
+            if (route.name === 'AtMain') {
+              iconName = focused ? 'home' : 'home-outline';
+            } else if (route.name === 'AddIncome') {
+              iconName = 'money-bill-transfer';
+              IconComponent = FontAwesome6;
+            } else if (route.name === 'AddExpenses') {
+              iconName = 'shopping-basket-add';
+              IconComponent = Fontisto;
+            } else if (route.name === 'GoSetting') {
+              iconName = focused ? 'settings' : 'settings-outline';
+            }
+
+            return <IconComponent name={iconName} size={size} color={color} solid={focused} />;
+          },
+          tabBarActiveTintColor: '#C4371B',
+          tabBarInactiveTintColor: '#D39285',
+          tabBarStyle: {
+            backgroundColor: '#FFDDDD',
+            height: 60,
+            paddingBottom: 8,
+            paddingTop: 4,
+          },
+          tabBarLabelStyle: {
+            fontSize: 12,
+            fontFamily: 'WinkySans-VariableFont_wght',
+          },
+        })}
       >
-        {(props: any) => <SettingStackNavigator {...props}  />}
-      </Tab.Screen>
-    </Tab.Navigator>
+        <Tab.Screen name="AtMain">{(props: any) => <MainStackNavigator {...props} />}</Tab.Screen>
+
+        <Tab.Screen
+          name="AddIncome"
+          component={AddIncomeScreen}
+          options={{
+            tabBarLabel: 'Income',
+            headerShown: true,
+            title: 'Add Income Transaction',
+            ...defaultHeaderOptions,
+          }}
+        />
+
+        <Tab.Screen
+          name="AddExpenses"
+          component={AddExpensesScreen}
+          options={{
+            tabBarLabel: 'Expenses',
+            headerShown: true,
+            title: 'Add Expenses Transaction',
+            ...defaultHeaderOptions,
+          }}
+        />
+
+        <Tab.Screen
+          name="GoSetting"
+          options={{
+            tabBarLabel: 'Settings',
+            headerShown: false,
+          }}
+        >
+          {(props: any) => <SettingStackNavigator {...props}  />}
+        </Tab.Screen>
+      </Tab.Navigator>
+    </PubNubProvider>
   );
 };
 

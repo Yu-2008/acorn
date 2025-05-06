@@ -66,11 +66,17 @@ const AddIncomeCategory = ({ route, navigation }: Props) => {
   }
 
   const iconOptions = [
-    { label: "Salary", iconName: "cash", iconLibrary: "Ionicons" },
-    { label: "Side Income", iconName: "usd", iconLibrary: "FontAwesome" },
-    { label: "Investments", iconName: "trending-up", iconLibrary: "Ionicons" },
-    { label: "Freelance", iconName: "pencil", iconLibrary: "FontAwesome" },
-    { label: "Business", iconName: "briefcase", iconLibrary: "Ionicons" },
+    { label: "Salary", iconName: "wallet", iconLibrary: "Ionicons" },
+    { label: "Side Income", iconName: "cash", iconLibrary: "Ionicons" },
+    { label: "Freelancing", iconName: "laptop", iconLibrary: "Ionicons" },
+    { label: "Investment", iconName: "chart-line", iconLibrary: "FontAwesome5" },
+    { label: "Gifts", iconName: "gift", iconLibrary: "Ionicons"},
+    { label: "Dividents", iconName: "money-bill-wave", iconLibrary: "FontAwesome5" },
+    { label: "Government Aid", iconName: "business", iconLibrary: "Ionicons" },
+    { label: "Scholarship", iconName: "ribbon", iconLibrary: "Ionicons" },
+    { label: "Tips", iconName: "thumbs-up", iconLibrary: "Ionicons" },
+    { label: "Intellectual Property", iconName: "bulb", iconLibrary: "Ionicons" },
+    { label: "Others", iconName: "ellipsis-h", iconLibrary: "FontAwesome5" },
   ];
 
   const renderIcon = (iconName: string, iconLibrary: string) => {
@@ -91,6 +97,7 @@ const AddIncomeCategory = ({ route, navigation }: Props) => {
       <ScrollView contentContainerStyle={styles.formContainer}>
 
         <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Select Icon</Text>
+        
         <View style={styles.pickerContainer}>
           {iconOptions.map((item) => (
             <TouchableOpacity

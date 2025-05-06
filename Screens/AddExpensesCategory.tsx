@@ -71,11 +71,20 @@ const AddExpensesCategory = ({ route, navigation }: Props) => {
   }
 
   const iconOptions = [
-    { label: "Salary", iconName: "cash", iconLibrary: "Ionicons" },
-    { label: "Side Income", iconName: "usd", iconLibrary: "FontAwesome" },
-    { label: "Investments", iconName: "trending-up", iconLibrary: "Ionicons" },
-    { label: "Freelance", iconName: "pencil", iconLibrary: "FontAwesome" },
-    { label: "Business", iconName: "briefcase", iconLibrary: "Ionicons" },
+    { label: "Food", iconName: "fast-food", iconLibrary: "Ionicons" },
+    { label: "Utilities", iconName: "flash", iconLibrary: "Ionicons" },
+    { label: "Entertainment", iconName: "game-controller", iconLibrary: "Ionicons" },
+    { label: "Education", iconName: "school", iconLibrary: "Ionicons" },
+    { label: "Childcare", iconName: "baby", iconLibrary: "FontAwesome5" },
+    { label: "Clothing", iconName: "shirt", iconLibrary: "Ionicons" },
+    { label: "Personal Care", iconName: "cut", iconLibrary: "Ionicons" },
+    { label: "Transportation", iconName: "car", iconLibrary: "Ionicons" },
+    { label: "Medication", iconName: "medkit", iconLibrary: "Ionicons" },
+    { label: "Insurance", iconName: "paper", iconLibrary: "Ionicons" },
+    { label: "Pets", iconName: "paw", iconLibrary: "FontAwesome5" },
+    { label: "Travel", iconName: "airplane", iconLibrary: "Ionicons" },
+    { label: "Subscription", iconName: "logo-youtube", iconLibrary: "Ionicons" },
+    { label: "Others", iconName: "ellipsis-h", iconLibrary: "FontAwesome5" },
   ];
 
   const renderIcon = (iconName: string, iconLibrary: string) => {
@@ -96,6 +105,7 @@ const AddExpensesCategory = ({ route, navigation }: Props) => {
       <ScrollView contentContainerStyle={styles.formContainer}>
 
         <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Select Icon</Text>
+        
         <View style={styles.pickerContainer}>
           {iconOptions.map((item) => (
             <TouchableOpacity

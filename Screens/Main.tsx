@@ -19,15 +19,16 @@ type Transaction = {
   transactionDate: number;
   amount: number;
   description: string | null;
+  location: string | null;
 };
 
 const Home = ({ navigation }: Props) => {
   const { userID } = useUser();
   const [username, setUsername] = useState('');
   const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [totalBalance, setTotalBalance] = useState(100.0);
-  const [income, setIncome] = useState(150.0);
-  const [expenses, setExpenses] = useState(50.0);
+  const [totalBalance, setTotalBalance] = useState(0);
+  const [income, setIncome] = useState(0);
+  const [expenses, setExpenses] = useState(0);
   const { theme } = useTheme();
 
   const colorAnim = new Animated.Value(0);
@@ -219,6 +220,7 @@ const Home = ({ navigation }: Props) => {
                   transCategory: item.transCategory,
                   transAmount: item.amount,
                   transDescription: item.description || "",
+                  transLocation: item.location,
                 });
               }}
               underlayColor="#FFCCCC"

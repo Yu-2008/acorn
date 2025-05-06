@@ -22,10 +22,10 @@ const ViewTransaction = ({ route, navigation }: Props) => {
   const [description, setDescription] = useState(route.params.transDescription);
   const [date, setDate] = useState<Date>(new Date(route.params.transDate));
   const [amount, setAmount] = useState(route.params.transAmount);
-  const [category, setCategory] = useState(route.params.transCategory)
+  const [category, setCategory] = useState(route.params.transCategory);
+  const [location, setLocation] = useState(route.params.transLocation);
   const { theme } = useTheme();
 
-  console.log("HIhihihihi");
 
   useFocusEffect(
     
@@ -79,6 +79,7 @@ const ViewTransaction = ({ route, navigation }: Props) => {
         transCategory: category,
         transAmount: amount,
         transDescription: description ||  "",
+        transLocation: location || "",
       });
     } else if (name === "delete") {
       console.log(`Delete transaction ${title}`);
@@ -149,7 +150,7 @@ const ViewTransaction = ({ route, navigation }: Props) => {
         <View style={styles.detailItem}>
           <Text style={[styles.detailLabel, { color: theme === 'dark' ? 'white' : 'black' }]}>Description</Text>
           <View style={[styles.detailBox, { backgroundColor: theme === 'dark' ? '#444' : '#fff' }]}>
-            <Text style={[styles.detailText, { color: theme === 'dark' ? 'white' : 'black' }]}>{description}</Text>
+            <Text style={[styles.detailText, { color: theme === 'dark' ? 'white' : 'black' }]}>{description? description : "No description"}</Text>
           </View>
         </View>
 
@@ -158,6 +159,13 @@ const ViewTransaction = ({ route, navigation }: Props) => {
           <View style={[styles.detailBox, { backgroundColor: theme === 'dark' ? '#444' : '#fff' }]}>
             <Text style={[styles.detailText, { color: theme === 'dark' ? 'white' : 'black' }]}><Text>{date.toDateString()}</Text>
             </Text>
+          </View>
+        </View>
+
+        <View style={styles.detailItem}>
+          <Text style={[styles.detailLabel, { color: theme === 'dark' ? 'white' : 'black' }]}>Location</Text>
+          <View style={[styles.detailBox, { backgroundColor: theme === 'dark' ? '#444' : '#fff' }]}>
+            <Text style={[styles.detailText, { color: theme === 'dark' ? 'white' : 'black' }]}>{location? location : "No location"}</Text>
           </View>
         </View>
         

@@ -29,6 +29,7 @@ export type MainStackParamList = {
       transDate: number;
       transAmount: number;
       transDescription: string | null;
+      transLocation: string | null;
     };
     EditTransaction: {
       transID: number;
@@ -38,6 +39,7 @@ export type MainStackParamList = {
       transDate: number;
       transAmount: number;
       transDescription: string | null;
+      transLocation: string | null;
     };
   };
   

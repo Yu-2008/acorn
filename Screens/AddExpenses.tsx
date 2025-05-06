@@ -1,12 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { SafeAreaView, Text, View, TextInput, TouchableOpacity, Platform, Alert, ScrollView} from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { SafeAreaView, Text, View, TextInput, TouchableOpacity, Platform, Alert, ScrollView, ActivityIndicator} from "react-native";
 import { AddExpensesStyles as styles } from '../Styles';
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useTheme } from '../ThemeContext';
 import { getExpensesCategories, insertTransactionHistory } from "../SQLite";
 import { useUser } from "../UserContext";
-import CheckBox from '@react-native-community/checkbox'; 
+import CheckBox from '@react-native-community/checkbox';
+import Geolocation from "@react-native-community/geolocation";
+import Ably from 'ably'; 
+import { usePubNub } from "pubnub-react";
+import { useLocationPermission } from "../useLocationPermission";
+import { reverseGeocode } from "../reverseGeocode";
+
+const CHANNEL = "location-channel";
 
 const AddExpenses = ({ navigation }: any) => {
   const { userID } = useUser();
@@ -18,9 +25,97 @@ const AddExpenses = ({ navigation }: any) => {
   const [transDate, setTransDate] = useState(new Date());
   const [transDescription, setTransDescription] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [locationCheckbox, setLocationCheckbox] = useState(false);
+  const [location, setLocation] = useState<string>("Not showing location.");
+  const { granted: hasLocationPerm, requestPermission } = useLocationPermission();
+  const watchId = useRef<number | null>(null);
+  const [ loading, setLoading ] = useState(false);
+  
+  
+  const pubnub = usePubNub();
 
-  const [isLocationChecked, setIsLocationChecked] = useState(false);
-  const [location, setLocation] = useState('');
+  const handlePubNubMessage = async (message: string) => {
+    const match = message.match(/Lat:([\d.-]+),Lon:([\d.-]+)/);
+    if (match) {
+      const lat = parseFloat(match[1]);
+      const lon = parseFloat(match[2]);
+  
+      const locationName = await reverseGeocode(lat, lon);
+      console.log('📍 Human-readable location:', locationName);
+      setLocation(locationName || "Unknown location");
+      setLoading(false);
+    }
+  };
+  
+  useEffect(() => {
+    pubnub.subscribe({ channels: [CHANNEL], withPresence: false });
+
+    const listener = {
+      message: (m: any) => {
+        const rawLocation = m.message.locationName ?? "Unknown location";
+        console.log("Received via PubNub:", rawLocation);
+        handlePubNubMessage(rawLocation);
+      }
+    };
+    pubnub.addListener(listener);
+
+    return () => {
+      pubnub.removeListener(listener);
+      pubnub.unsubscribe({ channels: [CHANNEL] });
+    };
+  }, [pubnub]);
+
+
+  const onToggleLocation = async (checked: boolean) => {
+    setLocationCheckbox(checked);
+    if (!checked)  {
+      stopWatchingLocation();
+      setLocation("Not showing location.");
+      return;
+    }
+
+    // request runtime permission on demand
+    const ok = await requestPermission();
+    if (!ok) {
+      Alert.alert("Permission required", "Location permission not granted.");
+      setLocationCheckbox(false);
+      return;
+    }
+
+    setLoading(true);
+    startWatchingLocation();
+  };
+
+  const startWatchingLocation = () => {
+    watchId.current = Geolocation.watchPosition(
+      async ({ coords }) => {
+        const name = `Lat:${coords.latitude.toFixed(4)},Lon:${coords.longitude.toFixed(4)}`;
+        pubnub.publish({ channel: CHANNEL, message: { locationName: name } })
+          .then(() => console.log("Published location:", name))
+          .catch(err => console.error("Publish error:", err));
+      },
+      err => {
+        console.error("Watch error:", err);
+        setLoading(false);
+      },
+      { enableHighAccuracy: true, distanceFilter: 10, interval: 5000 }
+    );
+  };
+  
+  const stopWatchingLocation = () => {
+    if (watchId.current !== null) {
+      Geolocation.clearWatch(watchId.current);
+      watchId.current = null;
+    }
+  };
+  
+  useEffect(() => {
+    return () => {
+      stopWatchingLocation(); // Clear on unmount
+    };
+  }, []);
+  
+  
 
   {/**handle onPress */}
   const handleSave = async() => {
@@ -41,20 +136,14 @@ const AddExpenses = ({ navigation }: any) => {
     }
 
     try {
-
-      let locationToSave = '';
-      if (isLocationChecked) {
-        locationToSave = location;
-      }
-
       await insertTransactionHistory({
         transType: 1, 
         transCategory: selectedCategory ? selectedCategory.toString() : "",
         transTitle: transTitle,
         transactionDate: transDate.getTime(), // timestamp
         amount: amount,
-        description: transDescription, // Optional description, can be added if needed
-        location: locationToSave,
+        description: transDescription, 
+        location: locationCheckbox ? location : "",
         userID,
       });
       console.log("Expenses added successfully.");
@@ -64,11 +153,13 @@ const AddExpenses = ({ navigation }: any) => {
       setTransDescription("");
       setTransDate(new Date());
       setLocation("");
+      setLocationCheckbox(false);
       navigation.goBack(); 
     } catch (error) {
       console.error("Add expenses transaction error: ", error);
     }
   };
+
 
   useEffect(() => {
     if (!userID) {
@@ -122,7 +213,7 @@ const AddExpenses = ({ navigation }: any) => {
           <View style={styles.inputContainer}>
             <TextInput
               style={[styles.textInput, { color: theme === 'dark' ? '#fff' : '#000' }]}
-              placeholder="e.g. from Boss"
+              placeholder="e.g. Breakfast"
               placeholderTextColor={theme === 'dark' ? '#aaa' : '#666'}
               value={transTitle}
               onChangeText={setTransTitle}
@@ -156,7 +247,7 @@ const AddExpenses = ({ navigation }: any) => {
           <View style={styles.inputContainer}>
             <TextInput
               style={[styles.textInput, { color: theme === 'dark' ? '#fff' : '#000' }]}
-              placeholder="Bonus!"
+              placeholder="Yummy!!"
               placeholderTextColor={theme === 'dark' ? '#aaa' : '#666'}
               value={transDescription}
               onChangeText={setTransDescription}
@@ -189,23 +280,19 @@ const AddExpenses = ({ navigation }: any) => {
             />
           )}
 
-          <Text style={[styles.label, { color: theme === 'dark' ? '#fff' : '#000' }]}>Record Current Location</Text>
-          <View style={styles.checkboxContainer}>
-            <CheckBox
-              value={isLocationChecked}
-              onValueChange={setIsLocationChecked}
-            />
-            <Text style={{ color: theme === 'dark' ? '#fff' : '#000' }}>
-              Do you want to record current location?
+
+          
+          {/* Location Toggle */}
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <CheckBox value={locationCheckbox} onValueChange={onToggleLocation} />
+            <Text style={[styles.label, { color: theme === 'dark' ? '#fff' : '#000' }]}>
+              Record Current Location
             </Text>
           </View>
-
-          {isLocationChecked ? (
-            <Text style={{ color: theme === 'dark' ? '#fff' : '#000' }}>
-              {location || 'Fetching current location...'}
-            </Text>
+          {loading ? (
+            <ActivityIndicator size="small" color={theme === 'dark' ? '#fff' : '#000'} />
           ) : (
-            <Text style={{ color: theme === 'dark' ? '#fff' : '#000' }}>Not showing location.</Text>
+            <Text>{locationCheckbox ? `Current Location: ${location}` : "Not showing location."}</Text>
           )}
 
 

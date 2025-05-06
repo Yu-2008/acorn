@@ -61,7 +61,7 @@ const ExpensesCategory = ({ route, navigation }: Props) => {
     
     if (iconLibrary === 'Ionicons') {
       return <Ionicons name={iconName} size={24} color={iconColor} style={styles.icon} />;
-    } else if (iconLibrary === 'FontAwesome') {
+    } else if (iconLibrary === 'FontAwesome5') {
       return <FontAwesome name={iconName} size={24} color={iconColor} style={styles.icon} />;
     } else {
       return <Ionicons name="file-tray" size={24} color={iconColor} style={styles.icon} />;
