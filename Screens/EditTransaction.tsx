@@ -16,44 +16,111 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { MainStackParamList } from "../Types";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useTheme } from '../ThemeContext';
+import { useUser } from "../UserContext";
+import { updateTransactionById, getIncomeCategories, getExpensesCategories } from "../SQLite";
+import { Picker } from "@react-native-picker/picker";
 
 type Props = StackScreenProps<MainStackParamList, "EditTransaction">;
 
 const EditTransaction = ({ route, navigation }: Props) => {
-  const { transTitle, transDate, transType, transAmount, transDescription } = route.params;
-
-  const [title, setTitle] = useState(transTitle);
-  const [description, setDescription] = useState(transDescription);
-  const [type, setType] = useState(transType);
-  const [amount, setAmount] = useState(transAmount.toString());
-  const [date, setDate] = useState(new Date(transDate));
+  const { transID }= route.params;
+  const [title, setTitle] = useState(route.params.transTitle);
+  const [type, setType] = useState(route.params.transType);
+  const [description, setDescription] = useState(route.params.transDescription);
+  const [date, setDate] = useState<Date>(new Date(route.params.transDate));
+  const [amount, setAmount] = useState(String(route.params.transAmount));
+  const [categories, setCategories] = useState<{ id: number; title: string }[]>([]);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [isEdited, setIsEdited] = useState(false);
+  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState(route.params.transCategory);
 
   const shouldWarnOnLeave = useRef(true);
+  const { userID } = useUser();
   const { theme } = useTheme();
 
-  const onChangeDate = (event: any, selectedDate?: Date) => {
-    setShowDatePicker(Platform.OS === 'ios');
-    if (selectedDate) {
-      setDate(selectedDate);
-      setIsEdited(true);
+ 
+
+  const handleSave = async () => {
+
+
+    if (!title.trim()) {
+      Alert.alert("Input Error", "Transaction title is required!");
+      return;
+    }
+
+    if (!selectedCategory || !title || !amount) {
+          Alert.alert("Please fill in category, title, and amount.");
+          return;
+    }
+
+    const parsedAmount = parseFloat(String(amount));
+    if (isNaN(parsedAmount)) {
+      Alert.alert("Please enter a valid amount.");
+      return;
+    }
+  
+    try {
+      await updateTransactionById({
+        transID,
+        transType: type,
+        transCategory: selectedCategory,
+        transTitle: title,
+        transactionDate: date.getTime(), // converting Date object to timestamp
+        amount: parsedAmount,
+        description: description || ""
+      });
+  
+      shouldWarnOnLeave.current = false;
+      setIsEdited(false);
+  
+      if (Platform.OS === 'android') {
+        ToastAndroid.show("Transaction saved successfully", ToastAndroid.SHORT);
+      } else {
+        Alert.alert("Success", "Transaction saved successfully");
+      }
+  
+      setSelectedCategory(categories.length > 0 ? String(categories[0].id) : "");
+      setTitle("");
+      setAmount("");
+      setDescription("");
+      setDate(new Date());
+      navigation.goBack();
+    } catch (error) {
+      Alert.alert("Error", "Failed to save transaction.");
+      console.error(error);
     }
   };
 
-  const handleSave = () => {
-    console.log("Save edited transaction:", title, type, amount, date);
-    shouldWarnOnLeave.current = false;
-    setIsEdited(false);
+  useEffect(()=>{
 
-    if (Platform.OS === 'android') {
-      ToastAndroid.show("Transaction saved successfully", ToastAndroid.SHORT);
-    } else {
-      Alert.alert("Success", "Transaction saved successfully");
+    if (!userID) {
+      Alert.alert("Get UID Error", "Please check your sign in status.");
+      return;
     }
 
-    navigation.goBack(); 
-  };
+    if(!transID){
+      Alert.alert("Get transID error","Cannot save category.");
+      return;
+    }
+
+    const loadCategories = async () => {
+      let data = [];
+      if (type === 0) {
+        data = await getIncomeCategories(userID);
+      } else {
+        data = await getExpensesCategories(userID);
+      }
+      setCategories(data);
+      
+      if (!data.find((cat) => cat.id === selectedCategory) && data.length > 0) {
+        setSelectedCategory(data[0].id);  // Ensure valid category selection
+      }
+    };
+    
+    loadCategories();
+  }, [transID]);
+
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('beforeRemove', (e) => {
@@ -80,6 +147,14 @@ const EditTransaction = ({ route, navigation }: Props) => {
     return unsubscribe;
   }, [navigation, isEdited]);
 
+  const onChangeDate = (event: any, selectedDate?: Date) => {
+    setShowDatePicker(Platform.OS === 'ios');
+    if (selectedDate) {
+      setDate(selectedDate);
+      setIsEdited(true);
+    }
+  };
+
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme === 'dark' ? '#333' : '#FDE6F6' }]}>
       <KeyboardAvoidingView
@@ -88,15 +163,25 @@ const EditTransaction = ({ route, navigation }: Props) => {
       >
         <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 20 }}>
           <View style={styles.formContainer}>
-          <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Transaction Type</Text>
+            <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Transaction Type</Text>
+              <View style={[styles.detailBox, { marginBottom: 20, backgroundColor: theme === 'dark' ? '#444' : '#fff' }]}>
+                {type===0? 
+                  <Text style={[styles.detailText, { color: theme === 'dark' ? 'white' : 'black' }]}>
+                    Income
+                  </Text>
+                :
+                  <Text style={[styles.detailText, { color: theme === 'dark' ? 'white' : 'black' }]}>
+                    Expenses
+                  </Text>}
+                </View>
+
+              
+
+
+
+            <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Title</Text>
             <TextInput
-              value={type}
-              editable={false}
-              style={[styles.input, { backgroundColor: theme === 'dark' ? '#444' : '#fff', color: theme === 'dark' ? 'white' : 'black' }]}
-            />
-            <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Transaction Name</Text>
-            <TextInput
-              value={title}
+              value={title ?? ""}
               onChangeText={(text) => {
                 setTitle(text);
                 setIsEdited(true);
@@ -104,6 +189,32 @@ const EditTransaction = ({ route, navigation }: Props) => {
               style={[styles.input, { backgroundColor: theme === 'dark' ? '#444' : '#fff', color: theme === 'dark' ? 'white' : 'black' }]}
               placeholder="Enter transaction name"
             />
+
+            <View style={styles.formContainer}>
+              <Text
+                style={[
+                  styles.label,
+                  { color: theme === 'dark' ? '#fff' : '#000' }, 
+                ]}
+              >
+                Category
+              </Text>
+              <View style={styles.pickerContainer}>
+                <Picker
+                  selectedValue={selectedCategory}
+                  onValueChange={(itemValue) => {setSelectedCategory(itemValue); setIsEdited(true);}}
+                  style={{ color: theme === 'dark' ? '#fff' : '#000' }}
+                >
+                  {categories.map((cat) => (
+                    <Picker.Item key={cat.id} label={cat.title} value={cat.id} />
+                  ))}
+                </Picker>
+              </View>
+
+            </View>
+
+
+            
             <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Date</Text>
             <TouchableOpacity
               style={[styles.datePickerButton, { backgroundColor: theme === 'dark' ? '#444' : '#fff' }]}
@@ -123,7 +234,7 @@ const EditTransaction = ({ route, navigation }: Props) => {
 
             <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Amount</Text>
             <TextInput
-              value={amount}
+              value={String(amount ?? "")}
               onChangeText={(text) => {
                 setAmount(text);
                 setIsEdited(true);
@@ -134,7 +245,7 @@ const EditTransaction = ({ route, navigation }: Props) => {
             />
             <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Description (Optional)</Text>
             <TextInput
-              value={description}
+              value={description ?? ""}
               onChangeText={(text) => {
                 setDescription(text);
                 setIsEdited(true);
@@ -142,6 +253,7 @@ const EditTransaction = ({ route, navigation }: Props) => {
               style={[styles.input, { backgroundColor: theme === 'dark' ? '#444' : '#fff', color: theme === 'dark' ? 'white' : 'black' }]}
               placeholder="Enter description"
             />
+
             <TouchableOpacity
               style={[styles.saveButton, { backgroundColor: isEdited ? '#E69DB8' : '#d3d3d3' }]}
               onPress={handleSave}

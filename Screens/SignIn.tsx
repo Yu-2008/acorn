@@ -19,6 +19,8 @@ import { SignInUpStackParamList } from "../Types";
 import { FIREBASE_AUTH } from '../FirebaseConfig';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 
+
+
 type Props = StackScreenProps<SignInUpStackParamList, "SignIn"> 
 
 const SignIn = ({ route, navigation }: Props) => {

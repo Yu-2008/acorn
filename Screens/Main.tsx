@@ -14,6 +14,7 @@ type Props = StackScreenProps<MainStackParamList, 'Home'>;
 type Transaction = {
   transID: number;
   transType: 0 | 1;
+  transCategory: string;
   transTitle: string;
   transactionDate: number;
   amount: number;
@@ -212,8 +213,15 @@ const Home = ({ navigation }: Props) => {
       renderItem={({ item }) => (
         <TouchableHighlight
           onPress={() => {
+            console.log("Navigating to ViewTransaction with ID:", item.transID);
             navigation.navigate('ViewTransaction', {
               transID: item.transID,
+              transTitle: item.transTitle,
+              transDate: item.transactionDate,
+              transType: item.transType,
+              transCategory: item.transCategory,
+              transAmount: item.amount,
+              transDescription: item.description ||  "",
             });
           }}
           underlayColor="#FFCCCC"

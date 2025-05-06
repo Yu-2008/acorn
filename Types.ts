@@ -23,14 +23,21 @@ export type MainStackParamList = {
     Home: undefined;
     ViewTransaction: {
       transID: number;
+      transType: 0 | 1;
+      transCategory: string;
+      transTitle: string;
+      transDate: number;
+      transAmount: number;
+      transDescription: string | null;
     };
     EditTransaction: {
-        transID: number;
-        transTitle: string;
-        transDate: string;
-        transType: string;
-        transAmount: number;
-        transDescription: string;
+      transID: number;
+      transType: 0 | 1;
+      transCategory: string;
+      transTitle: string;
+      transDate: number;
+      transAmount: number;
+      transDescription: string | null;
     };
   };
   

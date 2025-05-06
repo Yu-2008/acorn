@@ -297,10 +297,21 @@ export const getTransactionByTransId = async (transID: number) => {
       if (result.rows.length === 0) return null;
   
       const row = result.rows.item(0);
+
+      // row.transCategory is the numeric ID (as TEXT)
+      const catId = parseInt(row.transCategory, 10);
+      let catRecord;
+      if (row.transType === 0) {
+        catRecord = await getIncomeCategoryById(catId);
+      } else {
+        catRecord = await getExpensesCategoryById(catId);
+      }
+      const categoryTitle = catRecord?.title ?? "";
+
       return {
         transID: row.transID,
         transType: row.transType,
-        transCategory: row.transCategory,
+        transCategory: categoryTitle,
         transTitle: row.transTitle,
         transactionDate: row.transactionDate,
         amount: row.amount,

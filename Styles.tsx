@@ -650,6 +650,7 @@ export const EditExpensesCategoryStyles = StyleSheet.create({
     color: '#393533',
     fontFamily: 'WinkySans-VariableFont_wght',
   },
+  
 });
 
 export const EditIncomeCategoryStyles = StyleSheet.create({
@@ -714,6 +715,13 @@ export const EditTransactionStyles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingTop: 20,
   },
+  pickerContainer: {
+    marginTop: 10,
+    borderWidth: 2,
+    borderColor: '#DBABA1',
+    borderRadius: 10,
+    marginBottom: 15,
+  },
   formContainer: {
     marginTop: 10,
   },
@@ -755,6 +763,17 @@ export const EditTransactionStyles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '500',
     color: '#393533',
+    fontFamily: 'WinkySans-VariableFont_wght',
+  },
+  detailBox: {
+    borderWidth: 1,
+    borderColor: '#DBABA1',
+    borderRadius: 8,
+    padding: 10,
+    marginTop: 5,
+  },
+  detailText: {
+    fontSize: 16,
     fontFamily: 'WinkySans-VariableFont_wght',
   },
 });
