@@ -106,14 +106,21 @@ const GeolocationPage = () => {
     });
     Linking.openURL(mapLink);
   }
-
+const handleContactUs = () => {
+  const whatsappLink = "https://chat.whatsapp.com/JOzzVznb1YCL9CGpLQKMZM";
+  Linking.openURL(whatsappLink);
+};
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={queryLocation}>
-        <View style={styles.button}>
-           <Feather name="map-pin" size={24} color={theme === 'dark' ? 'white' : '#393533'} />
+      <TouchableOpacity onPress={queryLocation} style={[styles.button,{marginTop:20}]}>
+          <Feather name="map-pin" size={24} color={theme === 'dark' ? 'white' : '#393533'} />
           <Text style={[styles.buttonText,{ color: theme === 'dark' ? '#fff' : '#393533' }]}>Search for Acorn Company</Text>
-        </View>
+      </TouchableOpacity>
+
+      {/* Contact Us Button for WhatsApp */}
+      <TouchableOpacity onPress={handleContactUs} style={[styles.button, { marginTop: 20 }]}>
+        <Feather name="message-circle" size={24} color={theme === 'dark' ? 'white' : '#393533'} />
+        <Text style={[styles.buttonText, { color: theme === 'dark' ? '#fff' : '#393533' }]}>Contact Us (WhatsApp)</Text>
       </TouchableOpacity>
     </View>
   );
