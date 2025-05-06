@@ -319,7 +319,7 @@ export const AddExpensesStyles = StyleSheet.create({
     fontSize: 16,
   },
   doneButton: {
-    marginTop: 60,
+    marginTop: 30,
     backgroundColor: '#E69DB8',
     padding: 15,
     borderRadius: 10,
@@ -459,7 +459,7 @@ export const AddIncomeStyles = StyleSheet.create({
     fontSize :16
   },
   doneButton: {
-    marginTop: 60,
+    marginTop: 30,
     backgroundColor: '#E69DB8',
     padding: 15,
     borderRadius: 10,

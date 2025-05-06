@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { SafeAreaView, Text, View, TextInput, TouchableOpacity, Platform, Alert } from "react-native";
+import { SafeAreaView, Text, View, TextInput, TouchableOpacity, Platform, Alert, ScrollView } from "react-native";
 import { AddIncomeStyles as styles } from '../Styles';
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -18,15 +18,13 @@ const AddIncome = ({ navigation }: any) => {
   const [transDescription, setTransDescription] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
 
-
   // Handle onPress
-  const handleSave = async() => {
-
+  const handleSave = async () => {
     if (!userID) {
       Alert.alert("User not signed in. Cannot add transaction.");
       return;
     }
-    
+
     if (!selectedCategory || !transTitle || !transAmount) {
       Alert.alert("Please fill in category, title, and amount.");
       return;
@@ -54,12 +52,10 @@ const AddIncome = ({ navigation }: any) => {
       setTransAmount("");
       setTransDescription("");
       setTransDate(new Date());
-      navigation.goBack(); 
-
+      navigation.goBack();
     } catch (error) {
       console.error("Add income transaction error: ", error);
     }
-    
   };
 
   useEffect(() => {
@@ -84,34 +80,32 @@ const AddIncome = ({ navigation }: any) => {
 
   return (
     <SafeAreaView
-      style={[
-        styles.container,
-        { backgroundColor: theme === 'dark' ? '#333' : '#FDE6F6' }, 
-      ]}
+      style={[styles.container, { backgroundColor: theme === 'dark' ? '#333' : '#FDE6F6' }]}
     >
-      <View style={styles.formContainer}>
-        <Text
-          style={[
-            styles.label,
-            { color: theme === 'dark' ? '#fff' : '#000' }, 
-          ]}
-        >
-          Category
-        </Text>
-        <View style={styles.pickerContainer}>
-          <Picker
-            selectedValue={selectedCategory}
-            onValueChange={(itemValue) => setSelectedCategory(itemValue)}
-            style={{ color: theme === 'dark' ? '#fff' : '#000' }}
+      {/* Wrap the form in ScrollView to allow scrolling */}
+      <ScrollView keyboardShouldPersistTaps="handled">
+        <View style={styles.formContainer}>
+          <Text
+            style={[
+              styles.label,
+              { color: theme === 'dark' ? '#fff' : '#000' },
+            ]}
           >
-            {categories.map((cat) => (
-              <Picker.Item key={cat.id} label={cat.title} value={cat.id} />
-            ))}
-          </Picker>
-        </View>
+            Category
+          </Text>
+          <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={selectedCategory}
+              onValueChange={(itemValue) => setSelectedCategory(itemValue)}
+              style={{ color: theme === 'dark' ? '#fff' : '#000' }}
+            >
+              {categories.map((cat) => (
+                <Picker.Item key={cat.id} label={cat.title} value={cat.id} />
+              ))}
+            </Picker>
+          </View>
 
-        
-        <Text style={[styles.label, { color: theme === 'dark' ? '#fff' : '#000' }]}>
+          <Text style={[styles.label, { color: theme === 'dark' ? '#fff' : '#000' }]}>
             Title
           </Text>
           <View style={styles.inputContainer}>
@@ -122,33 +116,33 @@ const AddIncome = ({ navigation }: any) => {
               value={transTitle}
               onChangeText={setTransTitle}
             />
-        </View>
+          </View>
 
-        <Text
-          style={[
-            styles.label,
-            { color: theme === 'dark' ? '#fff' : '#000' }, 
-          ]}
-        >
-          Amount
-        </Text>
-        <View style={styles.inputContainer}>
-          <Text style={[styles.amountText, { color: theme === 'dark' ? '#fff' : '#000' }]}>RM</Text>
-          <TextInput
+          <Text
             style={[
-              styles.textInput,
-              { color: theme === 'dark' ? '#fff' : '#000' }
+              styles.label,
+              { color: theme === 'dark' ? '#fff' : '#000' },
             ]}
-            keyboardType="numeric"
-            value={transAmount}
-            onChangeText={setTransAmount}
-          />
-        </View>
+          >
+            Amount
+          </Text>
+          <View style={styles.inputContainer}>
+            <Text style={[styles.amountText, { color: theme === 'dark' ? '#fff' : '#000' }]}>RM</Text>
+            <TextInput
+              style={[
+                styles.textInput,
+                { color: theme === 'dark' ? '#fff' : '#000' }
+              ]}
+              keyboardType="numeric"
+              value={transAmount}
+              onChangeText={setTransAmount}
+            />
+          </View>
 
-        <Text style={[styles.label, { color: theme === 'dark' ? '#fff' : '#000' }]}>
+          <Text style={[styles.label, { color: theme === 'dark' ? '#fff' : '#000' }]}>
             Description
-        </Text>
-        <View style={styles.inputContainer}>
+          </Text>
+          <View style={styles.inputContainer}>
             <TextInput
               style={[styles.textInput, { color: theme === 'dark' ? '#fff' : '#000' }]}
               placeholder="Yummy"
@@ -156,45 +150,44 @@ const AddIncome = ({ navigation }: any) => {
               value={transDescription}
               onChangeText={setTransDescription}
             />
+          </View>
+
+          <Text
+            style={[
+              styles.label,
+              { color: theme === 'dark' ? '#fff' : '#000' },
+            ]}
+          >
+            Date
+          </Text>
+          <TouchableOpacity
+            style={styles.datePickerButton}
+            onPress={() => setShowDatePicker(true)}
+          >
+            <Text style={[styles.dateText, { color: theme === 'dark' ? '#fff' : '#000' }]}>
+              {transDate.toDateString()}
+            </Text>
+          </TouchableOpacity>
+
+          {showDatePicker && (
+            <DateTimePicker
+              value={transDate}
+              mode="date"
+              display="default"
+              onChange={onChangeDate}
+            />
+          )}
+
+          <TouchableOpacity
+            style={[styles.doneButton]}
+            onPress={handleSave}
+          >
+            <Text style={[styles.doneButtonText]}>
+              Add
+            </Text>
+          </TouchableOpacity>
         </View>
-
-        <Text
-          style={[
-            styles.label,
-            { color: theme === 'dark' ? '#fff' : '#000' }, 
-          ]}
-        >
-          Date
-        </Text>
-        <TouchableOpacity
-          style={styles.datePickerButton}
-          onPress={() => setShowDatePicker(true)}
-        >
-          <Text style={[styles.dateText, { color: theme === 'dark' ? '#fff' : '#000' }]}>
-            {transDate.toDateString()}
-          </Text>
-        </TouchableOpacity>
-
-        {showDatePicker && (
-          <DateTimePicker
-            value={transDate}
-            mode="date"
-            display="default"
-            onChange={onChangeDate}
-          />
-        )}
-
-        
-
-        <TouchableOpacity
-          style={[styles.doneButton]}
-          onPress={handleSave}
-        >
-          <Text style={[styles.doneButtonText]}>
-            Add
-          </Text>
-        </TouchableOpacity>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };

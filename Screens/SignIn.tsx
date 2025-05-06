@@ -1,4 +1,4 @@
-import React, {  useState } from 'react';
+import React, { useState } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -18,10 +18,9 @@ import { SignInUpStackParamList } from "../Types";
 
 import { FIREBASE_AUTH } from '../FirebaseConfig';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import LinearGradient from 'react-native-linear-gradient'; // Import the LinearGradient
 
-
-
-type Props = StackScreenProps<SignInUpStackParamList, "SignIn"> 
+type Props = StackScreenProps<SignInUpStackParamList, "SignIn">;
 
 const SignIn = ({ route, navigation }: Props) => {
   const { theme } = useTheme();
@@ -31,124 +30,112 @@ const SignIn = ({ route, navigation }: Props) => {
   const [loading, setLoading] = useState(false);
   const auth = FIREBASE_AUTH;
 
-  {/**handle onPress */}
-  const handleSignIn =async()=>{
+  // handle onPress
+  const handleSignIn = async () => {
     if (!email || !password) {
       Alert.alert("Error", "Email and password are required.");
       return;
     }
-    
+
     console.log('Sign In pressed');
-    //onSignIn();
     setLoading(true);
-    try{
+    try {
       const response = await signInWithEmailAndPassword(auth, email, password);
       console.log(response);
-      //onSignIn();
-    }catch(error: any){
+    } catch (error: any) {
       console.log(error);
       Alert.alert("Sign in failed: " + error.message);
-    }finally{
-     setLoading(false);
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
-  const handleSignUp =()=>{
+  const handleSignUp = () => {
     console.log('Sign Up pressed');
     navigation.navigate("SignUp");
+  };
 
-  }
-  const handleForgetPassword =()=>{
+  const handleForgetPassword = () => {
     console.log('Forget Password pressed');
-    navigation.navigate('ForgetPassword')
+    navigation.navigate('ForgetPassword');
+  };
 
-  }
+  // Determine gradient colors based on theme
+  const gradientColors = theme === 'dark'
+    ? ['#333', '#222222', '#333']
+    : ['#F2A7ED', '#FDE6F6', '#D4C3F9'];
 
   return (
-    <SafeAreaView
-      style={[
-        styles.container,
-        { backgroundColor: theme === 'dark' ? '#333' : '#FDE6F6' }, 
-      ]}
-    >
-      <ScrollView
-        contentContainerStyle={styles.scrollContainer}
-        keyboardShouldPersistTaps="handled"
+    <SafeAreaView style={{ flex: 1 }}>
+      {/* Apply LinearGradient to wrap the entire screen */}
+      <LinearGradient
+        colors={gradientColors}
+        style={{ flex: 1 }}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
       >
-        <View style={styles.innerContainer}>
-          {/* Logo */}
-          <View style={styles.logoContainer}>
-            <Image source={require('../img/logo.jpg')} style={styles.logo} />
-          </View>
-
-          <Text
-            style={[
-              styles.title,
-              { color: theme === 'dark' ? '#fff' : '#000' }, 
-            ]}
-          >
-            Welcome Back!
-          </Text>
-          <View style={styles.formContainer}>
-            {/* Email */}
-            <Text style={[styles.label, { color: theme === 'dark' ? '#fff' : '#000' }]}>Email/Username</Text>
-            <View style={styles.inputWrapper}>
-              <Icon
-                name="email-outline"
-                size={20}
-                color="#f57cbb"
-                style={styles.inputIcon}
-              />
-              <TextInput
-                style={[styles.input]} 
-                placeholder="Enter your Email/Username here"
-                keyboardType="email-address"
-                autoCapitalize="none"
-                value={email}
-                onChangeText={setEmail}
-                placeholderTextColor="#aaa"
-              />
+        <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
+          <View style={styles.innerContainer}>
+            {/* Logo */}
+            <View style={styles.logoContainer}>
+              <Image source={require('../img/logo.jpg')} style={styles.logo} />
             </View>
 
-            {/* Password */}
-            <Text style={[styles.label, { color: theme === 'dark' ? '#fff' : '#000' }]}>Password</Text>
-            <View style={styles.inputWrapper}>
-              <Icon
-                name="lock-outline"
-                size={20}
-                color="#f57cbb"
-                style={styles.inputIcon}
-              />
-              <TextInput
-                style={[styles.input]} 
-                placeholder="Enter password"
-                secureTextEntry={!showPassword}
-                value={password}
-                onChangeText={setPassword}
-                placeholderTextColor="#aaa"
-              />
-              <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                <Icon
-                  name={showPassword ? 'eye-off-outline' : 'eye-outline'}
-                  size={20}
-                  color="#f57cbb"
+            <Text
+              style={[styles.title, { color: theme === 'dark' ? '#fff' : '#000' }]}
+            >
+              Welcome Back!
+            </Text>
+            <View style={styles.formContainer}>
+              {/* Email */}
+              <Text style={[styles.label, { color: theme === 'dark' ? '#fff' : '#000' }]}>Email</Text>
+              <View style={styles.inputWrapper}>
+                <Icon name="email-outline" size={20} color="#f57cbb" style={styles.inputIcon} />
+                <TextInput
+                  style={styles.input}
+                  placeholder="Enter your Email here"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  value={email}
+                  onChangeText={setEmail}
+                  placeholderTextColor="#aaa"
                 />
-              </TouchableOpacity>
-            </View>
+              </View>
 
-            {/* Forgot Password */}
-            <View style={styles.forgotRow}>
-              <TouchableOpacity onPress={handleForgetPassword}>
-                <Text style={styles.forgotText}>Forgot Password?</Text>
-              </TouchableOpacity>
-            </View>
+              {/* Password */}
+              <Text style={[styles.label, { color: theme === 'dark' ? '#fff' : '#000' }]}>Password</Text>
+              <View style={styles.inputWrapper}>
+                <Icon name="lock-outline" size={20} color="#f57cbb" style={styles.inputIcon} />
+                <TextInput
+                  style={styles.input}
+                  placeholder="Enter password"
+                  secureTextEntry={!showPassword}
+                  value={password}
+                  onChangeText={setPassword}
+                  placeholderTextColor="#aaa"
+                />
+                <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                  <Icon name={showPassword ? 'eye-off-outline' : 'eye-outline'} size={20} color="#f57cbb" />
+                </TouchableOpacity>
+              </View>
 
-
+              {/* Forgot Password */}
+              <View style={styles.forgotRow}>
+                <TouchableOpacity onPress={handleForgetPassword}>
+                  <Text
+                    style={[
+                      styles.forgotText,
+                      { color: theme === 'dark' ? '#fff' : '#FF2EAB' }, 
+                    ]}
+                  >
+                    Forgot Password?
+                  </Text>
+                </TouchableOpacity>
+              </View>
 
             {/* Sign In Button */}
             {loading? <ActivityIndicator size="large" color="#0000ff" />
                         : <>
-
                           <TouchableOpacity
                             style={styles.button}
                             onPress={handleSignIn}
@@ -160,16 +147,31 @@ const SignIn = ({ route, navigation }: Props) => {
 
             
 
-            {/* Bottom Text */}
-            <View style={styles.tipsText}>
-              <Text style={styles.grayText}>Don't have an account?</Text>
-              <TouchableOpacity onPress={handleSignUp}>
-                <Text style={styles.registerLink}> Sign Up Here </Text>
-              </TouchableOpacity>
+              {/* Bottom Text */}
+              <View style={styles.tipsText}>
+                <Text
+                  style={[
+                    styles.grayText,
+                    { color: theme === 'dark' ? '#888888' : '#000' },
+                  ]}
+                >
+                  Don't have an account?
+                </Text>
+                <TouchableOpacity onPress={handleSignUp}>
+                  <Text
+                    style={[
+                      styles.registerLink,
+                      { color: theme === 'dark' ? '#fff' : '#FF2EAB' }, 
+                    ]}
+                  >
+                    Sign Up Here
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </LinearGradient>
     </SafeAreaView>
   );
 };

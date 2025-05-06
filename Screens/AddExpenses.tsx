@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { SafeAreaView, Text, View, TextInput, TouchableOpacity, Platform, Alert } from "react-native";
+import { SafeAreaView, Text, View, TextInput, TouchableOpacity, Platform, Alert, ScrollView } from "react-native";
 import { AddExpensesStyles as styles } from '../Styles';
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -20,7 +20,6 @@ const AddExpenses = ({ navigation }: any) => {
 
   {/**handle onPress */}
   const handleSave = async() => {
-
     if (!userID) {
       Alert.alert("User not signed in. Cannot add transaction.");
       return;
@@ -54,26 +53,24 @@ const AddExpenses = ({ navigation }: any) => {
       setTransDescription("");
       setTransDate(new Date());
       navigation.goBack(); 
-
     } catch (error) {
       console.error("Add expenses transaction error: ", error);
     }
-    
   };
 
   useEffect(() => {
-      if (!userID) {
-        Alert.alert("User not signed in. Cannot save category.");
-        return;
-      }
-      const loadCategories = async () => {
-        const data = await getExpensesCategories(userID);
-        setCategories(data);
-        if (data.length > 0) setSelectedCategory(data[0].id);
-      };
-      loadCategories();
+    if (!userID) {
+      Alert.alert("User not signed in. Cannot save category.");
+      return;
+    }
+    const loadCategories = async () => {
+      const data = await getExpensesCategories(userID);
+      setCategories(data);
+      if (data.length > 0) setSelectedCategory(data[0].id);
+    };
+    loadCategories();
   }, [userID]);
-    
+
   const onChangeDate = (event: any, selectedDate?: Date) => {
     setShowDatePicker(Platform.OS === 'ios');
     if (selectedDate) {
@@ -83,120 +80,115 @@ const AddExpenses = ({ navigation }: any) => {
 
   return (
     <SafeAreaView
-      style={[
-        styles.container,
-        { backgroundColor: theme === 'dark' ? '#333' : '#FDE6F6' }, 
-      ]}
+      style={[styles.container, { backgroundColor: theme === 'dark' ? '#333' : '#FDE6F6' }]}
     >
+      <ScrollView keyboardShouldPersistTaps="handled">
         <View style={styles.formContainer}>
-            <Text
+          <Text
+            style={[
+              styles.label,
+              { color: theme === 'dark' ? '#fff' : '#000' },
+            ]}
+          >
+            Category
+          </Text>
+          <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={selectedCategory}
+              onValueChange={(itemValue) => setSelectedCategory(itemValue)}
+              style={{ color: theme === 'dark' ? '#fff' : '#000' }}
+            >
+              {categories.map((cat) => (
+                <Picker.Item key={cat.id} label={cat.title} value={cat.id} />
+              ))}
+            </Picker>
+          </View>
+
+          <Text style={[styles.label, { color: theme === 'dark' ? '#fff' : '#000' }]}>
+            Title
+          </Text>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={[styles.textInput, { color: theme === 'dark' ? '#fff' : '#000' }]}
+              placeholder="e.g. from Boss"
+              placeholderTextColor={theme === 'dark' ? '#aaa' : '#666'}
+              value={transTitle}
+              onChangeText={setTransTitle}
+            />
+          </View>
+
+          <Text
+            style={[
+              styles.label,
+              { color: theme === 'dark' ? '#fff' : '#000' },
+            ]}
+          >
+            Amount
+          </Text>
+          <View style={styles.inputContainer}>
+            <Text style={[styles.amountText, { color: theme === 'dark' ? '#fff' : '#000' }]}>RM</Text>
+            <TextInput
               style={[
-                styles.label,
-                { color: theme === 'dark' ? '#fff' : '#000' }, 
+                styles.textInput,
+                { color: theme === 'dark' ? '#fff' : '#000' }
               ]}
-            >
-              Category
+              keyboardType="numeric"
+              value={transAmount}
+              onChangeText={setTransAmount}
+            />
+          </View>
+
+          <Text style={[styles.label, { color: theme === 'dark' ? '#fff' : '#000' }]}>
+            Description
+          </Text>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={[styles.textInput, { color: theme === 'dark' ? '#fff' : '#000' }]}
+              placeholder="Bonus!"
+              placeholderTextColor={theme === 'dark' ? '#aaa' : '#666'}
+              value={transDescription}
+              onChangeText={setTransDescription}
+            />
+          </View>
+
+          <Text
+            style={[
+              styles.label,
+              { color: theme === 'dark' ? '#fff' : '#000' },
+            ]}
+          >
+            Date
+          </Text>
+          <TouchableOpacity
+            style={styles.datePickerButton}
+            onPress={() => setShowDatePicker(true)}
+          >
+            <Text style={[styles.dateText, { color: theme === 'dark' ? '#fff' : '#000' }]}>
+              {transDate.toDateString()}
             </Text>
-            <View style={styles.pickerContainer}>
-              <Picker
-                selectedValue={selectedCategory}
-                onValueChange={(itemValue) => setSelectedCategory(itemValue)}
-                style={{ color: theme === 'dark' ? '#fff' : '#000' }}
-              >
-                {categories.map((cat) => (
-                  <Picker.Item key={cat.id} label={cat.title} value={cat.id} />
-                ))}
-              </Picker>
-            </View>
+          </TouchableOpacity>
 
-            
-            <Text style={[styles.label, { color: theme === 'dark' ? '#fff' : '#000' }]}>
-                Title
-              </Text>
-              <View style={styles.inputContainer}>
-                <TextInput
-                  style={[styles.textInput, { color: theme === 'dark' ? '#fff' : '#000' }]}
-                  placeholder="e.g. from Boss"
-                  placeholderTextColor={theme === 'dark' ? '#aaa' : '#666'}
-                  value={transTitle}
-                  onChangeText={setTransTitle}
-                />
-            </View>
+          {showDatePicker && (
+            <DateTimePicker
+              value={transDate}
+              mode="date"
+              display="default"
+              onChange={onChangeDate}
+            />
+          )}
 
-            <Text
-              style={[
-                styles.label,
-                { color: theme === 'dark' ? '#fff' : '#000' }, 
-              ]}
-            >
-              Amount
+          <TouchableOpacity
+            style={[styles.doneButton]}
+            onPress={handleSave}
+          >
+            <Text style={[styles.doneButtonText]}>
+              Add
             </Text>
-            <View style={styles.inputContainer}>
-              <Text style={[styles.amountText, { color: theme === 'dark' ? '#fff' : '#000' }]}>RM</Text>
-              <TextInput
-                style={[
-                  styles.textInput,
-                  { color: theme === 'dark' ? '#fff' : '#000' }
-                ]}
-                keyboardType="numeric"
-                value={transAmount}
-                onChangeText={setTransAmount}
-              />
-            </View>
-
-            <Text style={[styles.label, { color: theme === 'dark' ? '#fff' : '#000' }]}>
-                Description
-            </Text>
-            <View style={styles.inputContainer}>
-                <TextInput
-                  style={[styles.textInput, { color: theme === 'dark' ? '#fff' : '#000' }]}
-                  placeholder="Bonus!"
-                  placeholderTextColor={theme === 'dark' ? '#aaa' : '#666'}
-                  value={transDescription}
-                  onChangeText={setTransDescription}
-                />
-            </View>
-
-            <Text
-              style={[
-                styles.label,
-                { color: theme === 'dark' ? '#fff' : '#000' }, 
-              ]}
-            >
-              Date
-            </Text>
-            <TouchableOpacity
-              style={styles.datePickerButton}
-              onPress={() => setShowDatePicker(true)}
-            >
-              <Text style={[styles.dateText, { color: theme === 'dark' ? '#fff' : '#000' }]}>
-                {transDate.toDateString()}
-              </Text>
-            </TouchableOpacity>
-
-            {showDatePicker && (
-              <DateTimePicker
-                value={transDate}
-                mode="date"
-                display="default"
-                onChange={onChangeDate}
-              />
-            )}
-
-            
-
-            <TouchableOpacity
-              style={[styles.doneButton]}
-              onPress={handleSave}
-            >
-              <Text style={[styles.doneButtonText]}>
-                Add
-              </Text>
-            </TouchableOpacity>
+          </TouchableOpacity>
         </View>
-      </SafeAreaView>
-    );
-  };
-
+      </ScrollView>
+    </SafeAreaView>
+  );
+};
 
 export default AddExpenses;
