@@ -139,7 +139,7 @@ const Home = ({ navigation }: Props) => {
         {/* Header Section */}
         <View style={styles.header}>
           <View>
-            <Text style={[styles.greeting, { fontFamily: 'WinkySans-VariableFont_wght' }]}>Hello,</Text>
+            <Text style={[styles.greeting, { fontFamily: 'WinkySans-VariableFont_wght' },{ color: theme === 'dark' ? 'white' : '#424242' }]}>Hello,</Text>
             <Animated.Text
               style={[styles.userName, { fontFamily: 'WinkySans-VariableFont_wght', color: colorInterpolation }]} // Animated color
             >
