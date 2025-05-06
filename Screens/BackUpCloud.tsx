@@ -10,7 +10,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type Props = StackScreenProps<SettingStackParamList, 'GoBackUpCloud'>;
 
-const BackUpCloud = ({ route, navigation }: Props) => {
+const BackUpCloud = ({ navigation }: Props) => {
   const { theme } = useTheme();
   const [lastBackupTime, setLastBackupTime] = useState("Not yet backed up");
 
@@ -31,10 +31,14 @@ const BackUpCloud = ({ route, navigation }: Props) => {
   {/**handle onPress */}
   // Backup function
   const handleBackup = async () => {
-    const currentTime = new Date().toLocaleString();
-    setLastBackupTime(currentTime);
-    await AsyncStorage.setItem('lastBackupTime', currentTime);
-    console.log("Backup to Cloud pressed"); 
+    try{
+      const currentTime = new Date().toLocaleString();
+      setLastBackupTime(currentTime);
+      await AsyncStorage.setItem('lastBackupTime', currentTime);
+      console.log("Backup successful:", currentTime); 
+    } catch (error) {
+      console.error("Error saving backup:", error);
+    }
   };
 
   // Restore function

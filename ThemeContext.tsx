@@ -22,20 +22,28 @@ const useTheme = () => {
 
 // ThemeProvider component
 const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const [theme, setTheme] = useState<'light' | 'dark'>(Appearance.getColorScheme() || 'light');
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [isUserSet, setIsUserSet] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Load the saved theme from AsyncStorage
   useEffect(() => {
     const loadTheme = async () => {
-      const savedTheme = await AsyncStorage.getItem('userTheme');
-      if (savedTheme === 'dark' || savedTheme === 'light') {
-        setTheme(savedTheme);
-        setIsUserSet(true);
-      } else {
-        const systemTheme = Appearance.getColorScheme() || 'light';
-        setTheme(systemTheme);
-        await AsyncStorage.setItem('userTheme', systemTheme);
+      try {
+        const savedTheme = await AsyncStorage.getItem('userTheme');
+        if (savedTheme === 'dark' || savedTheme === 'light') {
+          setTheme(savedTheme);
+          setIsUserSet(true);
+        } else {
+          const systemTheme = Appearance.getColorScheme() || 'light';
+          setTheme(systemTheme);
+          await AsyncStorage.setItem('userTheme', systemTheme);
+        }
+      } catch (error) {
+        console.error("Failed to load theme:", error);
+        setTheme(Appearance.getColorScheme() || 'light');
+      } finally {
+        setIsLoading(false);
       }
     };
     loadTheme();
@@ -48,7 +56,6 @@ const ThemeProvider = ({ children }: { children: ReactNode }) => {
         setTheme(colorScheme || 'light');
       }
     });
-
     return () => listener.remove();
   }, [isUserSet]);
 
@@ -60,6 +67,9 @@ const ThemeProvider = ({ children }: { children: ReactNode }) => {
     await AsyncStorage.setItem('userTheme', newTheme);
   };
 
+  if (isLoading) {
+    return null;
+  }
   
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>

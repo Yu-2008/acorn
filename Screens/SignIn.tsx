@@ -46,7 +46,7 @@ const SignIn = ({ route, navigation }: Props) => {
       console.log("Login success:", response.user.email);
 
       const savedTheme = await AsyncStorage.getItem('userTheme');
-      if (savedTheme === 'dark' || savedTheme === 'light') {
+      if (savedTheme) {
         console.log("User preferred theme:", savedTheme);
       }
 
