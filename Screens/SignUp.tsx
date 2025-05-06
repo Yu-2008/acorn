@@ -24,7 +24,7 @@ const SignUp = ({ route, navigation }: Props) => {
 
   const validateEmail = async (email: string): Promise<boolean> => {
     try {
-      const url = `https://emailvalidation.abstractapi.com/v1/?api_key=32bad148cbbc439d81a84df08cad81be&email=${email}`;
+      const url = `https://emailreputation.abstractapi.com/v1/?api_key=107927a1742f4302a85e0dea445460e8&email=${email}`;
       const response = await fetch(url);
       const data = await response.json();
 
