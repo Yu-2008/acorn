@@ -297,8 +297,8 @@ const AddIncome = ({ navigation }: any) => {
             style={[
               styles.doneButton,
               { 
-                backgroundColor: theme === 'dark' ? '#515151' : '#E69D88',
-                borderColor: theme === 'dark' ? '#E69DB8' : '#E69D88', 
+                backgroundColor: theme === 'dark' ? '#515151' : '#E69DB8',
+                borderColor: theme === 'dark' ? '#E69DB8' : '#E69DB8', 
                 borderWidth: 2,
               }
             ]}
