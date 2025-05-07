@@ -66,7 +66,7 @@ const defaultHeaderOptions = (theme: string) => ({
     color: theme === 'dark' ? 'white' : 'black',
   },
 });
-
+// login, signup and password reset
 const SignInUpStackNavigator = () => {
   return (
     <SignInUpStack.Navigator initialRouteName="SignIn" screenOptions={{ headerShown: false }}>
@@ -78,7 +78,7 @@ const SignInUpStackNavigator = () => {
     </SignInUpStack.Navigator>
   );
 };
-
+// MainTabNavigator which contains tabs for different sections of the app
 const TabNavigator = () => {
   const { theme } = useTheme();
   return (
@@ -157,7 +157,7 @@ const TabNavigator = () => {
     </PubNubProvider>
   );
 };
-
+// handles the screens related to the main app flow
 const MainStackNavigator = () => {
   const { theme } = useTheme();
   return (
@@ -190,7 +190,7 @@ const MainStackNavigator = () => {
     </MainStack.Navigator>
   );
 };
-
+// Stack navigators for income category management
 const IncomeCategoryStackNavigator = () => {
   const { theme } = useTheme();
   return (
@@ -216,7 +216,7 @@ const IncomeCategoryStackNavigator = () => {
     </IncomeCategoryStack.Navigator>
   );
 };
-
+// Stack navigators for expense category management
 const ExpensesCategoryStackNavigator = () => {
   const { theme } = useTheme();
   return (
@@ -242,7 +242,7 @@ const ExpensesCategoryStackNavigator = () => {
     </ExpensesCategoryStack.Navigator>
   );
 };
-
+// Stack navigation for settings page and related screens
 const SettingStackNavigator = () => {
   const { theme } = useTheme();
   return (
@@ -268,7 +268,7 @@ const SettingStackNavigator = () => {
     </SettingStack.Navigator>
   );
 };
-
+// Handling authentication logic
 const AuthLogic = () => {
   const [user, setUser] = useState<User | null>(null);
   const [initializing, setInitializing] = useState(true);
@@ -311,7 +311,7 @@ const AuthLogic = () => {
     </RootStack.Navigator>
   );
 };
-
+// Main App component wrapping everything with necessary providers
 const App = () => {
   return (
     <UserProvider>
