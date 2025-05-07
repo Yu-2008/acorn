@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { SafeAreaView, Text, View, TextInput, TouchableOpacity, Image, ScrollView, ActivityIndicator, Alert } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { StackScreenProps } from '@react-navigation/stack';
 import { SignInUpStackParamList } from '../Types';
 import { useTheme } from '../ThemeContext';
@@ -18,6 +19,7 @@ const SignUp = ({ route, navigation }: Props) => {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const auth = FIREBASE_AUTH;
@@ -163,6 +165,9 @@ const SignUp = ({ route, navigation }: Props) => {
                   onChangeText={setPassword}
                   placeholderTextColor={theme === 'dark' ? '#aaa' : '#aaa'}
                 />
+              <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                <Icon name={showPassword ? 'eye-off-outline' : 'eye-outline'} size={20} color="#f57cbb" />
+              </TouchableOpacity>
               </View>
 
               {/* Confirm Password */}
@@ -180,6 +185,9 @@ const SignUp = ({ route, navigation }: Props) => {
                   onChangeText={setConfirmPassword}
                   placeholderTextColor={theme === 'dark' ? '#aaa' : '#aaa'}
                 />
+              <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                <Icon name={showPassword ? 'eye-off-outline' : 'eye-outline'} size={20} color="#f57cbb" />
+              </TouchableOpacity>
               </View>
 
             {/* Sign Up Button */}
