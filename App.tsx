@@ -24,6 +24,7 @@ import ViewExpensesCategoryScreen from './Screens/ViewExpensesCategory';
 import ViewIncomeCategoryScreen from './Screens/ViewIncomeCategory';
 import ViewTransactionScreen from './Screens/ViewTransaction';
 import { ThemeProvider } from './ThemeContext';
+import { useTheme } from './ThemeContext';
 import { UserProvider } from './UserContext';
 import { useUser } from './UserContext';
 import {
@@ -43,11 +44,10 @@ import { initDB } from './SQLite';
 import { PubNubProvider } from 'pubnub-react';
 import PubNub from 'pubnub';
 
-
 const pubnub = new PubNub({
   publishKey: 'pub-c-cf0b55ea-29d2-4169-96ec-90dbc6245c27',
   subscribeKey: 'sub-c-249e82b7-53f8-4399-b070-8fbea7f745c2',
-  uuid: PubNub.generateUUID()
+  uuid: PubNub.generateUUID(),
 });
 
 const RootStack = createStackNavigator<RootStackParamList>();
@@ -58,12 +58,16 @@ const SettingStack = createStackNavigator<SettingStackParamList>();
 const IncomeCategoryStack = createStackNavigator<IncomeCategoryParamList>();
 const ExpensesCategoryStack = createStackNavigator<ExpensesCategoryParamList>();
 
-// Shared header style
-const defaultHeaderOptions = {
-  headerStyle: { backgroundColor: '#FFDDDD' },
-  headerTintColor: '#393533',
-  headerTitleStyle: { fontWeight: '500' as '500', fontFamily: 'WinkySans-VariableFont_wght' },
-};
+// Shared header style function
+const defaultHeaderOptions = (theme: string) => ({
+  headerStyle: { backgroundColor: theme === 'dark' ? '#515151' : '#FFDDDD' },
+  headerTintColor: theme === 'dark' ? '#FFFFFF' : '#393533',
+  headerTitleStyle: {
+    fontWeight: '500' as '500',
+    fontFamily: 'WinkySans-VariableFont_wght',
+    color: theme === 'dark' ? 'white' : 'black',
+  },
+});
 
 const SignInUpStackNavigator = () => {
   return (
@@ -78,6 +82,7 @@ const SignInUpStackNavigator = () => {
 };
 
 const TabNavigator = () => {
+  const { theme } = useTheme();
   return (
     <PubNubProvider client={pubnub}>
       <Tab.Navigator
@@ -103,10 +108,10 @@ const TabNavigator = () => {
 
             return <IconComponent name={iconName} size={size} color={color} solid={focused} />;
           },
-          tabBarActiveTintColor: '#C4371B',
-          tabBarInactiveTintColor: '#D39285',
+          tabBarActiveTintColor: theme === 'dark' ? 'white' : '#C4371B',
+          tabBarInactiveTintColor: theme === 'dark' ? '#282828' : '#D39285',
           tabBarStyle: {
-            backgroundColor: '#FFDDDD',
+            backgroundColor: theme === 'dark' ? '#515151' : '#FFDDDD',
             height: 60,
             paddingBottom: 8,
             paddingTop: 4,
@@ -126,7 +131,7 @@ const TabNavigator = () => {
             tabBarLabel: 'Income',
             headerShown: true,
             title: 'Add Income Transaction',
-            ...defaultHeaderOptions,
+            ...defaultHeaderOptions(theme),
           }}
         />
 
@@ -137,7 +142,7 @@ const TabNavigator = () => {
             tabBarLabel: 'Expenses',
             headerShown: true,
             title: 'Add Expenses Transaction',
-            ...defaultHeaderOptions,
+            ...defaultHeaderOptions(theme),
           }}
         />
 
@@ -148,7 +153,7 @@ const TabNavigator = () => {
             headerShown: false,
           }}
         >
-          {(props: any) => <SettingStackNavigator {...props}  />}
+          {(props: any) => <SettingStackNavigator {...props} />}
         </Tab.Screen>
       </Tab.Navigator>
     </PubNubProvider>
@@ -156,18 +161,20 @@ const TabNavigator = () => {
 };
 
 const MainStackNavigator = () => {
+  const { theme } = useTheme();
   return (
     <MainStack.Navigator
       initialRouteName="Home"
       screenOptions={{
         headerShown: true,
         headerStyle: {
-          backgroundColor: '#FFDDDD',
+          backgroundColor: theme === 'dark' ? '#515151' : '#FFDDDD',
         },
         headerTintColor: '#393533',
         headerTitleStyle: {
           fontWeight: '500',
           fontFamily: 'WinkySans-VariableFont_wght',
+          color: theme === 'dark' ? 'white' : 'black',
         },
       }}
     >
@@ -175,22 +182,34 @@ const MainStackNavigator = () => {
       <MainStack.Screen
         name="ViewTransaction"
         component={ViewTransactionScreen}
-        options={defaultHeaderOptions}
+        options={defaultHeaderOptions(theme)}
       />
       <MainStack.Screen
         name="EditTransaction"
         component={EditTransactionScreen}
-        options={defaultHeaderOptions}
+        options={defaultHeaderOptions(theme)}
       />
     </MainStack.Navigator>
   );
 };
 
 const IncomeCategoryStackNavigator = () => {
+  const { theme } = useTheme();
   return (
     <IncomeCategoryStack.Navigator
       initialRouteName="IncomeCategory"
-      screenOptions={{ headerShown: true, ...defaultHeaderOptions }}
+      screenOptions={{
+        headerShown: true,
+        headerStyle: {
+          backgroundColor: theme === 'dark' ? '#515151' : '#FFDDDD',
+        },
+        headerTintColor: '#393533',
+        headerTitleStyle: {
+          fontWeight: '500',
+          fontFamily: 'WinkySans-VariableFont_wght',
+          color: theme === 'dark' ? 'white' : 'black',
+        },
+      }}
     >
       <IncomeCategoryStack.Screen name="IncomeCategory" component={IncomeCategoryScreen} options={{ headerTitle: 'Income Category' }} />
       <IncomeCategoryStack.Screen name="AddIncomeCategory" component={AddIncomeCategoryScreen} options={{ headerTitle: 'Add New Income Category' }} />
@@ -201,10 +220,22 @@ const IncomeCategoryStackNavigator = () => {
 };
 
 const ExpensesCategoryStackNavigator = () => {
+  const { theme } = useTheme();
   return (
     <ExpensesCategoryStack.Navigator
       initialRouteName="ExpensesCategory"
-      screenOptions={{ headerShown: true, ...defaultHeaderOptions }}
+      screenOptions={{
+        headerShown: true,
+        headerStyle: {
+          backgroundColor: theme === 'dark' ? '#515151' : '#FFDDDD',
+        },
+        headerTintColor: '#393533',
+        headerTitleStyle: {
+          fontWeight: '500',
+          fontFamily: 'WinkySans-VariableFont_wght',
+          color: theme === 'dark' ? 'white' : 'black',
+        },
+      }}
     >
       <ExpensesCategoryStack.Screen name="ExpensesCategory" component={ExpensesCategory} options={{ headerTitle: 'Expenses Category' }} />
       <ExpensesCategoryStack.Screen name="AddExpensesCategory" component={AddExpensesCategoryScreen} options={{ headerTitle: 'Add New Expenses Category' }} />
@@ -215,9 +246,10 @@ const ExpensesCategoryStackNavigator = () => {
 };
 
 const SettingStackNavigator = () => {
+  const { theme } = useTheme();
   return (
     <SettingStack.Navigator initialRouteName="Settings" screenOptions={{ headerShown: false }}>
-      <SettingStack.Screen name="Settings" options={{ headerShown: true, ...defaultHeaderOptions }}>
+      <SettingStack.Screen name="Settings" options={{ headerShown: true, ...defaultHeaderOptions(theme) }}>
         {(props: any) => <SettingScreen {...props} />}
       </SettingStack.Screen>
       <SettingStack.Screen name="GoIncomeCategory">
@@ -232,66 +264,55 @@ const SettingStackNavigator = () => {
         options={{
           headerShown: true,
           headerTitle: 'Back Up to Cloud',
-          ...defaultHeaderOptions,
+          ...defaultHeaderOptions(theme),
         }}
       />
     </SettingStack.Navigator>
   );
 };
 
-
-const AuthLogic =()=> {
+const AuthLogic = () => {
   const [user, setUser] = useState<User | null>(null);
   const [initializing, setInitializing] = useState(true);
   const { setUserID } = useUser();
 
-  useEffect(()=>{
-    const init = async()=>{
+  useEffect(() => {
+    const init = async () => {
       await initDB();
-    }
+    };
     init();
 
-    const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, (user)=>{
-      console.log("User: ", user);
-      if(user){
+    const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, (user) => {
+      if (user) {
         setUser(user);
-        setUserID(user?.uid??null);
-      }else{
-        console.log("Cannot get user. Set user to null.");
+        setUserID(user?.uid ?? null);
+      } else {
         setUser(null);
         setUserID(null);
       }
-      
+
       if (initializing) setInitializing(false);
     });
 
     return unsubscribe;
-  },[])
+  }, []);
 
   if (initializing) return null;
 
-
   return (
-    
-    <RootStack.Navigator screenOptions={{ headerShown: false }} initialRouteName='AuthorizedSignIn'>
-      { user ? (
+    <RootStack.Navigator screenOptions={{ headerShown: false }} initialRouteName="AuthorizedSignIn">
+      {user ? (
         <RootStack.Screen name="GoMain">
-          {(props: any) => <TabNavigator  {...props}/>}
+          {(props: any) => <TabNavigator {...props} />}
         </RootStack.Screen>
-        
       ) : (
         <RootStack.Screen name="AuthorizedSignIn">
-          {(props: any) => <SignInUpStackNavigator  {...props}/>}
+          {(props: any) => <SignInUpStackNavigator {...props} />}
         </RootStack.Screen>
-        
       )}
     </RootStack.Navigator>
-          
   );
-
-}
-
-
+};
 
 const App = () => {
   return (
@@ -303,7 +324,6 @@ const App = () => {
       </ThemeProvider>
     </UserProvider>
   );
-  
 };
 
 export default App;

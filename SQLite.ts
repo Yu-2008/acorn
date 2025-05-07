@@ -75,7 +75,7 @@ const predefinedIncomeCategories = [
     { title: "Freelancing", iconName: "laptop", iconLibrary: "Ionicons" },
     { title: "Investment", iconName: "chart-line", iconLibrary: "FontAwesome5" },
     { title: "Gifts", iconName: "gift", iconLibrary: "Ionicons"},
-    { title: "Dividents", iconName: "money-bill-wave", iconLibrary: "FontAwesome5" },
+    { title: "Dividend", iconName: "money-bill-wave", iconLibrary: "FontAwesome5" },
     { title: "Government Aid", iconName: "business", iconLibrary: "Ionicons" },
     { title: "Scholarship", iconName: "ribbon", iconLibrary: "Ionicons" },
     { title: "Tips", iconName: "thumbs-up", iconLibrary: "Ionicons" },

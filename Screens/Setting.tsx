@@ -112,13 +112,14 @@ const handleContactUs = () => {
 };
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={queryLocation} style={[styles.button,{marginTop:20}]}>
+      <TouchableOpacity onPress={queryLocation} style={[styles.button,{marginTop:20},{ backgroundColor: theme === 'dark' ? '#444' : '#E69DB8' }]}>
           <Feather name="map-pin" size={24} color={theme === 'dark' ? 'white' : '#393533'} />
           <Text style={[styles.buttonText,{ color: theme === 'dark' ? '#fff' : '#393533' }]}>Search for Acorn Company</Text>
       </TouchableOpacity>
+      <Text style={[styles.buttonText, { color: theme === 'dark' ? '#fff' : '#gray' }]}>Address: Universiti Tunku Abdul Rahman (UTAR) (UTAR Sungai Long Campus), Jalan Sungai Long, Bandar Sungai Long, 43000 Kajang, Selangor</Text>
 
       {/* Contact Us Button for WhatsApp */}
-      <TouchableOpacity onPress={handleContactUs} style={[styles.button, { marginTop: 20 }]}>
+      <TouchableOpacity onPress={handleContactUs} style={[styles.button, { marginTop: 20 },{backgroundColor: theme === 'dark' ? '#444' : '#E69DB8' }]}>
         <Feather name="message-circle" size={24} color={theme === 'dark' ? 'white' : '#393533'} />
         <Text style={[styles.buttonText, { color: theme === 'dark' ? '#fff' : '#393533' }]}>Contact Us (WhatsApp)</Text>
       </TouchableOpacity>

@@ -298,10 +298,17 @@ const AddExpenses = ({ navigation }: any) => {
 
 
           <TouchableOpacity
-            style={[styles.doneButton]}
+            style={[
+              styles.doneButton,
+              { 
+                backgroundColor: theme === 'dark' ? '#515151' : '#E69D88',
+                borderColor: theme === 'dark' ? '#E69DB8' : '#E69D88', 
+                borderWidth: 2,
+              }
+            ]}
             onPress={handleSave}
           >
-            <Text style={[styles.doneButtonText]}>
+            <Text style={[styles.doneButtonText,{color: theme === 'dark' ? '#fff' : '#000'}]}>
               Add
             </Text>
           </TouchableOpacity>

@@ -117,11 +117,30 @@ const EditIncomeCategory = ({ route, navigation }: Props) => {
 
 
             <TouchableOpacity
-              style={[styles.saveButton, { backgroundColor: isEdited ? '#E69DB8' : '#d3d3d3' }]}
+              style={[
+                styles.saveButton,
+                {
+                  
+                  backgroundColor: isEdited 
+                    ? (theme === 'dark' ? '#515151' : '#E69DB8') 
+                    : (theme === 'dark' ? '#7A7A7A' : '#d3d3d3'), 
+                  borderColor: isEdited ?(theme === 'dark' ? '#E69DB8' : '#E69DB8'):(theme === 'dark' ? '#E69DB8' : '#d3d3d3'), 
+                  borderWidth: 2,
+                }
+              ]}
               onPress={handleSave}
-              disabled={!isEdited}
+              disabled={!isEdited} 
             >
-              <Text style={styles.saveButtonText}>Save</Text>
+              <Text
+                style={[
+                  styles.saveButtonText,
+                  {
+                    color: isEdited ? (theme === 'dark' ? 'white' : 'black') : (theme === 'dark' ? 'white' : 'black') 
+                  }
+                ]}
+              >
+                Save
+              </Text>
             </TouchableOpacity>
           </View>
         </ScrollView>

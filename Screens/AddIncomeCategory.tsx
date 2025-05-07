@@ -71,7 +71,7 @@ const AddIncomeCategory = ({ route, navigation }: Props) => {
     { label: "Freelancing", iconName: "laptop", iconLibrary: "Ionicons" },
     { label: "Investment", iconName: "chart-line", iconLibrary: "FontAwesome5" },
     { label: "Gifts", iconName: "gift", iconLibrary: "Ionicons"},
-    { label: "Dividents", iconName: "money-bill-wave", iconLibrary: "FontAwesome5" },
+    { label: "Dividend", iconName: "money-bill-wave", iconLibrary: "FontAwesome5" },
     { label: "Government Aid", iconName: "business", iconLibrary: "Ionicons" },
     { label: "Scholarship", iconName: "ribbon", iconLibrary: "Ionicons" },
     { label: "Tips", iconName: "thumbs-up", iconLibrary: "Ionicons" },
@@ -139,9 +139,21 @@ const AddIncomeCategory = ({ route, navigation }: Props) => {
           </Text>
         ) : null}
 
-        <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-          <Text style={styles.saveButtonText}>Save</Text>
-        </TouchableOpacity>
+        <TouchableOpacity
+            style={[
+              styles.saveButton,
+              { 
+                backgroundColor: theme === 'dark' ? '#515151' : '#E69DB8',
+                borderColor: theme === 'dark' ? '#E69DB8' : '#E69DB8', 
+                borderWidth: 2,
+              }
+            ]}
+            onPress={handleSave}
+          >
+            <Text style={[styles.saveButtonText,{color: theme === 'dark' ? '#fff' : '#000'}]}>
+              Add
+            </Text>
+          </TouchableOpacity>
 
       </ScrollView>
     </SafeAreaView>

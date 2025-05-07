@@ -139,12 +139,12 @@ const BackUpCloud = ({ navigation }: Props) => {
       </View>
 
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={handleBackup}>
+        <TouchableOpacity style={[styles.button,{ backgroundColor: theme === 'dark' ? '#444' : '#E69DB8' }]} onPress={handleBackup}>
           <Ionicons name="cloud-upload" size={24} color={theme === 'dark' ? 'white' : '#393533'}/>
           <Text style={[styles.buttonText, { color: theme === 'dark' ? 'white' : 'black' }]}>Backup</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button} onPress={handleRestore}>
+        <TouchableOpacity style={[styles.button,{ backgroundColor: theme === 'dark' ? '#444' : '#E69DB8' }]} onPress={handleRestore}>
           <MaterialIcons name="cloud-download" size={24} color={theme === 'dark' ? 'white' : '#393533'} />
           <Text style={[styles.buttonText, { color: theme === 'dark' ? 'white' : 'black' }]}>Restore from Cloud</Text>
         </TouchableOpacity>
