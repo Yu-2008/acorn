@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState} from "react";
+import React, { useState } from "react";
 import { ViewIncomeCategoryStyles as styles } from '../src/styles/Styles';
 import { SafeAreaView, Text, View, StyleSheet, ScrollView, Alert } from "react-native";
 import type { StackScreenProps } from '@react-navigation/stack';
@@ -54,7 +54,7 @@ const ViewIncomeCategory = ({ route, navigation }: Props) => {
       navigation.navigate('EditIncomeCategory', { 
         incomeID, 
         incomeTitle: title, 
-        incomeDescription: description,
+        incomeDescription: description ? description : "No description"
        });
     } else if (name === "delete") {
       console.log(`Delete category ${title}`);
@@ -85,7 +85,7 @@ const ViewIncomeCategory = ({ route, navigation }: Props) => {
     <SafeAreaView style={[styles.container, { backgroundColor: theme === 'dark' ? '#333' : '#FDE6F6' }]}>
       <ScrollView contentContainerStyle={styles.scrollView}>
         <View style={styles.detailItem}>
-          <Text style={[styles.detailLabel, { color: theme === 'dark' ? 'white' : 'black' }]}>Income Category</Text>
+          <Text style={[styles.detailLabel, { color: theme === 'dark' ? 'white' : 'black' }]}>Category Title</Text>
           <View style={[styles.detailBox, { backgroundColor: theme === 'dark' ? '#444' : '#fff' }]}>
             <Text style={[styles.detailText, { color: theme === 'dark' ? 'white' : 'black' }]}>{title}</Text>
           </View>

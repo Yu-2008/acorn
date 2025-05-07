@@ -1,16 +1,13 @@
 import React, { useEffect, useState} from "react";
 import { BackUpCloudStyles as styles } from '../src/styles/Styles';
-import { SafeAreaView, Text, View, TouchableOpacity, Platform, Alert } from "react-native";
+import { SafeAreaView, Text, View, TouchableOpacity, Platform, Alert, ActivityIndicator } from "react-native";
 import { StackScreenProps } from '@react-navigation/stack';
 import { SettingStackParamList } from "../src/types/Types";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { useTheme } from '../src/contexts/ThemeContext';
-
 import { useUser } from "../src/contexts/UserContext";
-
 import { exportAllTablesToJson, restoreFromJson } from "../src/database/database";
-
 import { FIREBASE_DB } from "../src/config/FirebaseConfig";
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -22,14 +19,17 @@ const BackUpCloud = ({ navigation }: Props) => {
   const { theme } = useTheme();
   const { userID } = useUser();
   const [lastBackupTime, setLastBackupTime] = useState("Not yet backed up");
-
+  const [loading1, setLoading1] = useState(false);
+  const [loading2, setLoading2] = useState(false);
  
   {/**handle onPress */}
   // Backup function
   const handleBackup = async () => {
+    setLoading1(true);
 
     if (!userID) {
-      Alert.alert("User not signed in. Cannot save category.");
+      Alert.alert("Get user ID failed", "User is not signed in. Cannot generate back up files.\nPlease sign in again.");
+      setLoading1(false);
       return;
     }
 
@@ -48,11 +48,13 @@ const BackUpCloud = ({ navigation }: Props) => {
       setLastBackupTime(currentTime);
       await AsyncStorage.setItem('lastBackupTime', currentTime);
       console.log("Backup successful:", currentTime); 
-      Alert.alert("Success", "Backup to cloud completed.");
       console.log("Backup uploaded:", jsonData);
+      Alert.alert("Backup successful", "Your backup already upload to cloud.");
     } catch (error) {
       console.error("Backup Error:", error);
-      Alert.alert("Error", "Failed to back up data.");
+      Alert.alert("Backup failed", "Please try again.");
+    } finally {
+      setLoading1(false);
     }
   }
 
@@ -76,9 +78,11 @@ const BackUpCloud = ({ navigation }: Props) => {
   // Restore function
 
   const handleRestore = async () => {
-  
+    
+    setLoading2(true);
     if (!userID) {
-      Alert.alert("User not signed in. Cannot save category.");
+      Alert.alert("Get user ID failed", "User is not signed in. Cannot get restore file.\nPlease sign in again.");
+      setLoading2(false);
       return;
     }
 
@@ -100,14 +104,16 @@ const BackUpCloud = ({ navigation }: Props) => {
         const tables = backupData.data;
         await restoreFromJson(tables);
 
-        Alert.alert("Success", "Restore completed from cloud.");
+        Alert.alert("Restore successful", "Your data already replace with your last backup.");
         console.log("Restored data:", tables);
       } else {
-        Alert.alert("No Backup", "No backup found for this user.");
+        Alert.alert("Restore failed", "No backup found for this user.");
       }
     } catch (error) {
       console.error("Restore Error:", error);
-      Alert.alert("Error", "Failed to restore data.");
+      Alert.alert("Restore failed", "Please try again.");
+    } finally {
+      setLoading2(false);
     }
   }
 
@@ -139,15 +145,24 @@ const BackUpCloud = ({ navigation }: Props) => {
       </View>
 
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={[styles.button,{ backgroundColor: theme === 'dark' ? '#444' : '#E69DB8' }]} onPress={handleBackup}>
-          <Ionicons name="cloud-upload" size={24} color={theme === 'dark' ? 'white' : '#393533'}/>
-          <Text style={[styles.buttonText, { color: theme === 'dark' ? 'white' : 'black' }]}>Backup</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={[styles.button,{ backgroundColor: theme === 'dark' ? '#444' : '#E69DB8' }]} onPress={handleRestore}>
-          <MaterialIcons name="cloud-download" size={24} color={theme === 'dark' ? 'white' : '#393533'} />
-          <Text style={[styles.buttonText, { color: theme === 'dark' ? 'white' : 'black' }]}>Restore from Cloud</Text>
-        </TouchableOpacity>
+        {loading1 ? (<ActivityIndicator size="large" color="#0000ff" /> )
+        : 
+        (
+            <TouchableOpacity style={[styles.button,{ backgroundColor: theme === 'dark' ? '#444' : '#E69DB8' }]} onPress={handleBackup}>
+              <Ionicons name="cloud-upload" size={24} color={theme === 'dark' ? 'white' : '#393533'}/>
+              <Text style={[styles.buttonText, { color: theme === 'dark' ? 'white' : 'black' }]}>Backup</Text>
+            </TouchableOpacity>
+        )}
+        
+        {loading2 ? (<ActivityIndicator size="large" color="#0000ff" /> )
+        : 
+        (
+          <TouchableOpacity style={[styles.button,{ backgroundColor: theme === 'dark' ? '#444' : '#E69DB8' }]} onPress={handleRestore}>
+            <MaterialIcons name="cloud-download" size={24} color={theme === 'dark' ? 'white' : '#393533'} />
+            <Text style={[styles.buttonText, { color: theme === 'dark' ? 'white' : 'black' }]}>Restore from Cloud</Text>
+          </TouchableOpacity>
+        )}
+        
       </View>
     </SafeAreaView>
   );

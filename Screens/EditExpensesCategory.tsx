@@ -14,7 +14,6 @@ import {
 } from "react-native";
 import { ExpensesCategoryParamList } from "../src/types/Types";
 import { StackScreenProps } from '@react-navigation/stack';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { useTheme } from '../src/contexts/ThemeContext';
 import { updateExpensesCategory } from "../src/database/database";
 
@@ -25,7 +24,6 @@ const EditExpensesCategory = ({ route, navigation }: Props) => {
   const [id, setID] = useState(expensesID);
   const [title, setTitle] = useState(expensesTitle);
   const [description, setDescription] = useState(expensesDescription);
-  const [showDatePicker, setShowDatePicker] = useState(false);
   const [isEdited, setIsEdited] = useState(false);
 
   const shouldWarnOnLeave = useRef(true);
@@ -35,9 +33,14 @@ const EditExpensesCategory = ({ route, navigation }: Props) => {
 
   // Handle Save
   const handleSave = async() => {
-    console.log("Save edited expenses category");
+    
     if (!title.trim() ) {
-      Alert.alert("Validation Error", "Title are required!");
+      Alert.alert("Update expenses category details failed", "Please fill in Category Title.");
+      return;
+    }
+
+    if (title.trim().length > 30) {
+      Alert.alert("Update expenses category details failed", "Category title must not exceed 30 characters.");
       return;
     }
 
@@ -47,16 +50,16 @@ const EditExpensesCategory = ({ route, navigation }: Props) => {
       setIsEdited(false);
   
       if (Platform.OS === "android") {
-        ToastAndroid.show("Expenses category details updated successfully", ToastAndroid.SHORT);
+        ToastAndroid.show("Expenses category details is updated successfully", ToastAndroid.SHORT);
       } else {
-        Alert.alert("Success", "Expenses category details updated successfully");
+        Alert.alert("Upload success", "Expenses category details is updated successfully.");
       }
   
       navigation.goBack(); 
 
       console.log("Update expenses category details for:", id, title, description);
     } catch(error) {
-      console.error("Update expenses category error: ", error);
+      console.error("Update expenses category failed ", "Please try again.");
     }
     
   };

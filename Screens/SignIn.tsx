@@ -35,7 +35,7 @@ const SignIn = ({ route, navigation }: Props) => {
   // handle onPress
   const handleSignIn = async () => {
     if (!email || !password) {
-      Alert.alert("Error", "Email and password are required.");
+      Alert.alert("Sign in failed", "Please fill in email and password.");
       return;
     }
 
@@ -68,7 +68,13 @@ const SignIn = ({ route, navigation }: Props) => {
 
     } catch (error: any) {
       console.log("Login error:", error);
-      Alert.alert("Sign in failed: " + error.message);
+      let message = "Something went wrong. Please try again.";
+
+      if (error.code === "auth/invalid-credential") {
+          message = "Invalid email or password.";
+      }
+
+      Alert.alert("Sign in failed", message);
     } finally {
       setLoading(false);
     }
@@ -158,15 +164,15 @@ const SignIn = ({ route, navigation }: Props) => {
 
             {/* Sign In Button */}
             {loading? <ActivityIndicator size="large" color="#0000ff" />
-                        : <>
+                        : (
                           <TouchableOpacity
                             style={styles.button}
                             onPress={handleSignIn}
                           >
                             <Text style={styles.buttonText}>Sign in</Text>
-                          </TouchableOpacity>
+                          </TouchableOpacity>)
               
-              </>}
+              }
 
             
 

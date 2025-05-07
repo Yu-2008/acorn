@@ -15,7 +15,6 @@ import {
 } from "react-native";
 import { IncomeCategoryParamList } from "../src/types/Types";
 import { StackScreenProps } from "@react-navigation/stack";
-import DateTimePicker from "@react-native-community/datetimepicker";
 import { useTheme } from '../src/contexts/ThemeContext';
 import { updateIncomeCategory } from "../src/database/database";
 
@@ -26,7 +25,6 @@ const EditIncomeCategory = ({ route, navigation }: Props) => {
   const [id, setID] = useState(incomeID);
   const [title, setTitle] = useState(incomeTitle);
   const [description, setDescription] = useState(incomeDescription);
-  const [showDatePicker, setShowDatePicker] = useState(false);
   const [isEdited, setIsEdited] = useState(false);
 
 
@@ -37,7 +35,12 @@ const EditIncomeCategory = ({ route, navigation }: Props) => {
   const handleSave = async() => {
 
     if (!title.trim() ) {
-      Alert.alert("Input Error", "Category title are required!");
+      Alert.alert("Update income category details failed", "Please fill in Category Title.");
+      return;
+    }
+
+    if (title.trim().length > 30) {
+      Alert.alert("Update income category details failed", "Category title must not exceed 30 characters.");
       return;
     }
 
@@ -47,16 +50,16 @@ const EditIncomeCategory = ({ route, navigation }: Props) => {
       setIsEdited(false);
   
       if (Platform.OS === "android") {
-        ToastAndroid.show("Income category details updated successfully", ToastAndroid.SHORT);
+        ToastAndroid.show("Income category details is updated successfully", ToastAndroid.SHORT);
       } else {
-        Alert.alert("Success", "Income category details updated successfully");
+        Alert.alert("Update success", "Income category details is updated successfully");
       }
   
       navigation.goBack(); 
 
       console.log("Update income category details for:", id, title, description);
     } catch(error) {
-      console.error("Update income category error: ", error);
+      console.error("Update income category failed", "Please try again.");
     }
     
   };

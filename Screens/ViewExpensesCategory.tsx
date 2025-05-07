@@ -54,7 +54,7 @@ const ViewExpensesCategory = ({ route, navigation }: Props) => {
       navigation.navigate('EditExpensesCategory', { 
         expensesID,
         expensesTitle: title,
-        expensesDescription: description 
+        expensesDescription: description ? description : "No description",
       });
     } else if (name === "delete") {
       console.log(`Delete category ${title}`);
@@ -85,7 +85,7 @@ const ViewExpensesCategory = ({ route, navigation }: Props) => {
     <SafeAreaView style={[styles.container, { backgroundColor: theme === 'dark' ? '#333' : '#FDE6F6' }]}>
       <ScrollView contentContainerStyle={styles.scrollView}>
         <View style={styles.detailItem}>
-          <Text style={[styles.detailLabel, { color: theme === 'dark' ? 'white' : 'black' }]}>Category Name</Text>
+          <Text style={[styles.detailLabel, { color: theme === 'dark' ? 'white' : 'black' }]}>Category Title</Text>
           <View style={[styles.detailBox, { backgroundColor: theme === 'dark' ? '#444' : '#fff' }]}>
             <Text style={[styles.detailText, { color: theme === 'dark' ? 'white' : 'black' }]}>{title}</Text>
           </View>

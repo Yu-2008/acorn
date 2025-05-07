@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, View, Text, TouchableOpacity, FlatList, TouchableHighlight, Animated, ScrollView } from 'react-native';
+import { SafeAreaView, View, Text, FlatList, TouchableHighlight, Animated, ScrollView } from 'react-native';
 import { HomeStyles as styles } from '../src/styles/Styles';
 import type { StackScreenProps } from '@react-navigation/stack';
 import { MainStackParamList } from '../src/types/Types';

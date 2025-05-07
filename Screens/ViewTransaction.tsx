@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { ViewTransactionStyles as styles } from '../src/styles/Styles';
-import { SafeAreaView, Text, View, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import { SafeAreaView, Text, View, StyleSheet, ScrollView, Alert } from 'react-native';
 import { FloatingAction } from 'react-native-floating-action';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -15,7 +15,6 @@ type Props = StackScreenProps<MainStackParamList, 'ViewTransaction'>;
 
 
 const ViewTransaction = ({ route, navigation }: Props) => {
-  const { userID } = useUser();
   const { transID }= route.params;
   const [title, setTitle] = useState(route.params.transTitle);
   const [type, setType] = useState(route.params.transType);
@@ -78,8 +77,8 @@ const ViewTransaction = ({ route, navigation }: Props) => {
         transType: type,
         transCategory: category,
         transAmount: amount,
-        transDescription: description ||  "",
-        transLocation: location || "",
+        transDescription: description ||  "No description",
+        transLocation: location || "No location",
       });
     } else if (name === "delete") {
       console.log(`Delete transaction ${title}`);

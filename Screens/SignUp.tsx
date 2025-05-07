@@ -5,10 +5,8 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { SignInUpStackParamList } from '../src/types/Types';
 import { useTheme } from '../src/contexts/ThemeContext';
 import { SignUpStyles as styles } from '../src/styles/Styles';
-
 import { FIREBASE_AUTH } from '../src/config/FirebaseConfig';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-
 import { insertUser } from '../src/database/database';
 import LinearGradient from 'react-native-linear-gradient'; 
 
@@ -47,21 +45,29 @@ const SignUp = ({ route, navigation }: Props) => {
     setLoading(true);
 
     if (!email || !username || !password || !confirmPassword) {
-      Alert.alert("All fields are required.");
+      Alert.alert("Sign up failed", "Please fill in email, username, password, confirm passord.");
       setLoading(false);
       return;
     }
 
+    if (username.trim().length > 30) {
+      Alert.alert("Sign up failed", "Username must not exceed 30 characters.");
+      setLoading(false);
+      return;
+    }
+
+  
     const isValid = await validateEmail(email);
 
     if (!isValid) {
-      Alert.alert("Invalid email", "Please enter a valid email address.\n(E.g. gmail).");
+      Alert.alert("Sign up failed", "Email are invalied.\nPlease enter a valid email address.\n(E.g. gmail).");
       setLoading(false);
       return;
     }
 
     if (password !== confirmPassword) {
-      Alert.alert("Passwords do not match.");
+      Alert.alert("Sign up failed", "Confirm password are not match with password.\nPlease double check your password.");
+      setConfirmPassword("");
       setLoading(false);
       return;
     }
@@ -74,7 +80,7 @@ const SignUp = ({ route, navigation }: Props) => {
 
       await insertUser(userID, username);
       console.log("Insert new user success. UID:", userID);
-      Alert.alert("Sign Up successful.\nPlease check your email.");
+      Alert.alert("Sign Up successful.", "Auto sign in for you.\nKindly enjoy our app.");
     } catch (error: any) {
       console.log(error);
       Alert.alert("Sign Up failed: " + error.message);
@@ -150,6 +156,7 @@ const SignUp = ({ route, navigation }: Props) => {
                   placeholderTextColor={theme === 'dark' ? '#aaa' : '#aaa'}
                 />
               </View>
+              <Text style={{color: theme === 'dark' ? '#fff' : '#000'}}>*The username is not editable once sign up. Please consider carefully.</Text>
 
               {/* Password */}
               <Text

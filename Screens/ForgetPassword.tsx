@@ -4,10 +4,9 @@ import { Image, SafeAreaView, Text, TextInput, TouchableOpacity, View, ScrollVie
 import { StackScreenProps } from '@react-navigation/stack';
 import { SignInUpStackParamList } from "../src/types/Types";
 import { useTheme } from '../src/contexts/ThemeContext';
-
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { FIREBASE_AUTH } from '../src/config/FirebaseConfig';
-import LinearGradient from 'react-native-linear-gradient'; // Import LinearGradient
+import LinearGradient from 'react-native-linear-gradient'; 
 
 type Props = StackScreenProps<SignInUpStackParamList, "ForgetPassword">;
 
@@ -20,13 +19,13 @@ const ForgetPassword = ({ route, navigation }: Props) => {
   const handleUpdatePassword = async () => {
     console.log("Updated Password pressed");
     if (!email) {
-      Alert.alert("Password cannot be empty.\nPlease enter your password.");
+      Alert.alert("Send passord reset email failed" , "Please fill in your email.");
       return;
     }
     setLoading(true);
     try {
       await sendPasswordResetEmail(FIREBASE_AUTH, email);
-      Alert.alert("Password reset email sent!", "Please check your inbox.");
+      Alert.alert("Password reset email sent", "Please check your inbox.");
       navigation.navigate('SignIn');
     } catch (error: any) {
       console.log("Forget password:" + error);

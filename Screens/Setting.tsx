@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { SafeAreaView, Text, View, TouchableOpacity, Animated, Switch,Image } from "react-native";
+import { SafeAreaView, Text, View, TouchableOpacity, Animated, Switch,Image, Linking } from "react-native";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Feather from 'react-native-vector-icons/Feather';
@@ -13,7 +13,6 @@ import { FIREBASE_AUTH } from "../src/config/FirebaseConfig";
 import { getUsernameById } from "../src/database/database";
 import { useFocusEffect } from "@react-navigation/native";
 import { createMapLink } from 'react-native-open-maps';
-import { Linking } from 'react-native';
 
 
 
@@ -116,7 +115,8 @@ const handleContactUs = () => {
           <Feather name="map-pin" size={24} color={theme === 'dark' ? 'white' : '#393533'} />
           <Text style={[styles.buttonText,{ color: theme === 'dark' ? '#fff' : '#393533' }]}>Search for Acorn Company</Text>
       </TouchableOpacity>
-      <Text style={[styles.buttonText, { color: theme === 'dark' ? '#fff' : '#gray' }]}>Address: Universiti Tunku Abdul Rahman (UTAR) (UTAR Sungai Long Campus), Jalan Sungai Long, Bandar Sungai Long, 43000 Kajang, Selangor</Text>
+      <Text style={[styles.buttonText, { color: theme === 'dark' ? '#fff' : 'gray' }]}>Address:</Text>
+      <Text style={[styles.buttonText, { color: theme === 'dark' ? '#fff' : 'gray' }]}>Universiti Tunku Abdul Rahman (UTAR) (UTAR Sungai Long Campus), Jalan Sungai Long, Bandar Sungai Long, 43000 Kajang, Selangor</Text>
 
       {/* Contact Us Button for WhatsApp */}
       <TouchableOpacity onPress={handleContactUs} style={[styles.button, { marginTop: 20 },{backgroundColor: theme === 'dark' ? '#444' : '#E69DB8' }]}>

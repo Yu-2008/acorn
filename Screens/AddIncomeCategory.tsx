@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { 
-  ScrollView, SafeAreaView, Text, View, TextInput, TouchableOpacity 
+  ScrollView, SafeAreaView, Text, View, TextInput, TouchableOpacity, 
+  Alert,
+  Platform,
+  ToastAndroid
 } from "react-native";
 import { AddIncomeCategoryStyles as styles } from '../src/styles/Styles';
 import { IncomeCategoryParamList } from "../src/types/Types";
@@ -17,45 +20,55 @@ const AddIncomeCategory = ({ route, navigation }: Props) => {
   const { userID } = useUser();
   const [iconName, setIconName] = useState("");
   const [iconLibrary, setIconLibrary] = useState("");
-  const [categoryName, setCategoryName] = useState("");
+  const [categoryTitle, setCategoryTitle] = useState("");
   const [categoryDescription, setCategoryDescription] = useState("");
   const [confirmationMessage, setConfirmationMessage] = useState("");
   const { theme } = useTheme();
 
 
   const handleSave = async () => {
-    if (!categoryName || !iconName || !iconLibrary) {
-      setConfirmationMessage("Please make sure your are already select an icon and fill in Category Name.");
+    if (!categoryTitle.trim() || !iconName || !iconLibrary) {
+      Alert.alert("Add income category failed", "Please select an icon and fill in Category Name.");
+      return;
+    }
+
+    if (categoryTitle.trim().length > 30) {
+      Alert.alert("Sign up failed", "Username must not exceed 30 characters.");
       return;
     }
 
     if (!userID) {
-      setConfirmationMessage("User not signed in. Cannot save category.");
+      Alert.alert("Get user ID failed", "User not signed in. Cannot get category.\nPlease sign in again.");
       return;
     }
 
     try {
       await insertIncomeCategory({
-        title: categoryName,
-        description: categoryDescription,
+        title: categoryTitle,
+        description: categoryDescription ? categoryDescription : "No description",
         incomeIconName: iconName,
         incomeIconLibrary: iconLibrary,
         userID: userID,
       });
-      setConfirmationMessage(`Category '${categoryName}' saved successfully!`);
 
       console.log('Inserting category:', {
-        title: categoryName,
+        title: categoryTitle,
         description: categoryDescription,
         incomeIconName: iconName,
         incomeIconLibrary: iconLibrary,
         userID: userID,
       });
+
+      if (Platform.OS === "android") {
+        ToastAndroid.show("New income category is added succcessfully", ToastAndroid.SHORT);
+      } else {
+        Alert.alert("Added success", "New income category is added succcessfully.");
+      }
       
       navigation.goBack();
     } catch (error) {
       console.log("Error saving income category:", error);
-      setConfirmationMessage("Failed to save category.");
+      Alert.alert("Add new income category failed", "Please try again. ")
     }
   };
 
@@ -118,8 +131,8 @@ const AddIncomeCategory = ({ route, navigation }: Props) => {
         <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Category Name</Text>
         <TextInput
           placeholder="Enter category name"
-          value={categoryName}
-          onChangeText={setCategoryName}
+          value={categoryTitle}
+          onChangeText={setCategoryTitle}
           style={[styles.input, { color: theme === 'dark' ? 'white' : 'black' }]}  
           placeholderTextColor={theme === 'dark' ? 'lightgray' : '#6E6E6E'}  
         />

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { SafeAreaView, Text, View, TextInput, TouchableOpacity, Platform, Alert, ScrollView, ActivityIndicator} from "react-native";
+import { SafeAreaView, Text, View, TextInput, TouchableOpacity, Platform, Alert, ScrollView, ActivityIndicator, ToastAndroid} from "react-native";
 import { AddExpensesStyles as styles } from '../src/styles/Styles';
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -42,7 +42,7 @@ const AddExpenses = ({ navigation }: any) => {
       const lon = parseFloat(match[2]);
   
       const locationName = await reverseGeocode(lat, lon);
-      console.log('📍 Human-readable location:', locationName);
+      console.log('User location:', locationName);
       setLocation(locationName || "Unknown location");
       setLoading(false);
     }
@@ -121,18 +121,28 @@ const AddExpenses = ({ navigation }: any) => {
   {/**handle onPress */}
   const handleSave = async() => {
     if (!userID) {
-      Alert.alert("User not signed in. Cannot add transaction.");
+      Alert.alert("Add transaction failed", "Cannot get user ID. Please sign in again.");
       return;
     }
     
-    if (!selectedCategory || !transTitle || !transAmount) {
-      Alert.alert("Please fill in category, title, and amount.");
+    if (!selectedCategory || !transTitle.trim() || !transAmount) {
+      Alert.alert("Add transaction failed", "Please fill in category, title, and amount.");
+      return;
+    }
+
+    if (transTitle.trim().length > 30) {
+      Alert.alert("Add transaction failed", "Title must not exceed 30 characters.");
       return;
     }
 
     const amount = parseFloat(transAmount);
     if (isNaN(amount)) {
-      Alert.alert("Please enter a valid amount.");
+      Alert.alert("Add transaction failed", "Please enter a valid amount.");
+      return;
+    }
+    
+    if (amount < 0) {
+      Alert.alert("Add transaction failed","Amount cannot be negative.\nPlease input a positive amount.")
       return;
     }
 
@@ -148,6 +158,13 @@ const AddExpenses = ({ navigation }: any) => {
         userID,
       });
       console.log("Expenses added successfully.");
+
+      if (Platform.OS === 'android') {
+        ToastAndroid.show("Transaction added successfully", ToastAndroid.SHORT);
+      } else {
+        Alert.alert("Add success", "Transaction added successfully");
+      }
+
       setSelectedCategory(categories.length > 0 ? categories[0].id : null);
       setTransTitle("");
       setTransAmount("");
@@ -158,13 +175,14 @@ const AddExpenses = ({ navigation }: any) => {
       navigation.goBack(); 
     } catch (error) {
       console.error("Add expenses transaction error: ", error);
+      Alert.alert("Add expenses transaction failed", "Please try again.");
     }
   };
 
 
   useEffect(() => {
     if (!userID) {
-      Alert.alert("User not signed in. Cannot get category.");
+      console.log("Get user ID failed.\nPlease sign in again.");
       return;
     }
     const loadCategories = async () => {

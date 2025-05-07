@@ -15,7 +15,7 @@ import EditIncomeCategoryScreen from './Screens/EditIncomeCategory';
 import EditTransactionScreen from './Screens/EditTransaction';
 import ExpensesCategory from './Screens/ExpensesCategory';
 import IncomeCategoryScreen from './Screens/IncomeCategory';
-import MainScreen from './Screens/Main';
+import MainScreen from './Screens/Home';
 import SettingScreen from './Screens/Setting';
 import SignInScreen from './Screens/SignIn';
 import SignUpScreen from './Screens/SignUp';
@@ -36,10 +36,8 @@ import {
   ExpensesCategoryParamList,
   MainStackParamList,
 } from './src/types/Types';
-
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { FIREBASE_AUTH } from './src/config/FirebaseConfig';
-
 import { initDB } from './src/database/database';
 import { PubNubProvider } from 'pubnub-react';
 import PubNub from 'pubnub';

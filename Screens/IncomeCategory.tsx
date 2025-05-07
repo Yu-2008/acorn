@@ -20,7 +20,7 @@ type IncomeCategory = {
 }
 
 
-const IncomeCategory = ({ route, navigation }: Props) => {
+const IncomeCategory = ({ navigation }: Props) => {
   const { userID } = useUser();
   const { theme } = useTheme();
   const [data, setData] = useState<IncomeCategory[]>([]);

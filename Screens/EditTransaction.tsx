@@ -20,6 +20,7 @@ import { useUser } from "../src/contexts/UserContext";
 import { updateTransactionById, getIncomeCategories, getExpensesCategories } from "../src/database/database";
 import { Picker } from "@react-native-picker/picker";
 
+
 type Props = StackScreenProps<MainStackParamList, "EditTransaction">;
 
 const EditTransaction = ({ route, navigation }: Props) => {
@@ -32,7 +33,6 @@ const EditTransaction = ({ route, navigation }: Props) => {
   const [categories, setCategories] = useState<{ id: number; title: string }[]>([]);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [isEdited, setIsEdited] = useState(false);
-  const [selectedDate, setSelectedDate] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(route.params.transCategory);
 
 
@@ -45,14 +45,14 @@ const EditTransaction = ({ route, navigation }: Props) => {
   const handleSave = async () => {
 
 
-    if (!title.trim()) {
-      Alert.alert("Input Error", "Transaction title is required!");
+    if (!selectedCategory || !title.trim() || !amount) {
+      Alert.alert("Update transaction failed", "Please fill in category, title, and amount.");
       return;
     }
 
-    if (!selectedCategory || !title || !amount) {
-          Alert.alert("Please fill in category, title, and amount.");
-          return;
+    if (title.trim().length > 30) {
+      Alert.alert("Update transaction failed", "Title must not exceed 30 characters.");
+      return;
     }
 
     const parsedAmount = parseFloat(String(amount));
@@ -69,17 +69,17 @@ const EditTransaction = ({ route, navigation }: Props) => {
         transTitle: title,
         transactionDate: date.getTime(), // converting Date object to timestamp
         amount: parsedAmount,
-        description: description || "",
-        location: transLocation || "",
+        description: description || "No description",
+        location: transLocation || "No location",
       });
   
       shouldWarnOnLeave.current = false;
       setIsEdited(false);
   
       if (Platform.OS === 'android') {
-        ToastAndroid.show("Transaction saved successfully", ToastAndroid.SHORT);
+        ToastAndroid.show("Transaction updated successfully", ToastAndroid.SHORT);
       } else {
-        Alert.alert("Success", "Transaction saved successfully");
+        Alert.alert("Update success", "Transaction updated successfully");
       }
   
       setSelectedCategory(categories.length > 0 ? String(categories[0].id) : "");
@@ -89,7 +89,7 @@ const EditTransaction = ({ route, navigation }: Props) => {
       setDate(new Date());
       navigation.goBack();
     } catch (error) {
-      Alert.alert("Error", "Failed to save transaction.");
+      Alert.alert("Updated transaction failed", "Please try again.");
       console.error(error);
     }
   };
@@ -97,12 +97,12 @@ const EditTransaction = ({ route, navigation }: Props) => {
   useEffect(()=>{
 
     if (!userID) {
-      Alert.alert("Get UID Error", "Please check your sign in status.");
+      Alert.alert("Get user ID failed", "Please sign in again.");
       return;
     }
 
     if(!transID){
-      Alert.alert("Get transID error","Cannot save category.");
+      Alert.alert("Get transID failed","Please try again.");
       return;
     }
 
@@ -116,7 +116,7 @@ const EditTransaction = ({ route, navigation }: Props) => {
       setCategories(data);
       
       if (!data.find((cat) => cat.id === selectedCategory) && data.length > 0) {
-        setSelectedCategory(data[0].id);  // Ensure valid category selection
+        setSelectedCategory(data[0].id);  
       }
     };
     

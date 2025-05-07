@@ -5,8 +5,10 @@ import {
   View,
   TextInput,
   TouchableOpacity,
-  FlatList,
-  ScrollView
+  ScrollView,
+  Alert,
+  Platform,
+  ToastAndroid
 } from "react-native";
 import type { StackScreenProps } from '@react-navigation/stack';
 import { ExpensesCategoryParamList } from "../src/types/Types";
@@ -24,45 +26,56 @@ const AddExpensesCategory = ({ route, navigation }: Props) => {
   const { userID } = useUser();
   const [iconName, setIconName] = useState("");
   const [iconLibrary, setIconLibrary] = useState("");
-  const [categoryName, setCategoryName] = useState("");
+  const [categoryTitle, setCategoryTitle] = useState("");
   const [categoryDescription, setCategoryDescription] = useState("");
   const [confirmationMessage, setConfirmationMessage] = useState("");
   const { theme } = useTheme();
 
 
   const handleSave = async () => {
-    if (!categoryName || !iconName || !iconLibrary) {
-      setConfirmationMessage("Please make sure your are already select an icon and fill in Category Name.");
+
+    if (!userID) {
+      console.log("Get user ID failed.\nPlease sign in again.");
       return;
     }
 
-    if (!userID) {
-      setConfirmationMessage("User not signed in. Cannot save category.");
+    if (!categoryTitle.trim() || !iconName || !iconLibrary) {
+      Alert.alert("Add expenses category failed", "Please select an icon and fill in Category Title.");
+      return;
+    }
+
+    if (categoryTitle.trim().length > 30) {
+      Alert.alert("Add expenses category failed", "Category Title must not exceed 30 characters.");
       return;
     }
 
     try {
       await insertExpensesCategory({
-        title: categoryName,
-        description: categoryDescription,
+        title: categoryTitle,
+        description: categoryDescription ? categoryDescription : "No description",
         expensesIconName: iconName,
         expensesIconLibrary: iconLibrary,
         userID: userID,
       });
-      setConfirmationMessage(`Category '${categoryName}' saved successfully!`);
 
       console.log('Inserting category:', {
-        title: categoryName,
+        title: categoryTitle,
         description: categoryDescription,
         expensesIconName: iconName,
         expensesIconLibrary: iconLibrary,
         userID: userID,
       });
+
+      if (Platform.OS === 'android') {
+        ToastAndroid.show("Expenses category added successfully", ToastAndroid.SHORT);
+      } else {
+        Alert.alert("Add success", "Expenses category added successfully");
+      }
       
       navigation.goBack();
     } catch (error) {
-        console.log("Error saving expenses category:", error);
-        setConfirmationMessage("Failed to save category.");
+        console.error("Error saving expenses category:", error);
+        Alert.alert("Add expenses category failed", "The expenses category's title is duplicated.\nPlease try again.")
     }
   };
   const handleSelectIcon = (item: { iconName: string; iconLibrary: string; label: string }) => {
@@ -92,13 +105,13 @@ const AddExpensesCategory = ({ route, navigation }: Props) => {
     const size = 24;
 
     if (iconLibrary === 'Ionicons') {
-      return <Ionicons name={iconName} size={24} color={color}  />;
+      return <Ionicons name={iconName} size={size} color={color}  />;
     } else if (iconLibrary === 'FontAwesome') {
-      return <FontAwesome name={iconName} size={24} color={color}  />;
+      return <FontAwesome name={iconName} size={size} color={color}  />;
     } else if (iconLibrary === 'FontAwesome5') {
-      return <FontAwesome5 name={iconName} size={24} color={color}  />;
+      return <FontAwesome5 name={iconName} size={size} color={color}  />;
     } else {
-      return <Ionicons name="file-tray" size={24} color={color} />;
+      return <Ionicons name="file-tray" size={size} color={color} />;
     }
 
   };
@@ -126,11 +139,11 @@ const AddExpensesCategory = ({ route, navigation }: Props) => {
           ))}
         </View>
 
-        <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Category Name</Text>
+        <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Category Title</Text>
         <TextInput
           placeholder="Enter category name"
-          value={categoryName}
-          onChangeText={setCategoryName}
+          value={categoryTitle}
+          onChangeText={setCategoryTitle}
           style={[styles.input, { color: theme === 'dark' ? 'white' : 'black' }]}  
           placeholderTextColor={theme === 'dark' ? 'lightgray' : '#6E6E6E'}  
         />

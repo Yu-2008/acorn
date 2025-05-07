@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ExpensesCategoryStyles as styles } from '../src/styles/Styles';
-import { SafeAreaView, Text, View, TouchableOpacity, FlatList } from "react-native";
+import { SafeAreaView, Text, View, TouchableOpacity, FlatList, Alert } from "react-native";
 import type { StackScreenProps } from '@react-navigation/stack';
 import { ExpensesCategoryParamList } from "../src/types/Types";
 import Ionicons from 'react-native-vector-icons/Ionicons'; 
@@ -22,7 +22,7 @@ type ExpensesCategory = {
   iconLibrary: string; 
 }
 
-const ExpensesCategory = ({ route, navigation }: Props) => {
+const ExpensesCategory = ({ navigation }: Props) => {
   const { userID } = useUser();
   const { theme } = useTheme();
   const [data, setData] = useState<ExpensesCategory[]>([]);
@@ -36,6 +36,7 @@ const ExpensesCategory = ({ route, navigation }: Props) => {
           setData(categories); 
         } else {
           console.error("Cannot get user ID.");
+          Alert.alert("Get user ID failed", "Please sign in again.");
         }
       };
       

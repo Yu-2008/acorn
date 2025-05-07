@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { SafeAreaView, Text, View, TextInput, TouchableOpacity, Platform, Alert, ScrollView, ActivityIndicator } from "react-native";
+import { SafeAreaView, Text, View, TextInput, TouchableOpacity, Platform, Alert, ScrollView, ActivityIndicator, ToastAndroid } from "react-native";
 import { AddIncomeStyles as styles } from '../src/styles/Styles';
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -118,24 +118,34 @@ const AddIncome = ({ navigation }: any) => {
   // Handle onPress
   const handleSave = async () => {
     if (!userID) {
-      Alert.alert("User not signed in. Cannot add transaction.");
+      Alert.alert("Add transaction failed", "Cannot get user ID. Please sign in again.");
       return;
     }
-
-    if (!selectedCategory || !transTitle || !transAmount) {
-      Alert.alert("Please fill in category, title, and amount.");
+    
+    if (!selectedCategory || !transTitle.trim() || !transAmount) {
+      Alert.alert("Add transaction failed", "Please fill in category, title, and amount.");
+      return;
+    }
+    
+    if (transTitle.trim().length > 30) {
+      Alert.alert("Add transaction failed", "Title must not exceed 30 characters.");
       return;
     }
 
     const amount = parseFloat(transAmount);
     if (isNaN(amount)) {
-      Alert.alert("Please enter a valid amount.");
+      Alert.alert("Add transaction failed", "Please enter a valid amount.");
+      return;
+    }
+    
+    if (amount < 0) {
+      Alert.alert("Add transaction failed","Amount cannot be negative.\nPlease input a positive amount.")
       return;
     }
 
     try {
       await insertTransactionHistory({
-        transType: 0, // income
+        transType: 0, 
         transCategory: selectedCategory ? selectedCategory.toString() : "",
         transTitle: transTitle,
         transactionDate: transDate.getTime(), // timestamp
@@ -152,15 +162,23 @@ const AddIncome = ({ navigation }: any) => {
       setTransDate(new Date());
       setLocation("");
       setLocationCheckbox(false);
+
+      if (Platform.OS === 'android') {
+        ToastAndroid.show("Transaction added successfully", ToastAndroid.SHORT);
+      } else {
+        Alert.alert("Add success", "Transaction added successfully");
+      }
+
       navigation.goBack();
     } catch (error) {
       console.error("Add income transaction error: ", error);
+      Alert.alert("Add expenses category failed", "Please try again.")
     }
   };
 
   useEffect(() => {
     if (!userID) {
-      Alert.alert("User not signed in. Cannot get category.");
+      console.error("Get user ID failed", "User is not signed in. Cannot get income category.\nPlease sign in again.");
       return;
     }
     const loadCategories = async () => {
