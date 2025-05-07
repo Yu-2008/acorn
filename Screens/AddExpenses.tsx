@@ -163,7 +163,7 @@ const AddExpenses = ({ navigation }: any) => {
 
   useEffect(() => {
     if (!userID) {
-      Alert.alert("User not signed in. Cannot save category.");
+      Alert.alert("User not signed in. Cannot get category.");
       return;
     }
     const loadCategories = async () => {

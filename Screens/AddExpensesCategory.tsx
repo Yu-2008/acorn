@@ -11,7 +11,8 @@ import {
 import type { StackScreenProps } from '@react-navigation/stack';
 import { ExpensesCategoryParamList } from "../Types";
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'; 
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { AddExpensesCategoryStyles as styles } from '../Styles';
 import { useTheme } from '../ThemeContext';
 import { useUser } from "../UserContext";
@@ -80,7 +81,6 @@ const AddExpensesCategory = ({ route, navigation }: Props) => {
     { label: "Personal Care", iconName: "cut", iconLibrary: "Ionicons" },
     { label: "Transportation", iconName: "car", iconLibrary: "Ionicons" },
     { label: "Medication", iconName: "medkit", iconLibrary: "Ionicons" },
-    { label: "Insurance", iconName: "paper", iconLibrary: "Ionicons" },
     { label: "Pets", iconName: "paw", iconLibrary: "FontAwesome5" },
     { label: "Travel", iconName: "airplane", iconLibrary: "Ionicons" },
     { label: "Subscription", iconName: "logo-youtube", iconLibrary: "Ionicons" },
@@ -91,13 +91,16 @@ const AddExpensesCategory = ({ route, navigation }: Props) => {
     const color = theme === 'dark' ? 'white' : '#393533';
     const size = 24;
 
-    if (iconLibrary === "Ionicons") {
-      return <Ionicons name={iconName} size={size} color={color} />;
-    } else if (iconLibrary === "MaterialIcons") {
-      return <MaterialIcons name={iconName} size={size} color={color} />;
+    if (iconLibrary === 'Ionicons') {
+      return <Ionicons name={iconName} size={24} color={color}  />;
+    } else if (iconLibrary === 'FontAwesome') {
+      return <FontAwesome name={iconName} size={24} color={color}  />;
+    } else if (iconLibrary === 'FontAwesome5') {
+      return <FontAwesome5 name={iconName} size={24} color={color}  />;
     } else {
-      return null;
+      return <Ionicons name="file-tray" size={24} color={color} />;
     }
+
   };
 
   return (

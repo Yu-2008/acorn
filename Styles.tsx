@@ -432,11 +432,11 @@ export const AddIncomeStyles = StyleSheet.create({
     fontFamily: 'WinkySans-VariableFont_wght', 
   },
   pickerContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    gap: 10,
-    marginBottom: 20
+    marginTop: 10,
+    borderWidth: 2,
+    borderColor: '#DBABA1',
+    borderRadius: 10,
+    marginBottom: 15,
   },
   itemRow: {
     width: '45%',

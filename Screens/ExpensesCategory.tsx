@@ -5,7 +5,7 @@ import type { StackScreenProps } from '@react-navigation/stack';
 import { ExpensesCategoryParamList } from "../Types";
 import Ionicons from 'react-native-vector-icons/Ionicons'; 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'; 
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { useTheme } from '../ThemeContext';
 import { useUser } from "../UserContext";
 import { useFocusEffect } from "@react-navigation/native";
@@ -61,8 +61,10 @@ const ExpensesCategory = ({ route, navigation }: Props) => {
     
     if (iconLibrary === 'Ionicons') {
       return <Ionicons name={iconName} size={24} color={iconColor} style={styles.icon} />;
-    } else if (iconLibrary === 'FontAwesome5') {
+    } else if (iconLibrary === 'FontAwesome') {
       return <FontAwesome name={iconName} size={24} color={iconColor} style={styles.icon} />;
+    } else if (iconLibrary === 'FontAwesome5') {
+      return <FontAwesome5 name={iconName} size={24} color={iconColor} style={styles.icon} />;
     } else {
       return <Ionicons name="file-tray" size={24} color={iconColor} style={styles.icon} />;
     }

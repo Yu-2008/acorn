@@ -40,7 +40,7 @@ const AddIncome = ({ navigation }: any) => {
       const lon = parseFloat(match[2]);
   
       const locationName = await reverseGeocode(lat, lon);
-      console.log('📍 Human-readable location:', locationName);
+      console.log('User location:', locationName);
       setLocation(locationName || "Unknown location");
       setLoading(false);
     }
@@ -161,11 +161,12 @@ const AddIncome = ({ navigation }: any) => {
 
   useEffect(() => {
     if (!userID) {
-      Alert.alert("User not signed in. Cannot save category.");
+      Alert.alert("User not signed in. Cannot get category.");
       return;
     }
     const loadCategories = async () => {
       const data = await getIncomeCategories(userID);
+      console.log("Fetched income categories:", data);
       setCategories(data);
       if (data.length > 0) setSelectedCategory(data[0].id);
     };
