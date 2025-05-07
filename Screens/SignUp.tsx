@@ -19,8 +19,9 @@ const SignUp = ({ route, navigation }: Props) => {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const auth = FIREBASE_AUTH;
 
@@ -160,7 +161,7 @@ const SignUp = ({ route, navigation }: Props) => {
                 <TextInput
                   style={styles.input}
                   placeholder="Enter your password"
-                  secureTextEntry
+                  secureTextEntry={!showPassword}
                   value={password}
                   onChangeText={setPassword}
                   placeholderTextColor={theme === 'dark' ? '#aaa' : '#aaa'}
@@ -180,14 +181,14 @@ const SignUp = ({ route, navigation }: Props) => {
                 <TextInput
                   style={styles.input}
                   placeholder="Re-enter your password"
-                  secureTextEntry
+                  secureTextEntry={!showConfirmPassword}
                   value={confirmPassword}
                   onChangeText={setConfirmPassword}
                   placeholderTextColor={theme === 'dark' ? '#aaa' : '#aaa'}
                 />
-              <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                <Icon name={showPassword ? 'eye-off-outline' : 'eye-outline'} size={20} color="#f57cbb" />
-              </TouchableOpacity>
+                <TouchableOpacity onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
+                  <Icon name={showConfirmPassword ? 'eye-off-outline' : 'eye-outline'} size={20} color="#f57cbb" />
+                </TouchableOpacity>
               </View>
 
             {/* Sign Up Button */}
