@@ -71,13 +71,13 @@ const AddIncomeCategory = ({ route, navigation }: Props) => {
       Alert.alert("Add new income category failed", "Please try again. ")
     }
   };
-
+  // icon selection from the list of options
   const handleSelectIcon = (item: { iconName: string; iconLibrary: string; label: string }) => {
     setIconName(item.iconName);
     setIconLibrary(item.iconLibrary);
     setConfirmationMessage(`You selected ${item.label} icon!`);
   }
-
+   // List of available icon options for the income categories
   const iconOptions = [
     { label: "Salary", iconName: "wallet", iconLibrary: "Ionicons" },
     { label: "Side Income", iconName: "cash", iconLibrary: "Ionicons" },
@@ -108,7 +108,7 @@ const AddIncomeCategory = ({ route, navigation }: Props) => {
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme === 'dark' ? '#333' : '#FDE6F6' }]}>
       <ScrollView contentContainerStyle={styles.formContainer}>
-
+        {/* Icon Selection */}
         <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Select Icon</Text>
         
         <View style={styles.pickerContainer}>
@@ -127,7 +127,7 @@ const AddIncomeCategory = ({ route, navigation }: Props) => {
             </TouchableOpacity>
           ))}
         </View>
-
+        {/* Category Title Input */}
         <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Category Name</Text>
         <TextInput
           placeholder="Enter category name"
@@ -136,7 +136,7 @@ const AddIncomeCategory = ({ route, navigation }: Props) => {
           style={[styles.input, { color: theme === 'dark' ? 'white' : 'black' }]}  
           placeholderTextColor={theme === 'dark' ? 'lightgray' : '#6E6E6E'}  
         />
-
+        {/* Description Input */}
         <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Description (optional)</Text>
         <TextInput
           placeholder="Enter description"
@@ -145,13 +145,13 @@ const AddIncomeCategory = ({ route, navigation }: Props) => {
           style={[styles.input, { color: theme === 'dark' ? 'white' : 'black' }]} 
           placeholderTextColor={theme === 'dark' ? 'lightgray' : '#6E6E6E'} 
         />
-
+         {/* Display Confirmation Message for selected icon */}
         {confirmationMessage ? (
           <Text style={[styles.confirmationMessage, { color: theme === 'dark' ? '#8FF479' : 'green' }]}>
             {confirmationMessage}
           </Text>
         ) : null}
-
+         {/* Save Button */}
         <TouchableOpacity
             style={[
               styles.saveButton,

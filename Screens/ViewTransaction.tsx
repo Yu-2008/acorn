@@ -45,7 +45,7 @@ const ViewTransaction = ({ route, navigation }: Props) => {
       return () => { active = false; };
     }, [transID])
   );
-
+ // Actions for FloatingAction button
   const actions = [
     {
       text: "Edit",
@@ -62,7 +62,7 @@ const ViewTransaction = ({ route, navigation }: Props) => {
       icon: <MaterialIcons name="delete" size={24} color="white" /> 
     },
   ];
-
+   // Handle action press
   const handleActionPress = (name?: string) => {
 
     if (!transID) {

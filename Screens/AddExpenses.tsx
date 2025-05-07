@@ -16,6 +16,7 @@ import { reverseGeocode } from "../src/services/reverseGeocode";
 
 const CHANNEL = "location-channel";
 
+// Declare state variables for form inputs and location tracking
 const AddExpenses = ({ navigation }: any) => {
   const { userID } = useUser();
   const { theme } = useTheme();
@@ -32,9 +33,10 @@ const AddExpenses = ({ navigation }: any) => {
   const watchId = useRef<number | null>(null);
   const [ loading, setLoading ] = useState(false);
   
-  
+  // PubNub channel for location updates
   const pubnub = usePubNub();
 
+   // Function to handle incoming messages with location data from PubNub
   const handlePubNubMessage = async (message: string) => {
     const match = message.match(/Lat:([\d.-]+),Lon:([\d.-]+)/);
     if (match) {
@@ -47,10 +49,10 @@ const AddExpenses = ({ navigation }: any) => {
       setLoading(false);
     }
   };
-  
+  // Effect hook to subscribe to location updates from PubNub
   useEffect(() => {
     pubnub.subscribe({ channels: [CHANNEL], withPresence: false });
-
+    // Listener for receiving location updates
     const listener = {
       message: (m: any) => {
         const rawLocation = m.message.locationName ?? "Unknown location";
@@ -66,7 +68,7 @@ const AddExpenses = ({ navigation }: any) => {
     };
   }, [pubnub]);
 
-
+    // Function to check location tracking on or off
   const onToggleLocation = async (checked: boolean) => {
     setLocationCheckbox(checked);
     if (!checked)  {
@@ -86,7 +88,7 @@ const AddExpenses = ({ navigation }: any) => {
     setLoading(true);
     startWatchingLocation();
   };
-
+  // Function to start watching the location in real-time
   const startWatchingLocation = () => {
     watchId.current = Geolocation.watchPosition(
       async ({ coords }) => {
@@ -102,7 +104,7 @@ const AddExpenses = ({ navigation }: any) => {
       { enableHighAccuracy: true, distanceFilter: 10, interval: 5000 }
     );
   };
-  
+  // Function to stop watching the location
   const stopWatchingLocation = () => {
     if (watchId.current !== null) {
       Geolocation.clearWatch(watchId.current);
@@ -315,7 +317,7 @@ const AddExpenses = ({ navigation }: any) => {
           )}
 
 
-
+           {/* Submit Button */}
           <TouchableOpacity
             style={[styles.doneButton]}
             onPress={handleSave}

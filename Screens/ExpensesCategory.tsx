@@ -44,11 +44,12 @@ const ExpensesCategory = ({ navigation }: Props) => {
     }, [userID])
   );
 
-  {/**handle onPress */}
+  // Handler for navigating to AddExpensesCategory screen
   const handleAddMore = () => {
     console.log("Add more pressed")
     navigation.navigate('AddExpensesCategory');
   };
+   // Handler for navigating to ViewExpensesCategory screen
   const handleView = (item: any) => {
     navigation.navigate('ViewExpensesCategory', {
       expensesID: item.id,

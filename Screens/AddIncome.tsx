@@ -12,11 +12,14 @@ import { usePubNub } from "pubnub-react";
 import { useLocationPermission } from "../src/hooks/useLocationPermission";
 import { reverseGeocode } from "../src/services/reverseGeocode";
 
+// PubNub channel for location updates
 const CHANNEL = "location-channel";
 
 const AddIncome = ({ navigation }: any) => {
+ // Retrieve user ID and theme from context
   const { userID } = useUser();
   const { theme } = useTheme();
+  // State variables for handling income details and location
   const [categories, setCategories] = useState<{ id: number; title: string }[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [transTitle, setTransTitle] = useState("");
@@ -32,6 +35,7 @@ const AddIncome = ({ navigation }: any) => {
 
   const pubnub = usePubNub();
 
+  // Handle received location data from PubNub
   const handlePubNubMessage = async (message: string) => {
     const match = message.match(/Lat:([\d.-]+),Lon:([\d.-]+)/);
     if (match) {
@@ -44,7 +48,7 @@ const AddIncome = ({ navigation }: any) => {
       setLoading(false);
     }
   };
-  
+  // Subscribe to location updates via PubNub
   useEffect(() => {
     pubnub.subscribe({ channels: [CHANNEL], withPresence: false });
 
@@ -121,17 +125,17 @@ const AddIncome = ({ navigation }: any) => {
       Alert.alert("Add transaction failed", "Cannot get user ID. Please sign in again.");
       return;
     }
-    
+    // Validate form inputs
     if (!selectedCategory || !transTitle.trim() || !transAmount) {
       Alert.alert("Add transaction failed", "Please fill in category, title, and amount.");
       return;
     }
-    
+     // Title length validation
     if (transTitle.trim().length > 30) {
       Alert.alert("Add transaction failed", "Title must not exceed 30 characters.");
       return;
     }
-
+    // Validate the amount input
     const amount = parseFloat(transAmount);
     if (isNaN(amount)) {
       Alert.alert("Add transaction failed", "Please enter a valid amount.");
@@ -189,7 +193,7 @@ const AddIncome = ({ navigation }: any) => {
     };
     loadCategories();
   }, [userID]);
-
+   // Handle date changes
   const onChangeDate = (event: any, selectedDate?: Date) => {
     setShowDatePicker(Platform.OS === 'ios');
     if (selectedDate) {
@@ -203,6 +207,7 @@ const AddIncome = ({ navigation }: any) => {
     >
       <ScrollView keyboardShouldPersistTaps="handled">
         <View style={styles.formContainer}>
+          {/* Category Picker */}
           <Text
             style={[
               styles.label,
@@ -222,7 +227,7 @@ const AddIncome = ({ navigation }: any) => {
               ))}
             </Picker>
           </View>
-
+          {/* Title Input */}
           <Text style={[styles.label, { color: theme === 'dark' ? '#fff' : '#000' }]}>
             Title
           </Text>
@@ -235,7 +240,7 @@ const AddIncome = ({ navigation }: any) => {
               onChangeText={setTransTitle}
             />
           </View>
-
+          {/* Amount Input */}
           <Text
             style={[
               styles.label,
@@ -256,7 +261,7 @@ const AddIncome = ({ navigation }: any) => {
               onChangeText={setTransAmount}
             />
           </View>
-
+          {/* Description Input */}
           <Text style={[styles.label, { color: theme === 'dark' ? '#fff' : '#000' }]}>
             Description (Optional)
           </Text>
@@ -269,7 +274,7 @@ const AddIncome = ({ navigation }: any) => {
               onChangeText={setTransDescription}
             />
           </View>
-
+           {/* Date Picker */}
           <Text
             style={[
               styles.label,
@@ -309,7 +314,7 @@ const AddIncome = ({ navigation }: any) => {
             <Text style={{ color: theme === 'dark' ? '#fff' : '#000' }}>{locationCheckbox ? `Current Location: ${location}` : "Not showing location."}</Text>
           )}
 
-
+          {/* Save Button */}
           <TouchableOpacity
             style={[
               styles.doneButton,

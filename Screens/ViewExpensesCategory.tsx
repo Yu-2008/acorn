@@ -32,6 +32,7 @@ const ViewExpensesCategory = ({ route, navigation }: Props) => {
       }, [expensesID])
     );
 
+  // Actions for FloatingAction button
   const actions = [
     {
       text: "Edit",
@@ -48,7 +49,7 @@ const ViewExpensesCategory = ({ route, navigation }: Props) => {
       icon: <MaterialIcons name="delete" size={24} color="white" /> 
     },
   ];
-
+  // Handle action press
   const handleActionPress = (name?: string) => {
     if (name === "edit") {
       navigation.navigate('EditExpensesCategory', { 

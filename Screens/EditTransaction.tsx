@@ -41,7 +41,7 @@ const EditTransaction = ({ route, navigation }: Props) => {
   const { theme } = useTheme();
 
  
-
+  // Handle save
   const handleSave = async () => {
 
 
@@ -49,7 +49,7 @@ const EditTransaction = ({ route, navigation }: Props) => {
       Alert.alert("Update transaction failed", "Please fill in category, title, and amount.");
       return;
     }
-
+     // Ensure the title doesn't exceed character limit
     if (title.trim().length > 30) {
       Alert.alert("Update transaction failed", "Title must not exceed 30 characters.");
       return;
@@ -76,6 +76,7 @@ const EditTransaction = ({ route, navigation }: Props) => {
       shouldWarnOnLeave.current = false;
       setIsEdited(false);
   
+      // Provide feedback to the user 
       if (Platform.OS === 'android') {
         ToastAndroid.show("Transaction updated successfully", ToastAndroid.SHORT);
       } else {
@@ -131,7 +132,7 @@ const EditTransaction = ({ route, navigation }: Props) => {
       if (!isEdited) return;
 
       e.preventDefault();
-
+      // Show a confirmation message to the user
       Alert.alert(
         "Unsaved Changes",
         "You have unsaved changes. Are you sure you want to leave?",
@@ -148,7 +149,7 @@ const EditTransaction = ({ route, navigation }: Props) => {
 
     return unsubscribe;
   }, [navigation, isEdited]);
-
+  // Handle date picker changes
   const onChangeDate = (event: any, selectedDate?: Date) => {
     setShowDatePicker(Platform.OS === 'ios');
     if (selectedDate) {
@@ -165,6 +166,7 @@ const EditTransaction = ({ route, navigation }: Props) => {
       >
         <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 20 }}>
           <View style={styles.formContainer}>
+            {/* Transaction Type (Non-editable) */}
             <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Transaction Type (No editable)</Text>
               <View style={[styles.detailBox, { marginBottom: 20, backgroundColor: theme === 'dark' ? '#444' : '#fff' }]}>
                 {type===0? 
@@ -177,10 +179,7 @@ const EditTransaction = ({ route, navigation }: Props) => {
                   </Text>}
                 </View>
 
-              
-
-
-
+                {/* Title Input */}              
             <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Title</Text>
             <TextInput
               value={title ?? ""}
@@ -191,7 +190,7 @@ const EditTransaction = ({ route, navigation }: Props) => {
               style={[styles.input, { backgroundColor: theme === 'dark' ? '#444' : '#fff', color: theme === 'dark' ? 'white' : 'black' }]}
               placeholder="Enter transaction name"
             />
-
+            {/* Category Picker */}
             <View style={styles.formContainer}>
               <Text
                 style={[
@@ -214,9 +213,7 @@ const EditTransaction = ({ route, navigation }: Props) => {
               </View>
 
             </View>
-
-
-            
+             {/* Date Picker */}
             <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Date</Text>
             <TouchableOpacity
               style={[styles.datePickerButton, { backgroundColor: theme === 'dark' ? '#444' : '#fff' }]}
@@ -233,7 +230,7 @@ const EditTransaction = ({ route, navigation }: Props) => {
                 onChange={onChangeDate}
               />
             )}
-
+             {/* Amount Input */}
             <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Amount</Text>
             <TextInput
               value={String(amount ?? "")}
@@ -245,6 +242,7 @@ const EditTransaction = ({ route, navigation }: Props) => {
               keyboardType="numeric"
               placeholder="Enter amount"
             />
+            {/* Description Input */}
             <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Description (Optional)</Text>
             <TextInput
               value={description ?? "No description"}
@@ -255,7 +253,7 @@ const EditTransaction = ({ route, navigation }: Props) => {
               style={[styles.input, { backgroundColor: theme === 'dark' ? '#444' : '#fff', color: theme === 'dark' ? 'white' : 'black' }]}
               placeholder="Enter description"
             />
-
+            {/* Location */}
             <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Location (Not editable)</Text>
             <TextInput
               value={transLocation ?? "No location"}
@@ -264,7 +262,7 @@ const EditTransaction = ({ route, navigation }: Props) => {
               placeholder="No location"
             />
             
-
+             {/* Save Button */}
             <TouchableOpacity
               style={[styles.saveButton, { backgroundColor: isEdited ? '#E69DB8' : '#d3d3d3' }]}
               onPress={handleSave}

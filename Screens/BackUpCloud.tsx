@@ -16,8 +16,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 type Props = StackScreenProps<SettingStackParamList, 'GoBackUpCloud'>;
 
 const BackUpCloud = ({ navigation }: Props) => {
+ // Theme and user context
   const { theme } = useTheme();
   const { userID } = useUser();
+  // State hooks to manage backup and restore UI
   const [lastBackupTime, setLastBackupTime] = useState("Not yet backed up");
   const [loading1, setLoading1] = useState(false);
   const [loading2, setLoading2] = useState(false);
@@ -34,16 +36,17 @@ const BackUpCloud = ({ navigation }: Props) => {
     }
 
     try {
+      // Export all tables as JSON
       const jsonData = await exportAllTablesToJson();
-  
+      // Upload backup data to Firebase Cloud
       const docRef = doc(FIREBASE_DB, "backups", userID);
       await setDoc(docRef, {
         timestamp: new Date().toISOString(),
-        data: JSON.parse(jsonData), 
+        data: JSON.parse(jsonData), // Parse the JSON data to Firebase
       });
   
       setLastBackupTime(new Date().toLocaleString());
-
+      // Update last backup time and store it in AsyncStorage
       const currentTime = new Date().toLocaleString();
       setLastBackupTime(currentTime);
       await AsyncStorage.setItem('lastBackupTime', currentTime);
@@ -58,13 +61,13 @@ const BackUpCloud = ({ navigation }: Props) => {
     }
   }
 
-
+// Function to load last backup time from AsyncStorage on component mount
   useEffect(() => {
     const loadBackupTime = async () => {
       try{
         const storedTime = await AsyncStorage.getItem('lastBackupTime');
         if (storedTime) {
-          setLastBackupTime(storedTime);
+          setLastBackupTime(storedTime);  // Set the stored backup time
         }
       } catch (error) {
         console.error("Error loading backup time: ", error);
@@ -145,6 +148,7 @@ const BackUpCloud = ({ navigation }: Props) => {
       </View>
 
       <View style={styles.buttonContainer}>
+        {/* Backup button */}
         {loading1 ? (<ActivityIndicator size="large" color="#0000ff" /> )
         : 
         (
@@ -153,7 +157,7 @@ const BackUpCloud = ({ navigation }: Props) => {
               <Text style={[styles.buttonText, { color: theme === 'dark' ? 'white' : 'black' }]}>Backup</Text>
             </TouchableOpacity>
         )}
-        
+         {/* Restore button */}
         {loading2 ? (<ActivityIndicator size="large" color="#0000ff" /> )
         : 
         (

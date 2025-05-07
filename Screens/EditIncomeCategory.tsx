@@ -48,14 +48,15 @@ const EditIncomeCategory = ({ route, navigation }: Props) => {
       await updateIncomeCategory({id, title, description});
       shouldWarnOnLeave.current = false;
       setIsEdited(false);
-  
+      
+      // Provide feedback to the user
       if (Platform.OS === "android") {
         ToastAndroid.show("Income category details is updated successfully", ToastAndroid.SHORT);
       } else {
         Alert.alert("Update success", "Income category details is updated successfully");
       }
   
-      navigation.goBack(); 
+      navigation.goBack(); // Go back to the previous screen
 
       console.log("Update income category details for:", id, title, description);
     } catch(error) {
@@ -63,14 +64,14 @@ const EditIncomeCategory = ({ route, navigation }: Props) => {
     }
     
   };
-
+  // Warn the user if they try to navigate away with unsaved changes
   useEffect(() => {
     const unsubscribe = navigation.addListener("beforeRemove", (e) => {
       if (!shouldWarnOnLeave.current) return;
       if (!isEdited) return;
 
       e.preventDefault();
-
+      // Show an alert asking the user to confirm if they want to leave without saving changes
       Alert.alert(
         "Unsaved Changes",
         "You have unsaved changes. Are you sure you want to leave?",
@@ -96,6 +97,7 @@ const EditIncomeCategory = ({ route, navigation }: Props) => {
       >
         <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 20 }}>
           <View style={styles.formContainer}>
+            {/* Category Title Input */}
             <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Category Title</Text>
             <TextInput
               value={title}
@@ -107,6 +109,7 @@ const EditIncomeCategory = ({ route, navigation }: Props) => {
               placeholder="Enter category title"
             />
 
+             {/* Category Description Input */}
             <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Description</Text>
             <TextInput
               value={description}
@@ -118,7 +121,7 @@ const EditIncomeCategory = ({ route, navigation }: Props) => {
               placeholder="Enter description"
             />
 
-
+            {/* Save Button */}
             <TouchableOpacity
               style={[
                 styles.saveButton,

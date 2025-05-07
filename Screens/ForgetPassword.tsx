@@ -39,6 +39,7 @@ const ForgetPassword = ({ route, navigation }: Props) => {
     }
   };
 
+ // Navigate to Sign In screen
   const handleSignIn = () => {
     console.log("Sign In pressed");
     navigation.navigate('SignIn');

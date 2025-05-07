@@ -23,6 +23,7 @@ import { insertExpensesCategory } from "../src/database/database";
 type Props = StackScreenProps<ExpensesCategoryParamList, 'AddExpensesCategory'>;
 
 const AddExpensesCategory = ({ route, navigation }: Props) => {
+ // State hooks for managing form inputs
   const { userID } = useUser();
   const [iconName, setIconName] = useState("");
   const [iconLibrary, setIconLibrary] = useState("");
@@ -31,7 +32,7 @@ const AddExpensesCategory = ({ route, navigation }: Props) => {
   const [confirmationMessage, setConfirmationMessage] = useState("");
   const { theme } = useTheme();
 
-
+  // Function to save the new expense category
   const handleSave = async () => {
 
     if (!userID) {
@@ -71,19 +72,21 @@ const AddExpensesCategory = ({ route, navigation }: Props) => {
       } else {
         Alert.alert("Add success", "Expenses category added successfully");
       }
-      
+      // Navigate back to the previous screen after saving
       navigation.goBack();
     } catch (error) {
         console.error("Error saving expenses category:", error);
         Alert.alert("Add expenses category failed", "The expenses category's title is duplicated.\nPlease try again.")
     }
   };
+  // Function to handle icon selection
   const handleSelectIcon = (item: { iconName: string; iconLibrary: string; label: string }) => {
     setIconName(item.iconName);
     setIconLibrary(item.iconLibrary);
     setConfirmationMessage(`You selected ${item.label} icon!`);
   }
 
+   // List of available icons for the categories
   const iconOptions = [
     { label: "Food", iconName: "fast-food", iconLibrary: "Ionicons" },
     { label: "Utilities", iconName: "flash", iconLibrary: "Ionicons" },
@@ -119,7 +122,7 @@ const AddExpensesCategory = ({ route, navigation }: Props) => {
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme === 'dark' ? '#444' : '#FDE6F6' }]}>
       <ScrollView contentContainerStyle={styles.formContainer}>
-
+         {/* Icon selection section */}
         <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Select Icon</Text>
         
         <View style={styles.pickerContainer}>
@@ -138,7 +141,7 @@ const AddExpensesCategory = ({ route, navigation }: Props) => {
             </TouchableOpacity>
           ))}
         </View>
-
+         {/* Category title input */}
         <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Category Title</Text>
         <TextInput
           placeholder="Enter category name"
@@ -147,7 +150,7 @@ const AddExpensesCategory = ({ route, navigation }: Props) => {
           style={[styles.input, { color: theme === 'dark' ? 'white' : 'black' }]}  
           placeholderTextColor={theme === 'dark' ? 'lightgray' : '#6E6E6E'}  
         />
-
+         {/* Category description input */}
         <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Description (optional)</Text>
         <TextInput
           placeholder="Enter description"
@@ -156,13 +159,13 @@ const AddExpensesCategory = ({ route, navigation }: Props) => {
           style={[styles.input, { color: theme === 'dark' ? 'white' : 'black' }]} 
           placeholderTextColor={theme === 'dark' ? 'lightgray' : '#6E6E6E'} 
         />
-
+         {/* Confirmation message for icon selection */}
         {confirmationMessage ? (
           <Text style={[styles.confirmationMessage, { color: theme === 'dark' ? '#8FF479' : 'green' }]}>
             {confirmationMessage}
           </Text>
         ) : null}
-
+         {/* Save button */}
         <TouchableOpacity
             style={[
               styles.saveButton,

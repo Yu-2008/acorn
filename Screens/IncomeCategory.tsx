@@ -49,6 +49,7 @@ const IncomeCategory = ({ navigation }: Props) => {
     console.log("Add More pressed");
     navigation.navigate('AddIncomeCategory')
   }
+   // Handler for navigating to ViewIncomeCategory screen
   const handleView =(item: any)=>{
     navigation.navigate('ViewIncomeCategory', { 
       incomeID: item.id,

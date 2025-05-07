@@ -70,7 +70,7 @@ const EditExpensesCategory = ({ route, navigation }: Props) => {
       if (!isEdited) return;
 
       e.preventDefault();
-
+      // Show a confirmation message to the user
       Alert.alert(
         "Unsaved Changes",
         "You have unsaved changes. Are you sure you want to leave?",
@@ -96,6 +96,7 @@ const EditExpensesCategory = ({ route, navigation }: Props) => {
       >
         <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 20 }}>
           <View style={styles.formContainer}>
+            {/* Category Title Input */}
             <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Category Title</Text>
             <TextInput
               value={title}
@@ -106,7 +107,7 @@ const EditExpensesCategory = ({ route, navigation }: Props) => {
               style={[styles.input, { backgroundColor: theme === 'dark' ? '#444' : '#fff', color: theme === 'dark' ? 'white' : 'black' }]}
               placeholder="Enter category title"
             />
-
+            {/* Category Description Input */}
             <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Description</Text>
             <TextInput
               value={description}
@@ -118,7 +119,7 @@ const EditExpensesCategory = ({ route, navigation }: Props) => {
               placeholder="Enter description"
             />
 
-
+            {/* Save Button */}
             <TouchableOpacity
               style={[
                 styles.saveButton,
