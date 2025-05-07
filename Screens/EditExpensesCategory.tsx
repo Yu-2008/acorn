@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { EditExpensesCategoryStyles as styles } from '../Styles';
+import { EditExpensesCategoryStyles as styles } from '../src/styles/Styles';
 import {
   SafeAreaView,
   Text,
@@ -12,11 +12,11 @@ import {
   KeyboardAvoidingView,
   ScrollView,
 } from "react-native";
-import { ExpensesCategoryParamList } from "../Types";
+import { ExpensesCategoryParamList } from "../src/types/Types";
 import { StackScreenProps } from '@react-navigation/stack';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { useTheme } from '../ThemeContext';
-import { updateExpensesCategory } from "../SQLite";
+import { useTheme } from '../src/contexts/ThemeContext';
+import { updateExpensesCategory } from "../src/database/database";
 
 type Props = StackScreenProps<ExpensesCategoryParamList, 'EditExpensesCategory'>;
 

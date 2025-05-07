@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView, View, Text, TouchableOpacity, FlatList, TouchableHighlight, Animated, ScrollView } from 'react-native';
-import { HomeStyles as styles } from '../Styles';
+import { HomeStyles as styles } from '../src/styles/Styles';
 import type { StackScreenProps } from '@react-navigation/stack';
-import { MainStackParamList } from '../Types';
-import { useTheme } from '../ThemeContext';
-import { useUser } from '../UserContext';
-import { getUsernameById, getTransactionHistoryById } from "../SQLite";
+import { MainStackParamList } from '../src/types/Types';
+import { useTheme } from '../src/contexts/ThemeContext';
+import { useUser } from '../src/contexts/UserContext';
+import { getUsernameById, getTransactionHistoryById } from "../src/database/database";
 import { useFocusEffect } from "@react-navigation/native";
 import { Picker } from '@react-native-picker/picker';
 

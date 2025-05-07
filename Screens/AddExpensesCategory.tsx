@@ -9,14 +9,14 @@ import {
   ScrollView
 } from "react-native";
 import type { StackScreenProps } from '@react-navigation/stack';
-import { ExpensesCategoryParamList } from "../Types";
+import { ExpensesCategoryParamList } from "../src/types/Types";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { AddExpensesCategoryStyles as styles } from '../Styles';
-import { useTheme } from '../ThemeContext';
-import { useUser } from "../UserContext";
-import { insertExpensesCategory } from "../SQLite";
+import { AddExpensesCategoryStyles as styles } from '../src/styles/Styles';
+import { useTheme } from '../src/contexts/ThemeContext';
+import { useUser } from "../src/contexts/UserContext";
+import { insertExpensesCategory } from "../src/database/database";
 
 type Props = StackScreenProps<ExpensesCategoryParamList, 'AddExpensesCategory'>;
 

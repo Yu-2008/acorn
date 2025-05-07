@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect} from "react";
-import { EditTransactionStyles as styles } from '../Styles';
+import { EditTransactionStyles as styles } from '../src/styles/Styles';
 import {
   SafeAreaView,
   Text,
@@ -13,11 +13,11 @@ import {
   ToastAndroid,
 } from "react-native";
 import { StackScreenProps } from '@react-navigation/stack';
-import { MainStackParamList } from "../Types";
+import { MainStackParamList } from "../src/types/Types";
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { useTheme } from '../ThemeContext';
-import { useUser } from "../UserContext";
-import { updateTransactionById, getIncomeCategories, getExpensesCategories } from "../SQLite";
+import { useTheme } from '../src/contexts/ThemeContext';
+import { useUser } from "../src/contexts/UserContext";
+import { updateTransactionById, getIncomeCategories, getExpensesCategories } from "../src/database/database";
 import { Picker } from "@react-native-picker/picker";
 
 type Props = StackScreenProps<MainStackParamList, "EditTransaction">;

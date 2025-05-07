@@ -1,17 +1,17 @@
 import React, { useEffect, useState} from "react";
-import { BackUpCloudStyles as styles } from '../Styles';
+import { BackUpCloudStyles as styles } from '../src/styles/Styles';
 import { SafeAreaView, Text, View, TouchableOpacity, Platform, Alert } from "react-native";
 import { StackScreenProps } from '@react-navigation/stack';
-import { SettingStackParamList } from "../Types";
+import { SettingStackParamList } from "../src/types/Types";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import { useTheme } from '../ThemeContext';
+import { useTheme } from '../src/contexts/ThemeContext';
 
-import { useUser } from "../UserContext";
+import { useUser } from "../src/contexts/UserContext";
 
-import { exportAllTablesToJson, restoreFromJson } from "../SQLite";
+import { exportAllTablesToJson, restoreFromJson } from "../src/database/database";
 
-import { FIREBASE_DB } from "../FirebaseConfig";
+import { FIREBASE_DB } from "../src/config/FirebaseConfig";
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 

@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import { ViewExpensesCategoryStyles as styles } from '../Styles';
+import { ViewExpensesCategoryStyles as styles } from '../src/styles/Styles';
 import { SafeAreaView, Text, View,ScrollView, Alert } from "react-native";
 import type { StackScreenProps } from '@react-navigation/stack';
-import { ExpensesCategoryParamList } from '../Types';
+import { ExpensesCategoryParamList } from '../src/types/Types';
 import { FloatingAction } from "react-native-floating-action";
 import Ionicons from 'react-native-vector-icons/Ionicons'; 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'; 
-import { useTheme } from '../ThemeContext';
-import { getExpensesCategoryById, deleteExpensesCategory} from "../SQLite";
+import { useTheme } from '../src/contexts/ThemeContext';
+import { getExpensesCategoryById, deleteExpensesCategory} from "../src/database/database";
 import { useFocusEffect } from "@react-navigation/native";
 
 type Props = StackScreenProps<ExpensesCategoryParamList, 'ViewExpensesCategory'>;

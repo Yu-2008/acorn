@@ -1,17 +1,18 @@
 import React, { useEffect, useRef, useState } from "react";
 import { SafeAreaView, Text, View, TextInput, TouchableOpacity, Platform, Alert, ScrollView, ActivityIndicator} from "react-native";
-import { AddExpensesStyles as styles } from '../Styles';
+import { AddExpensesStyles as styles } from '../src/styles/Styles';
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { useTheme } from '../ThemeContext';
-import { getExpensesCategories, insertTransactionHistory } from "../SQLite";
-import { useUser } from "../UserContext";
+import { useTheme } from '../src/contexts/ThemeContext';
+import { getExpensesCategories, insertTransactionHistory } from "../src/database/database";
+import { useUser } from "../src/contexts/UserContext";
 import CheckBox from '@react-native-community/checkbox';
 import Geolocation from "@react-native-community/geolocation";
-import Ably from 'ably'; 
 import { usePubNub } from "pubnub-react";
-import { useLocationPermission } from "../useLocationPermission";
-import { reverseGeocode } from "../reverseGeocode";
+import { useLocationPermission } from "../src/hooks/useLocationPermission";
+import { reverseGeocode } from "../src/services/reverseGeocode";
+
+
 
 const CHANNEL = "location-channel";
 
@@ -298,17 +299,10 @@ const AddExpenses = ({ navigation }: any) => {
 
 
           <TouchableOpacity
-            style={[
-              styles.doneButton,
-              { 
-                backgroundColor: theme === 'dark' ? '#515151' : '#E69DB8',
-                borderColor: theme === 'dark' ? '#E69DB8' : '#E69DB8', 
-                borderWidth: 2,
-              }
-            ]}
+            style={[styles.doneButton]}
             onPress={handleSave}
           >
-            <Text style={[styles.doneButtonText,{color: theme === 'dark' ? '#fff' : '#000'}]}>
+            <Text style={[styles.doneButtonText]}>
               Add
             </Text>
           </TouchableOpacity>

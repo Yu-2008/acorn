@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect} from "react";
-import { EditIncomeCategoryStyles as styles } from '../Styles';
+import { EditIncomeCategoryStyles as styles } from '../src/styles/Styles';
 import {
   SafeAreaView,
   Text,
@@ -13,11 +13,11 @@ import {
   KeyboardAvoidingView,
   ToastAndroid,
 } from "react-native";
-import { IncomeCategoryParamList } from "../Types";
+import { IncomeCategoryParamList } from "../src/types/Types";
 import { StackScreenProps } from "@react-navigation/stack";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { useTheme } from '../ThemeContext';
-import { updateIncomeCategory } from "../SQLite";
+import { useTheme } from '../src/contexts/ThemeContext';
+import { updateIncomeCategory } from "../src/database/database";
 
 type Props = StackScreenProps<IncomeCategoryParamList, "EditIncomeCategory">;
 

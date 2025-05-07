@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { ForgetPasswordStyles as styles } from '../Styles';
+import { ForgetPasswordStyles as styles } from '../src/styles/Styles';
 import { Image, SafeAreaView, Text, TextInput, TouchableOpacity, View, ScrollView, ActivityIndicator, Alert } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
-import { SignInUpStackParamList } from "../Types";
-import { useTheme } from '../ThemeContext';
+import { SignInUpStackParamList } from "../src/types/Types";
+import { useTheme } from '../src/contexts/ThemeContext';
 
 import { sendPasswordResetEmail } from 'firebase/auth';
-import { FIREBASE_AUTH } from '../FirebaseConfig';
+import { FIREBASE_AUTH } from '../src/config/FirebaseConfig';
 import LinearGradient from 'react-native-linear-gradient'; // Import LinearGradient
 
 type Props = StackScreenProps<SignInUpStackParamList, "ForgetPassword">;

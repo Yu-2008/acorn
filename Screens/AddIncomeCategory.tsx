@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import { 
   ScrollView, SafeAreaView, Text, View, TextInput, TouchableOpacity 
 } from "react-native";
-import { AddIncomeCategoryStyles as styles } from '../Styles';
-import { IncomeCategoryParamList } from "../Types";
+import { AddIncomeCategoryStyles as styles } from '../src/styles/Styles';
+import { IncomeCategoryParamList } from "../src/types/Types";
 import { StackScreenProps } from '@react-navigation/stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { useTheme } from '../ThemeContext'; 
-import { useUser } from "../UserContext";
-import { insertIncomeCategory } from "../SQLite";
+import { useTheme } from '../src/contexts/ThemeContext'; 
+import { useUser } from "../src/contexts/UserContext";
+import { insertIncomeCategory } from "../src/database/database";
 
 type Props = StackScreenProps<IncomeCategoryParamList, 'AddIncomeCategory'>;
 

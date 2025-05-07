@@ -1,13 +1,13 @@
 import React, { useEffect, useContext, useState} from "react";
-import { ViewIncomeCategoryStyles as styles } from '../Styles';
+import { ViewIncomeCategoryStyles as styles } from '../src/styles/Styles';
 import { SafeAreaView, Text, View, StyleSheet, ScrollView, Alert } from "react-native";
 import type { StackScreenProps } from '@react-navigation/stack';
-import { IncomeCategoryParamList } from '../Types';
+import { IncomeCategoryParamList } from '../src/types/Types';
 import { FloatingAction } from "react-native-floating-action";
 import Ionicons from 'react-native-vector-icons/Ionicons'; 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'; 
-import { useTheme } from '../ThemeContext';
-import { getIncomeCategoryById, deleteIncomeCategory } from "../SQLite";
+import { useTheme } from '../src/contexts/ThemeContext';
+import { getIncomeCategoryById, deleteIncomeCategory } from "../src/database/database";
 import { useFocusEffect } from "@react-navigation/native";
 
 type Props = StackScreenProps<IncomeCategoryParamList, 'ViewIncomeCategory'>;

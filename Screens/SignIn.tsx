@@ -11,13 +11,13 @@ import {
   Alert,
 } from 'react-native';
 import { CommonActions } from '@react-navigation/native';
-import { SignInStyles as styles } from '../Styles';
+import { SignInStyles as styles } from '../src/styles/Styles';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useTheme } from '../ThemeContext';
+import { useTheme } from '../src/contexts/ThemeContext';
 import type { StackScreenProps } from '@react-navigation/stack';
-import { SignInUpStackParamList } from "../Types";
+import { SignInUpStackParamList } from "../src/types/Types";
 
-import { FIREBASE_AUTH } from '../FirebaseConfig';
+import { FIREBASE_AUTH } from '../src/config/FirebaseConfig';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import LinearGradient from 'react-native-linear-gradient'; // Import the LinearGradient
 import AsyncStorage from '@react-native-async-storage/async-storage';

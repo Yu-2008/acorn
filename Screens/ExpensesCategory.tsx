@@ -1,15 +1,15 @@
 import React, { useState } from "react";
-import { ExpensesCategoryStyles as styles } from '../Styles';
+import { ExpensesCategoryStyles as styles } from '../src/styles/Styles';
 import { SafeAreaView, Text, View, TouchableOpacity, FlatList } from "react-native";
 import type { StackScreenProps } from '@react-navigation/stack';
-import { ExpensesCategoryParamList } from "../Types";
+import { ExpensesCategoryParamList } from "../src/types/Types";
 import Ionicons from 'react-native-vector-icons/Ionicons'; 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { useTheme } from '../ThemeContext';
-import { useUser } from "../UserContext";
+import { useTheme } from '../src/contexts/ThemeContext';
+import { useUser } from "../src/contexts/UserContext";
 import { useFocusEffect } from "@react-navigation/native";
-import { getExpensesCategories } from "../SQLite";
+import { getExpensesCategories } from "../src/database/database";
 
 
 type Props = StackScreenProps<ExpensesCategoryParamList, 'ExpensesCategory'>;

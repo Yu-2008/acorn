@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { IncomeCategoryStyles as styles } from '../Styles';
+import { IncomeCategoryStyles as styles } from '../src/styles/Styles';
 import { SafeAreaView, Text, View, TouchableOpacity, FlatList, StyleSheet } from "react-native";
 import type { StackScreenProps } from '@react-navigation/stack';
-import { IncomeCategoryParamList } from "../Types";
+import { IncomeCategoryParamList } from "../src/types/Types";
 import Ionicons from 'react-native-vector-icons/Ionicons'; 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { useTheme } from '../ThemeContext';
-import { useUser } from "../UserContext";
+import { useTheme } from '../src/contexts/ThemeContext';
+import { useUser } from "../src/contexts/UserContext";
 import { useFocusEffect } from "@react-navigation/native";
-import { getIncomeCategories } from "../SQLite";
+import { getIncomeCategories } from "../src/database/database";
 type Props = StackScreenProps<IncomeCategoryParamList, 'IncomeCategory'>;
 
 type IncomeCategory = {

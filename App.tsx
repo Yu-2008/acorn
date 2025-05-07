@@ -23,10 +23,10 @@ import ForgetPasswordScreen from './Screens/ForgetPassword';
 import ViewExpensesCategoryScreen from './Screens/ViewExpensesCategory';
 import ViewIncomeCategoryScreen from './Screens/ViewIncomeCategory';
 import ViewTransactionScreen from './Screens/ViewTransaction';
-import { ThemeProvider } from './ThemeContext';
-import { useTheme } from './ThemeContext';
-import { UserProvider } from './UserContext';
-import { useUser } from './UserContext';
+import { ThemeProvider } from './src/contexts/ThemeContext';
+import { useTheme } from './src/contexts/ThemeContext';
+import { UserProvider } from './src/contexts/UserContext';
+import { useUser } from './src/contexts/UserContext';
 import {
   RootStackParamList,
   TabParamList,
@@ -35,12 +35,12 @@ import {
   IncomeCategoryParamList,
   ExpensesCategoryParamList,
   MainStackParamList,
-} from './Types';
+} from './src/types/Types';
 
 import { onAuthStateChanged, User } from 'firebase/auth';
-import { FIREBASE_AUTH } from './FirebaseConfig';
+import { FIREBASE_AUTH } from './src/config/FirebaseConfig';
 
-import { initDB } from './SQLite';
+import { initDB } from './src/database/database';
 import { PubNubProvider } from 'pubnub-react';
 import PubNub from 'pubnub';
 

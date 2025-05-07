@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import { SafeAreaView, Text, View, TextInput, TouchableOpacity, Image, ScrollView, ActivityIndicator, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { StackScreenProps } from '@react-navigation/stack';
-import { SignInUpStackParamList } from '../Types';
-import { useTheme } from '../ThemeContext';
-import { SignUpStyles as styles } from '../Styles';
+import { SignInUpStackParamList } from '../src/types/Types';
+import { useTheme } from '../src/contexts/ThemeContext';
+import { SignUpStyles as styles } from '../src/styles/Styles';
 
-import { FIREBASE_AUTH } from '../FirebaseConfig';
+import { FIREBASE_AUTH } from '../src/config/FirebaseConfig';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 
-import { insertUser } from '../SQLite';
+import { insertUser } from '../src/database/database';
 import LinearGradient from 'react-native-linear-gradient'; 
 
 type Props = StackScreenProps<SignInUpStackParamList, "SignUp">;
