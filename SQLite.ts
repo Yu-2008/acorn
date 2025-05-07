@@ -93,7 +93,6 @@ const predefinedIncomeCategories = [
     { title: "Personal Care", iconName: "cut", iconLibrary: "Ionicons" },
     { title: "Transportation", iconName: "car", iconLibrary: "Ionicons" },
     { title: "Medication", iconName: "medkit", iconLibrary: "Ionicons" },
-    { title: "Insurance", iconName: "paper", iconLibrary: "Ionicons" },
     { title: "Pets", iconName: "paw", iconLibrary: "FontAwesome5" },
     { title: "Travel", iconName: "airplane", iconLibrary: "Ionicons" },
     { title: "Subscription", iconName: "logo-youtube", iconLibrary: "Ionicons" },
