@@ -25,6 +25,8 @@
     "@react-navigation/stack": "6.3",
     "ably": "^2.8.0",
     "firebase": "^11.6.1",
+    "pubnub": "^9.5.2",
+    "pubnub-react": "^3.0.2",
     "react": "18.2.0",
     "react-native": "^0.73.11",
     "react-native-asset": "^2.1.1",
