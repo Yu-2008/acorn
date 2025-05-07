@@ -460,7 +460,7 @@ export const updateTransactionById = async ({
         `UPDATE transactionHistory
          SET transType = ?, transCategory = ?, transTitle = ?, transactionDate = ?, amount = ?, description = ?, location = ?
          WHERE transID = ?`,
-        [transType, transCategory, transTitle, transactionDate, amount, description || null, transID]
+        [transType, transCategory, transTitle, transactionDate, amount, description || null, location, transID]
       );
       console.log("Transaction updated successfully.");
     } catch (error) {

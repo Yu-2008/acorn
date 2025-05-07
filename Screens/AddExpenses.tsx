@@ -143,8 +143,8 @@ const AddExpenses = ({ navigation }: any) => {
         transTitle: transTitle,
         transactionDate: transDate.getTime(), // timestamp
         amount: amount,
-        description: transDescription, 
-        location: locationCheckbox ? location : "",
+        description: transDescription ? transDescription : "No description", 
+        location: locationCheckbox ? location : "No location",
         userID,
       });
       console.log("Expenses added successfully.");
@@ -243,7 +243,7 @@ const AddExpenses = ({ navigation }: any) => {
           </View>
 
           <Text style={[styles.label, { color: theme === 'dark' ? '#fff' : '#000' }]}>
-            Description
+            Description (Optional)
           </Text>
           <View style={styles.inputContainer}>
             <TextInput
@@ -293,7 +293,7 @@ const AddExpenses = ({ navigation }: any) => {
           {loading ? (
             <ActivityIndicator size="small" color={theme === 'dark' ? '#fff' : '#000'} />
           ) : (
-            <Text style={{ color: theme === 'dark' ? '#fff' : '#000' }}>{locationCheckbox ? `Current Location: ${location}` : "Not showing location."}</Text>
+            <Text style={{ color: theme === 'dark' ? '#fff' : '#000' }}>{locationCheckbox ? `Current Location: ${location} \n (Location are not editable once saved)` : "Not showing location."}</Text>
           )}
 
 

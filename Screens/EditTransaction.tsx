@@ -165,7 +165,7 @@ const EditTransaction = ({ route, navigation }: Props) => {
       >
         <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 20 }}>
           <View style={styles.formContainer}>
-            <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Transaction Type</Text>
+            <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Transaction Type (No editable)</Text>
               <View style={[styles.detailBox, { marginBottom: 20, backgroundColor: theme === 'dark' ? '#444' : '#fff' }]}>
                 {type===0? 
                   <Text style={[styles.detailText, { color: theme === 'dark' ? 'white' : 'black' }]}>
@@ -256,7 +256,7 @@ const EditTransaction = ({ route, navigation }: Props) => {
               placeholder="Enter description"
             />
 
-            <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Location</Text>
+            <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Location (Not editable)</Text>
             <TextInput
               value={transLocation ?? "No location"}
               editable={false}

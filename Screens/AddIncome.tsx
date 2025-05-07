@@ -140,8 +140,8 @@ const AddIncome = ({ navigation }: any) => {
         transTitle: transTitle,
         transactionDate: transDate.getTime(), // timestamp
         amount: amount,
-        description: transDescription, 
-        location: locationCheckbox ? location : "",
+        description: transDescription ? transDescription : "No description", 
+        location: locationCheckbox ? location : "No location",
         userID,
       });
       console.log("Income added successfully.");
@@ -240,7 +240,7 @@ const AddIncome = ({ navigation }: any) => {
           </View>
 
           <Text style={[styles.label, { color: theme === 'dark' ? '#fff' : '#000' }]}>
-            Description
+            Description (Optional)
           </Text>
           <View style={styles.inputContainer}>
             <TextInput
