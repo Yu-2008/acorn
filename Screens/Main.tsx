@@ -116,11 +116,11 @@ const Home = ({ navigation }: Props) => {
     };
 
     startColorAnimation();
-  }, []);
+  }, [colorAnim]);
 
   const colorInterpolation = colorAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['#FF9068', '#FFB6B6'],
+    inputRange: [0, 0.5, 1],
+    outputRange: ['#E248BA', '#A767D6', '#6C86F1'],
   });
 
   const formatDate = (dateString: string) => {

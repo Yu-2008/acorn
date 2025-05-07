@@ -292,7 +292,7 @@ const AddExpenses = ({ navigation }: any) => {
           {loading ? (
             <ActivityIndicator size="small" color={theme === 'dark' ? '#fff' : '#000'} />
           ) : (
-            <Text>{locationCheckbox ? `Current Location: ${location}` : "Not showing location."}</Text>
+            <Text style={{ color: theme === 'dark' ? '#fff' : '#000' }}>{locationCheckbox ? `Current Location: ${location}` : "Not showing location."}</Text>
           )}
 
 
