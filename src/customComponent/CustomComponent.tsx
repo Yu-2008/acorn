@@ -106,34 +106,3 @@ export const CategoryPicker = ({
   </>
 );
 
-
-// for location
-export const LocationToggle = ({
-  value,
-  onToggle,
-  loading,
-  location,
-  theme,
-  style,
-}: {
-  value: boolean;
-  onToggle: (checked: boolean) => void;
-  loading: boolean;
-  location: string;
-  theme: 'light' | 'dark';
-  style: any;
-}) => (
-  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-    <CheckBox value={value} onValueChange={onToggle} />
-    <Text style={[style.label, { color: theme === 'dark' ? '#fff' : '#000' }]}>Record Current Location</Text>
-    {loading ? (
-      <ActivityIndicator size="small" color={theme === 'dark' ? '#fff' : '#000'} />
-    ) : (
-      <Text style={{ color: theme === 'dark' ? '#fff' : '#000' }}>
-        {value ? `Current Location: ${location}` : "Not showing location."}
-      </Text>
-    )}
-  </View>
-);
-
-
