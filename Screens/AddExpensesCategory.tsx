@@ -73,7 +73,7 @@ const AddExpensesCategory = ({ route, navigation }: Props) => {
       // Navigate back to the previous screen after saving
       navigation.goBack();
     } catch (error) {
-        console.error("Error saving expenses category:", error);
+        console.log("Error saving expenses category:", error);
         Alert.alert("Add expenses category failed", "The expenses category's title is duplicated.\nPlease try again.")
     }
   };
