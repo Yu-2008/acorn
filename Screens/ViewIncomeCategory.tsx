@@ -84,14 +84,14 @@ const ViewIncomeCategory = ({ route, navigation }: Props) => {
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme === 'dark' ? '#333' : '#FDE6F6' }]}>
       <ScrollView contentContainerStyle={styles.scrollView}>
-        <View style={styles.detailItem}>
+        <View style={{marginBottom: 20}}>
           <Text style={[styles.detailLabel, { color: theme === 'dark' ? 'white' : 'black' }]}>Category Title</Text>
           <View style={[styles.detailBox, { backgroundColor: theme === 'dark' ? '#444' : '#fff' }]}>
             <Text style={[styles.detailText, { color: theme === 'dark' ? 'white' : 'black' }]}>{title}</Text>
           </View>
         </View>
 
-        <View style={styles.detailItem}>
+        <View style={{marginBottom: 20}}>
           <Text style={[styles.detailLabel, { color: theme === 'dark' ? 'white' : 'black' }]}>Description</Text>
           <View style={[styles.detailBox, { backgroundColor: theme === 'dark' ? '#444' : '#fff' }]}>
             <Text style={[styles.detailText, { color: theme === 'dark' ? 'white' : 'black' }]}>{description}</Text>

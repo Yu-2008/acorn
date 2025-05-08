@@ -1252,9 +1252,6 @@ export const ViewExpensesCategoryStyles = StyleSheet.create({
     marginBottom: 5,
     fontFamily: 'WinkySans-VariableFont_wght',
   },
-  detailItem: {
-    marginBottom: 20,
-  },
   detailLabel: {
     marginBottom: 10,
     fontSize: 20,
@@ -1282,9 +1279,6 @@ export const ViewIncomeCategoryStyles = StyleSheet.create({
   },
   scrollView: {
     flexGrow: 1, 
-  },
-  detailItem: {
-    marginBottom: 20,
   },
   detailLabel: {
     marginBottom: 10,
