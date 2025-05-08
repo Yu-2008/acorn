@@ -156,7 +156,7 @@ const SignUp = ({ route, navigation }: Props) => {
                   placeholderTextColor={theme === 'dark' ? '#aaa' : '#aaa'}
                 />
               </View>
-              <Text style={{color: theme === 'dark' ? '#fff' : '#000'}}>*The username is not editable once sign up. Please consider carefully.</Text>
+              <Text style={{color: theme === 'dark' ? '#fff' : '#000',fontStyle:'italic'}}>*The username is not editable once sign up. Please consider carefully.</Text>
 
               {/* Password */}
               <Text
