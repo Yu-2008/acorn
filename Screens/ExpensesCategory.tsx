@@ -61,12 +61,14 @@ const ExpensesCategory = ({ navigation }: Props) => {
     const size = 24;
 
     return (
+      <View style={styles.icon}>
       <GetIcon
         library={iconLibrary as 'Ionicons' | 'FontAwesome' | 'FontAwesome5'}
         name={iconName}
         color={color}
         size={size}
       />
+      </View>
     );
   };
 

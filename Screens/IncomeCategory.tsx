@@ -63,12 +63,14 @@ const IncomeCategory = ({ navigation }: Props) => {
     const size = 24;
 
     return (
+      <View style={styles.icon}>
       <GetIcon
         library={iconLibrary as 'Ionicons' | 'FontAwesome' | 'FontAwesome5'}
         name={iconName}
         color={color}
         size={size}
       />
+      </View>
     );
   };
 
@@ -77,7 +79,7 @@ const IncomeCategory = ({ navigation }: Props) => {
     <TouchableOpacity
       onPress={() => handleView(item)}
       style={[
-        styles.itemRow,
+        styles.itemRow, 
         { backgroundColor: theme === 'dark' ? '#444' : '#FFC1DA' }  // Dynamic background color
       ]}
     >
