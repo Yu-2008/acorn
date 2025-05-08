@@ -1,11 +1,10 @@
-// src/hooks/useLocationPermission.ts
+// get location permission
 import { useState } from 'react';
 import { PermissionsAndroid, Platform } from 'react-native';
 
-export function useLocationPermission() {
+export const useLocationPermission = () => {
   const [granted, setGranted] = useState(false);
 
-  // New: request function
   const requestPermission = async (): Promise<boolean> => {
     if (Platform.OS !== 'android') {
       setGranted(true);
