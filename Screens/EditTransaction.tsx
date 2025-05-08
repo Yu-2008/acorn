@@ -55,9 +55,9 @@ const EditTransaction = ({ route, navigation }: Props) => {
       return;
     }
 
-    const parsedAmount = parseFloat(String(amount));
+    const parsedAmount = parseFloat(amount);
     if (isNaN(parsedAmount)) {
-      Alert.alert("Please enter a valid amount.");
+      Alert.alert("Update transaction failed", "Title must not exceed 30 characters.");
       return;
     }
   
