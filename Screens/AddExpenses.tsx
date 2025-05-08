@@ -317,12 +317,19 @@ const AddExpenses = ({ navigation }: any) => {
           )}
 
 
-           {/* Submit Button */}
+          {/* Save Button */}
           <TouchableOpacity
-            style={[styles.doneButton]}
+            style={[
+              styles.doneButton,
+              { 
+                backgroundColor: theme === 'dark' ? '#515151' : '#E69DB8',
+                borderColor: theme === 'dark' ? '#E69DB8' : '#E69DB8', 
+                borderWidth: 2,
+              }
+            ]}
             onPress={handleSave}
           >
-            <Text style={[styles.doneButtonText]}>
+            <Text style={[styles.doneButtonText,{color: theme === 'dark' ? '#fff' : '#000'}]}>
               Add
             </Text>
           </TouchableOpacity>
