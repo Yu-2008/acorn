@@ -38,72 +38,105 @@ const AddExpenses = ({ navigation }: any) => {
 
    // Function to handle incoming messages with location data from PubNub
   const handlePubNubMessage = async (message: string) => {
-    const match = message.match(/Lat:([\d.-]+),Lon:([\d.-]+)/);
-    if (match) {
+    try {
+      const match = message.match(/Lat:([\d.-]+),Lon:([\d.-]+)/);
+      if (!match) {
+        console.warn("Invalid message format:", message);
+        setLocation("Unknown location");
+        return;
+      }
+  
       const lat = parseFloat(match[1]);
       const lon = parseFloat(match[2]);
-  
       const locationName = await reverseGeocode(lat, lon);
-      console.log('User location:', locationName);
-      setLocation(locationName || "Unknown location");
+  
+      if (!locationName) {
+        console.warn("Reverse geocoding failed for:", lat, lon);
+        setLocation("Unknown location");
+      } else {
+        console.log("User location:", locationName);
+        setLocation(locationName);
+      }
+    } catch (error) {
+      console.error("Error handling PubNub message:", error);
+      setLocation("Unknown location");
+    } finally {
       setLoading(false);
     }
   };
   // Effect hook to subscribe to location updates from PubNub
   useEffect(() => {
     pubnub.subscribe({ channels: [CHANNEL], withPresence: false });
-    // Listener for receiving location updates
+  
     const listener = {
       message: (m: any) => {
-        const rawLocation = m.message.locationName ?? "Unknown location";
-        console.log("Received via PubNub:", rawLocation);
-        handlePubNubMessage(rawLocation);
-      }
+        try {
+          const rawLocation = m?.message?.locationName ?? "Unknown location";
+          console.log("Received via PubNub:", rawLocation);
+          handlePubNubMessage(rawLocation);
+        } catch (error) {
+          console.error("PubNub listener error:", error);
+        }
+      },
     };
+  
     pubnub.addListener(listener);
-
+  
     return () => {
       pubnub.removeListener(listener);
       pubnub.unsubscribe({ channels: [CHANNEL] });
     };
   }, [pubnub]);
+  
 
     // Function to check location tracking on or off
   const onToggleLocation = async (checked: boolean) => {
     setLocationCheckbox(checked);
-    if (!checked)  {
+  
+    if (!checked) {
       stopWatchingLocation();
       setLocation("Not showing location.");
       return;
     }
-
-    // request runtime permission on demand
-    const ok = await requestPermission();
-    if (!ok) {
+  
+    const permissionGranted = await requestPermission();
+    if (!permissionGranted) {
       Alert.alert("Permission required", "Location permission not granted.");
       setLocationCheckbox(false);
       return;
     }
-
+  
     setLoading(true);
     startWatchingLocation();
   };
+
   // Function to start watching the location in real-time
   const startWatchingLocation = () => {
-    watchId.current = Geolocation.watchPosition(
-      async ({ coords }) => {
-        const name = `Lat:${coords.latitude.toFixed(4)},Lon:${coords.longitude.toFixed(4)}`;
-        pubnub.publish({ channel: CHANNEL, message: { locationName: name } })
-          .then(() => console.log("Published location:", name))
-          .catch(err => console.error("Publish error:", err));
-      },
-      err => {
-        console.error("Watch error:", err);
-        setLoading(false);
-      },
-      { enableHighAccuracy: true, distanceFilter: 10, interval: 5000 }
-    );
-  };
+  watchId.current = Geolocation.watchPosition(
+    async ({ coords }) => {
+      try {
+        const formatted = `Lat:${coords.latitude.toFixed(4)},Lon:${coords.longitude.toFixed(4)}`;
+        await pubnub.publish({
+          channel: CHANNEL,
+          message: { locationName: formatted },
+        });
+        console.log("Published location:", formatted);
+      } catch (err) {
+        console.error("PubNub publish error:", err);
+      }
+    },
+    (error) => {
+      console.error("Geolocation watch error:", error);
+      setLoading(false);
+    },
+    {
+      enableHighAccuracy: true,
+      distanceFilter: 10,
+      interval: 5000,
+    }
+  );
+};
+
   // Function to stop watching the location
   const stopWatchingLocation = () => {
     if (watchId.current !== null) {

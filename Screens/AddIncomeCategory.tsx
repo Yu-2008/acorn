@@ -67,7 +67,7 @@ const AddIncomeCategory = ({ route, navigation }: Props) => {
       navigation.goBack();
     } catch (error) {
       console.log("Error saving income category:", error);
-      Alert.alert("Add new income category failed", "Please try again. ")
+      Alert.alert("Add new income category failed", "The income category's title is duplicated.\nPlease try again. ")
     }
   };
   // icon selection from the list of options
