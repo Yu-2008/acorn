@@ -979,7 +979,7 @@ export const SettingStyles = StyleSheet.create({
     fontFamily: 'WinkySans-VariableFont_wght',
   },
   section: {
-    marginBottom: 30,
+    marginBottom: 20,
   },
   sectionTitle: {
     fontSize: 20,
@@ -1005,7 +1005,7 @@ export const SettingStyles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 30,
+    marginTop:1,
   },
   toggleText: {
     fontSize: 18,
