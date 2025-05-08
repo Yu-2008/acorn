@@ -830,7 +830,7 @@ export const ExpensesCategoryStyles = StyleSheet.create({
     borderRadius: 12,
   },
   icon: {
-    marginRight: 15,
+    marginRight: 20,
   },
   itemText: {
     fontSize: 16,
@@ -950,7 +950,7 @@ export const IncomeCategoryStyles = StyleSheet.create({
     borderRadius: 12,
   },
   icon: {
-    marginRight: 15, 
+    marginRight: 20, 
   },
   itemText: {
     fontSize: 16,
