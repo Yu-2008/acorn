@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { ActivityIndicator, StyleProp, Text, TextInput, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native";
+import React from "react";
+import { ActivityIndicator, Text, TouchableOpacity, View, } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import Ionicons from "react-native-vector-icons/Ionicons";
