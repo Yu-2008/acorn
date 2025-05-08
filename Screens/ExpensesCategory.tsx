@@ -33,7 +33,7 @@ const ExpensesCategory = ({ navigation }: Props) => {
           categories.sort((a, b) => a.title.localeCompare(b.title));
           setData(categories); 
         } else {
-          console.error("Cannot get user ID.");
+          console.log("Cannot get user ID.");
           Alert.alert("Get user ID failed", "Please sign in again.");
         }
       };

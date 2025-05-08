@@ -60,7 +60,7 @@ const EditIncomeCategory = ({ route, navigation }: Props) => {
 
       console.log("Update income category details for:", id, title, description);
     } catch(error) {
-      console.error("Update income category failed", "Please try again.");
+      console.log("Update income category failed", "Please try again.");
     }
     
   };

@@ -59,7 +59,7 @@ const EditExpensesCategory = ({ route, navigation }: Props) => {
 
       console.log("Update expenses category details for:", id, title, description);
     } catch(error) {
-      console.error("Update expenses category failed ", "Please try again.");
+      console.log("Update expenses category failed ", "Please try again.");
     }
     
   };

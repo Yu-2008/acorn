@@ -54,7 +54,7 @@ const BackUpCloud = ({ navigation }: Props) => {
       console.log("Backup uploaded:", jsonData);
       Alert.alert("Backup successful", "Your backup already upload to cloud.");
     } catch (error) {
-      console.error("Backup Error:", error);
+      console.log("Backup Error:", error);
       Alert.alert("Backup failed", "Please try again.");
     } finally {
       setLoading1(false);
@@ -70,7 +70,7 @@ const BackUpCloud = ({ navigation }: Props) => {
           setLastBackupTime(storedTime);  // Set the stored backup time
         }
       } catch (error) {
-        console.error("Error loading backup time: ", error);
+        console.log("Error loading backup time: ", error);
       }
     };
     loadBackupTime();
@@ -113,7 +113,7 @@ const BackUpCloud = ({ navigation }: Props) => {
         Alert.alert("Restore failed", "No backup found for this user.");
       }
     } catch (error) {
-      console.error("Restore Error:", error);
+      console.log("Restore Error:", error);
       Alert.alert("Restore failed", "Please try again.");
     } finally {
       setLoading2(false);

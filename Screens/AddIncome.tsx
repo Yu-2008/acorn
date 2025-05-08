@@ -58,7 +58,7 @@ const AddIncome = ({ navigation }: any) => {
           setLocation(locationName);
         }
       } catch (error) {
-        console.error("Error handling PubNub message:", error);
+        console.log("Error handling PubNub message:", error);
         setLocation("Unknown location");
       } finally {
         setLoading(false);
@@ -75,7 +75,7 @@ const AddIncome = ({ navigation }: any) => {
           console.log("Received via PubNub:", rawLocation);
           handlePubNubMessage(rawLocation);
         } catch (error) {
-          console.error("PubNub listener error:", error);
+          console.log("PubNub listener error:", error);
         }
       },
     };
@@ -120,11 +120,11 @@ const AddIncome = ({ navigation }: any) => {
           });
           console.log("Published location:", formatted);
         } catch (err) {
-          console.error("PubNub publish error:", err);
+          console.log("PubNub publish error:", err);
         }
       },
       (error) => {
-        console.error("Geolocation watch error:", error);
+        console.log("Geolocation watch error:", error);
         setLoading(false);
       },
       {
@@ -207,14 +207,14 @@ const AddIncome = ({ navigation }: any) => {
 
       navigation.goBack();
     } catch (error) {
-      console.error("Add income transaction error: ", error);
+      console.log("Add income transaction error: ", error);
       Alert.alert("Add expenses category failed", "Please try again.")
     }
   };
 
   useEffect(() => {
     if (!userID) {
-      console.error("Get user ID failed", "User is not signed in. Cannot get income category.\nPlease sign in again.");
+      console.log("Get user ID failed", "User is not signed in. Cannot get income category.\nPlease sign in again.");
       return;
     }
     const loadCategories = async () => {

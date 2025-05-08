@@ -58,7 +58,7 @@ const AddExpenses = ({ navigation }: any) => {
         setLocation(locationName);
       }
     } catch (error) {
-      console.error("Error handling PubNub message:", error);
+      console.log("Error handling PubNub message:", error);
       setLocation("Unknown location");
     } finally {
       setLoading(false);
@@ -75,7 +75,7 @@ const AddExpenses = ({ navigation }: any) => {
           console.log("Received via PubNub:", rawLocation);
           handlePubNubMessage(rawLocation);
         } catch (error) {
-          console.error("PubNub listener error:", error);
+          console.log("PubNub listener error:", error);
         }
       },
     };
@@ -122,11 +122,11 @@ const AddExpenses = ({ navigation }: any) => {
         });
         console.log("Published location:", formatted);
       } catch (err) {
-        console.error("PubNub publish error:", err);
+        console.log("PubNub publish error:", err);
       }
     },
     (error) => {
-      console.error("Geolocation watch error:", error);
+      console.log("Geolocation watch error:", error);
       setLoading(false);
     },
     {
@@ -209,7 +209,7 @@ const AddExpenses = ({ navigation }: any) => {
       setLocationCheckbox(false);
       navigation.goBack(); 
     } catch (error) {
-      console.error("Add expenses transaction error: ", error);
+      console.log("Add expenses transaction error: ", error);
       Alert.alert("Add expenses transaction failed", "Please try again.");
     }
   };

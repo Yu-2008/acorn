@@ -91,7 +91,7 @@ const EditTransaction = ({ route, navigation }: Props) => {
       navigation.goBack();
     } catch (error) {
       Alert.alert("Updated transaction failed", "Please try again.");
-      console.error(error);
+      console.log(error);
     }
   };
 

@@ -37,7 +37,7 @@ const Setting = ({ navigation }:Props) => {
           const user = await getUsernameById(userID);
           setUsername(user ?? ' '); 
         } else {
-          console.error("Cannot get user ID.");
+          console.log("Cannot get user ID.");
         }
       };
       loadIncomeCategories();
@@ -66,7 +66,7 @@ const Setting = ({ navigation }:Props) => {
       await FIREBASE_AUTH.signOut();
       console.log(`Sign out successfully for user ${username}.`);
     } catch (error) {
-      console.error("Error signing out:", error);
+      console.log("Error signing out:", error);
     }
   };
 
@@ -97,7 +97,7 @@ const Setting = ({ navigation }:Props) => {
               if (error.code === 'auth/requires-recent-login') {
                 Alert.alert("Re-authentication Required", "Please sign in again to delete your account.");
               } else {
-                console.error("Error deleting user account:", error);
+                console.log("Error deleting user account:", error);
               }
             }
           },

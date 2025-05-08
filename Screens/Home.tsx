@@ -44,7 +44,7 @@ const Home = ({ navigation }: Props) => {
           const user = await getUsernameById(userID);
           setUsername(user ?? ' ');
         } else {
-          console.error("Cannot get user ID.");
+          console.log("Cannot get user ID.");
         }
       };
       loadUsername();
@@ -88,7 +88,7 @@ const Home = ({ navigation }: Props) => {
       setExpenses(exp);
       setTotalBalance(inc - exp);
     } else {
-      console.error("Cannot get user ID.");
+      console.log("Cannot get user ID.");
     }
   };
 

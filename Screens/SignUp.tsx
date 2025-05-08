@@ -34,7 +34,7 @@ const SignUp = ({ route, navigation }: Props) => {
 
       return isValidFormat && isMxFound;
     } catch (error) {
-      console.error("Error validating email:", error);
+      console.log("Error validating email:", error);
       return false;
     }
   };
