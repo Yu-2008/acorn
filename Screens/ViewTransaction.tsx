@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { ViewTransactionStyles as styles } from '../src/styles/Styles';
-import { SafeAreaView, Text, View, StyleSheet, ScrollView, Alert } from 'react-native';
+import { SafeAreaView, Text, View, ScrollView, Alert } from 'react-native';
 import { FloatingAction } from 'react-native-floating-action';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import type { StackScreenProps } from '@react-navigation/stack';
 import { MainStackParamList } from '../src/types/Types';
 import { useTheme } from '../src/contexts/ThemeContext';
-import { useUser } from '../src/contexts/UserContext';
 import { deleteTransactionById, getTransactionByTransId } from '../src/database/database';
 import { useFocusEffect } from '@react-navigation/native';
 

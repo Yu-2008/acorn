@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ViewIncomeCategoryStyles as styles } from '../src/styles/Styles';
-import { SafeAreaView, Text, View, StyleSheet, ScrollView, Alert } from "react-native";
+import { SafeAreaView, Text, View, ScrollView, Alert } from "react-native";
 import type { StackScreenProps } from '@react-navigation/stack';
 import { IncomeCategoryParamList } from '../src/types/Types';
 import { FloatingAction } from "react-native-floating-action";

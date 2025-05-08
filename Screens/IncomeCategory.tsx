@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { IncomeCategoryStyles as styles } from '../src/styles/Styles';
 import { SafeAreaView, Text, View, TouchableOpacity, FlatList, StyleSheet } from "react-native";
 import type { StackScreenProps } from '@react-navigation/stack';
