@@ -14,11 +14,11 @@ import {
 } from "react-native";
 import { StackScreenProps } from '@react-navigation/stack';
 import { MainStackParamList } from "../src/types/Types";
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { useTheme } from '../src/contexts/ThemeContext';
 import { useUser } from "../src/contexts/UserContext";
 import { updateTransactionById, getIncomeCategories, getExpensesCategories } from "../src/database/database";
 import { Picker } from "@react-native-picker/picker";
+import { CalenderPicker } from "../src/customComponent/CustomComponent";
 
 
 type Props = StackScreenProps<MainStackParamList, "EditTransaction">;
@@ -215,21 +215,17 @@ const EditTransaction = ({ route, navigation }: Props) => {
             </View>
              {/* Date Picker */}
             <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Date</Text>
-            <TouchableOpacity
-              style={[styles.datePickerButton, { backgroundColor: theme === 'dark' ? '#444' : '#fff' }]}
-              onPress={() => setShowDatePicker(true)}
-            >
-              <Text style={[styles.dateText, { color: theme === 'dark' ? 'white' : 'black' }]}>{date.toDateString()}</Text>
-            </TouchableOpacity>
-
-            {showDatePicker && (
-              <DateTimePicker
-                value={date}
-                mode="date"
-                display="default"
-                onChange={onChangeDate}
-              />
-            )}
+            <CalenderPicker
+              date={date}
+              show={showDatePicker}
+              setShow={setShowDatePicker}
+              onChange={onChangeDate}
+              theme={theme}
+              style={{
+              datePickerButton: styles.datePickerButton,
+              dateText: styles.dateText
+              }}
+            />
              {/* Amount Input */}
             <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Amount</Text>
             <TextInput

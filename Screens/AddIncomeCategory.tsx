@@ -8,11 +8,10 @@ import {
 import { AddIncomeCategoryStyles as styles } from '../src/styles/Styles';
 import { IncomeCategoryParamList } from "../src/types/Types";
 import { StackScreenProps } from '@react-navigation/stack';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useTheme } from '../src/contexts/ThemeContext'; 
 import { useUser } from "../src/contexts/UserContext";
 import { insertIncomeCategory } from "../src/database/database";
+import { GetIcon } from "../src/customComponent/CustomComponent";
 
 type Props = StackScreenProps<IncomeCategoryParamList, 'AddIncomeCategory'>;
 
@@ -96,13 +95,14 @@ const AddIncomeCategory = ({ route, navigation }: Props) => {
     const color = theme === 'dark' ? 'white' : '#393533';
     const size = 24;
 
-    if (iconLibrary === "Ionicons") {
-      return <Ionicons name={iconName} size={size} color={color} />;
-    } else if (iconLibrary === "FontAwesome") {
-      return <FontAwesome name={iconName} size={size} color={color} />;
-    } else {
-      return null;
-    }
+    return (
+      <GetIcon
+        library={iconLibrary as 'Ionicons' | 'FontAwesome' | 'FontAwesome5'}
+        name={iconName}
+        color={color}
+        size={size}
+      />
+    );
   };
 
   return (

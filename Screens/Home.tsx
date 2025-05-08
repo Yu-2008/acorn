@@ -36,6 +36,7 @@ const Home = ({ navigation }: Props) => {
   type Period = typeof periodOptions[number];
   const [period, setPeriod] = useState<Period>('Weekly');
 
+  
   useFocusEffect(
     React.useCallback(() => {
       const loadUsername = async () => {
@@ -135,124 +136,126 @@ const Home = ({ navigation }: Props) => {
 
   return (
     <SafeAreaView style={[styles.container, styles.screenPadding, { backgroundColor: theme === 'dark' ? '#333' : '#FDE6F6' }]}>
-      {/* Wrap everything in ScrollView */}
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        {/* Header Section */}
-        <View style={styles.header}>
-          <View>
-            <Text style={[styles.greeting, { fontFamily: 'WinkySans-VariableFont_wght' },{ color: theme === 'dark' ? 'white' : '#424242' }]}>Hello,</Text>
-            <Animated.Text
-              style={[styles.userName, { fontFamily: 'WinkySans-VariableFont_wght', color: colorInterpolation }]} // Animated color
-            >
-              {username}
-            </Animated.Text>
-          </View>
-
-          <View style={styles.periodPickerContainer}>
-            <Picker
-              selectedValue={period}
-              onValueChange={(value) => {
-                setPeriod(value);
-                loadTransHistory(value);
-              }}
-              mode="dropdown"
-              style={{ width: 150, color: theme === 'dark' ? 'white' : 'black' }}
-            >
-              {periodOptions.map(p => (
-                <Picker.Item key={p} label={p} value={p} />
-              ))}
-            </Picker>
-          </View>
-        </View>
-
-        {/* Balance Section */}
-        <View style={[styles.balanceContainer, { backgroundColor: theme === 'dark' ? '#333' : '#FDE6F6' }]}>
-          <Text style={[styles.balanceLabel, { fontFamily: 'WinkySans-VariableFont_wght' }, { color: theme === 'dark' ? 'white' : '#424242' }]}>Total Balance</Text>
-          <Text style={[styles.balanceAmount, { fontFamily: 'WinkySans-VariableFont_wght' }, { color: theme === 'dark' ? 'white' : '#424242' }]}>RM {totalBalance.toFixed(2)}</Text>
-        </View>
-
-        {/* Income/Expense Summary */}
-        <View style={styles.summaryContainer}>
-          <View style={[styles.summaryCard, { backgroundColor: theme === 'dark' ? '#5D5D5D' : '#f8f9fa' }]}>
-            <Text style={[styles.summaryLabel, { fontFamily: 'WinkySans-VariableFont_wght' }, { color: theme === 'dark' ? 'white' : '#424242' }]}>Income</Text>
-            <Text
-              style={[styles.summaryAmount, styles.incomeText, { fontFamily: 'WinkySans-VariableFont_wght' }]}
-            >
-              + RM{income.toFixed(2)}
-            </Text>
-          </View>
-          <View style={[styles.summaryCard, { backgroundColor: theme === 'dark' ? '#5D5D5D' : '#f8f9fa' }]}>
-            <Text style={[styles.summaryLabel, { fontFamily: 'WinkySans-VariableFont_wght' }, { color: theme === 'dark' ? 'white' : '#424242' }]}>Expenses</Text>
-            <Text
-              style={[styles.summaryAmount, styles.expenseText, { fontFamily: 'WinkySans-VariableFont_wght' }]}
-            >
-              - RM{expenses.toFixed(2)}
-            </Text>
-          </View>
-        </View>
-
-        {/* Transaction Header */}
-        <View style={styles.transactionHeader}>
-          <Text style={[styles.sectionTitle, { fontFamily: 'WinkySans-VariableFont_wght' }, { color: theme === 'dark' ? 'white' : '#424242' }]}>
-            Transaction History
-          </Text>
-        </View>
-
-        {/* Transaction List */}
-        <FlatList
-          style={{ flex: 1 }}
-          data={transactions}
-          ListEmptyComponent={
-            <View style={styles.emptyContainer}>
-              <Text style={[styles.emptyText, { color: theme === 'dark' ? 'white' : '#424242' }]}>
-                -----No transactions yet-----
-              </Text>
-            </View>
-          }
-          renderItem={({ item }) => (
-            <TouchableHighlight
-              onPress={() => {
-                navigation.navigate('ViewTransaction', {
-                  transID: item.transID,
-                  transTitle: item.transTitle,
-                  transDate: item.transactionDate,
-                  transType: item.transType,
-                  transCategory: item.transCategory,
-                  transAmount: item.amount,
-                  transDescription: item.description || "",
-                  transLocation: item.location,
-                });
-              }}
-              underlayColor="#FFCCCC"
-              style={styles.listItemTouchable}
-            >
-              <View style={[styles.transactionBox, { backgroundColor: theme === 'dark' ? '#5D5D5D' : '#FFC1DA' }]}>
-                <View style={styles.transactionInfo}>
-                  <Text style={[styles.transactionTitle, { fontFamily: 'WinkySans-VariableFont_wght' }, { color: theme === 'dark' ? 'white' : '#424242' }]}>
-                    {item.transTitle}
-                  </Text>
-                  <Text style={[styles.transactionDate, { fontFamily: 'WinkySans-VariableFont_wght' }, { color: theme === 'dark' ? '#DEDEDE' : '#424242' }]}>
-                    {formatDate(new Date(item.transactionDate).toISOString())}
-                  </Text>
-                </View>
-                <Text
-                  style={{
-                    color: item.transType === 0 ? '#2ecc71' : '#e74c3c',
-                    fontSize: 16,
-                    fontWeight: '500',
-                    fontFamily: 'WinkySans-VariableFont_wght',
-                    alignSelf: 'flex-end',
-                  }}
+      <FlatList
+        data={transactions}
+        keyExtractor={(item) => item.transID.toString()}
+        ListHeaderComponent={
+          <>
+            {/* Header Section */}
+            <View style={styles.header}>
+              <View>
+                <Text style={[styles.greeting, { fontFamily: 'WinkySans-VariableFont_wght' },{ color: theme === 'dark' ? 'white' : '#424242' }]}>Hello,</Text>
+                <Animated.Text
+                  style={[styles.userName, { fontFamily: 'WinkySans-VariableFont_wght', color: colorInterpolation }]}
                 >
-                  {item.transType === 0 ? '+' : '-'} RM {item.amount.toFixed(2)}
+                  {username}
+                </Animated.Text>
+              </View>
+
+              <View style={styles.periodPickerContainer}>
+                <Picker
+                  selectedValue={period}
+                  onValueChange={(value) => {
+                    setPeriod(value);
+                    loadTransHistory(value);
+                  }}
+                  mode="dropdown"
+                  style={{ width: 150, color: theme === 'dark' ? 'white' : 'black' }}
+                >
+                  {periodOptions.map(p => (
+                    <Picker.Item key={p} label={p} value={p} />
+                  ))}
+                </Picker>
+              </View>
+            </View>
+
+            {/* Balance Section */}
+            <View style={[styles.balanceContainer, { backgroundColor: theme === 'dark' ? '#333' : '#FDE6F6' }]}>
+              <Text style={[styles.balanceLabel, { fontFamily: 'WinkySans-VariableFont_wght' }, { color: theme === 'dark' ? 'white' : '#424242' }]}>Total Balance</Text>
+              <Text style={[styles.balanceAmount, { fontFamily: 'WinkySans-VariableFont_wght' }, { color: theme === 'dark' ? 'white' : '#424242' }]}>RM {totalBalance.toFixed(2)}</Text>
+            </View>
+
+            {/* Income/Expense Summary */}
+            <View style={styles.summaryContainer}>
+              <View style={[styles.summaryCard, { backgroundColor: theme === 'dark' ? '#5D5D5D' : '#f8f9fa' }]}>
+                <Text style={[styles.summaryLabel, { fontFamily: 'WinkySans-VariableFont_wght' }, { color: theme === 'dark' ? 'white' : '#424242' }]}>Income</Text>
+                <Text
+                  style={[styles.summaryAmount, styles.incomeText, { fontFamily: 'WinkySans-VariableFont_wght' }]}
+                >
+                  + RM{income.toFixed(2)}
                 </Text>
               </View>
-            </TouchableHighlight>
-          )}
-        />
-      </ScrollView>
+              <View style={[styles.summaryCard, { backgroundColor: theme === 'dark' ? '#5D5D5D' : '#f8f9fa' }]}>
+                <Text style={[styles.summaryLabel, { fontFamily: 'WinkySans-VariableFont_wght' }, { color: theme === 'dark' ? 'white' : '#424242' }]}>Expenses</Text>
+                <Text
+                  style={[styles.summaryAmount, styles.expenseText, { fontFamily: 'WinkySans-VariableFont_wght' }]}
+                >
+                  - RM{expenses.toFixed(2)}
+                </Text>
+              </View>
+            </View>
+
+            {/* Transaction Header */}
+            <View style={styles.transactionHeader}>
+              <Text style={[styles.sectionTitle, { fontFamily: 'WinkySans-VariableFont_wght' }, { color: theme === 'dark' ? 'white' : '#424242' }]}>
+                Transaction History
+              </Text>
+            </View>
+          </>
+        }
+        ListEmptyComponent={
+          <View style={styles.emptyContainer}>
+            <Text style={[styles.emptyText, { color: theme === 'dark' ? 'white' : '#424242' }]}>
+              -----No transactions yet-----
+            </Text>
+          </View>
+        }
+        renderItem={({ item }) => (
+          <TouchableHighlight
+            onPress={() => {
+              navigation.navigate('ViewTransaction', {
+                transID: item.transID,
+                transTitle: item.transTitle,
+                transDate: item.transactionDate,
+                transType: item.transType,
+                transCategory: item.transCategory,
+                transAmount: item.amount,
+                transDescription: item.description || "",
+                transLocation: item.location,
+              });
+            }}
+            underlayColor="#FFCCCC"
+            style={styles.listItemTouchable}
+          >
+            <View style={[styles.transactionBox, { backgroundColor: theme === 'dark' ? '#5D5D5D' : '#FFC1DA' }]}>
+              <View style={styles.transactionInfo}>
+                <Text style={[styles.transactionTitle, { fontFamily: 'WinkySans-VariableFont_wght' }, { color: theme === 'dark' ? 'white' : '#424242' }]}>
+                  {item.transTitle}
+                </Text>
+                <Text style={[styles.transactionDate, { fontFamily: 'WinkySans-VariableFont_wght' }, { color: theme === 'dark' ? '#DEDEDE' : '#424242' }]}>
+                  {formatDate(new Date(item.transactionDate).toISOString())}
+                </Text>
+              </View>
+              <Text
+                style={{
+                  color: item.transType === 0 ? '#2ecc71' : '#e74c3c',
+                  fontSize: 16,
+                  fontWeight: '500',
+                  fontFamily: 'WinkySans-VariableFont_wght',
+                  alignSelf: 'flex-end',
+                }}
+              >
+                {item.transType === 0 ? '+' : '-'} RM {item.amount.toFixed(2)}
+              </Text>
+            </View>
+          </TouchableHighlight>
+        )}
+        contentContainerStyle={{ paddingBottom: 20 }}
+      />
     </SafeAreaView>
   );
+
+
 };
 
 export default Home;

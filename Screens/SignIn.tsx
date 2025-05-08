@@ -21,6 +21,7 @@ import { FIREBASE_AUTH } from '../src/config/FirebaseConfig';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import LinearGradient from 'react-native-linear-gradient'; // Import the LinearGradient
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useUser } from '../src/contexts/UserContext';
 
 type Props = StackScreenProps<SignInUpStackParamList, "SignIn">;
 
@@ -31,6 +32,8 @@ const SignIn = ({ route, navigation }: Props) => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const auth = FIREBASE_AUTH;
+  const { setUserID } = useUser();
+
 
   // handle onPress
   const handleSignIn = async () => {
@@ -44,6 +47,8 @@ const SignIn = ({ route, navigation }: Props) => {
     try {
       const response = await signInWithEmailAndPassword(auth, email, password);
       console.log("Login success:", response.user.email);
+
+      await setUserID(response.user.uid);
 
       const savedTheme = await AsyncStorage.getItem('userTheme');
       if (savedTheme) {
@@ -59,12 +64,18 @@ const SignIn = ({ route, navigation }: Props) => {
         console.log("Last backup time:", backupTime);
       }
 
-      navigation.dispatch(
-        CommonActions.reset({
-          index: 0,
-          routes: [{name: 'Home'}],
-        })
-      );
+      // Ensure user ID is available before navigating
+
+      setTimeout(() => {
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: 'Home' }],
+          })
+        );
+      }, 100); 
+
+
 
     } catch (error: any) {
       console.log("Login error:", error);

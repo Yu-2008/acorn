@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
-interface UserContextType {
+type UserContextType = {
   userID: string | null;
   setUserID: (id: string | null) => void;
 }

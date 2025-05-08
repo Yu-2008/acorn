@@ -11,7 +11,7 @@ import Geolocation from "@react-native-community/geolocation";
 import { usePubNub } from "pubnub-react";
 import { useLocationPermission } from "../src/hooks/useLocationPermission";
 import { reverseGeocode } from "../src/services/reverseGeocode";
-
+import { CalenderPicker, CategoryPicker } from "../src/customComponent/CustomComponent";
 
 
 const CHANNEL = "location-channel";
@@ -216,17 +216,17 @@ const AddExpenses = ({ navigation }: any) => {
           >
             Category
           </Text>
-          <View style={styles.pickerContainer}>
-            <Picker
-              selectedValue={selectedCategory}
-              onValueChange={(itemValue) => setSelectedCategory(itemValue)}
-              style={{ color: theme === 'dark' ? '#fff' : '#000' }}
-            >
-              {categories.map((cat) => (
-                <Picker.Item key={cat.id} label={cat.title} value={cat.id} />
-              ))}
-            </Picker>
-          </View>
+          <CategoryPicker
+            categories={categories}
+            selectedCategory={selectedCategory ?? undefined}
+            onValueChange={(val) => setSelectedCategory(val)}
+            theme={theme}
+            style={{
+              label: styles.label,
+              pickerContainer: styles.pickerContainer,
+            }}
+          />
+
 
           <Text style={[styles.label, { color: theme === 'dark' ? '#fff' : '#000' }]}>
             Title
@@ -283,23 +283,18 @@ const AddExpenses = ({ navigation }: any) => {
           >
             Date
           </Text>
-          <TouchableOpacity
-            style={styles.datePickerButton}
-            onPress={() => setShowDatePicker(true)}
-          >
-            <Text style={[styles.dateText, { color: theme === 'dark' ? '#fff' : '#000' }]}>
-              {transDate.toDateString()}
-            </Text>
-          </TouchableOpacity>
+          <CalenderPicker
+            date={transDate}
+            show={showDatePicker}
+            setShow={setShowDatePicker}
+            onChange={onChangeDate}
+            theme={theme}
+            style={{
+            datePickerButton: styles.datePickerButton,
+            dateText: styles.dateText
+            }}
+          />
 
-          {showDatePicker && (
-            <DateTimePicker
-              value={transDate}
-              mode="date"
-              display="default"
-              onChange={onChangeDate}
-            />
-          )}
 
 
           
@@ -320,7 +315,7 @@ const AddExpenses = ({ navigation }: any) => {
           {/* Save Button */}
           <TouchableOpacity
             style={[
-              styles.doneButton,
+              styles.saveButton,
               { 
                 backgroundColor: theme === 'dark' ? '#515151' : '#E69DB8',
                 borderColor: theme === 'dark' ? '#E69DB8' : '#E69DB8', 
@@ -329,10 +324,11 @@ const AddExpenses = ({ navigation }: any) => {
             ]}
             onPress={handleSave}
           >
-            <Text style={[styles.doneButtonText,{color: theme === 'dark' ? '#fff' : '#000'}]}>
+            <Text style={[styles.saveButtonText,{color: theme === 'dark' ? '#fff' : '#000'}]}>
               Add
             </Text>
           </TouchableOpacity>
+
         </View>
       </ScrollView>
     </SafeAreaView>

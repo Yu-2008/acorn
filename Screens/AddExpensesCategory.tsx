@@ -12,13 +12,11 @@ import {
 } from "react-native";
 import type { StackScreenProps } from '@react-navigation/stack';
 import { ExpensesCategoryParamList } from "../src/types/Types";
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { AddExpensesCategoryStyles as styles } from '../src/styles/Styles';
 import { useTheme } from '../src/contexts/ThemeContext';
 import { useUser } from "../src/contexts/UserContext";
 import { insertExpensesCategory } from "../src/database/database";
+import { GetIcon } from "../src/customComponent/CustomComponent";
 
 type Props = StackScreenProps<ExpensesCategoryParamList, 'AddExpensesCategory'>;
 
@@ -107,17 +105,18 @@ const AddExpensesCategory = ({ route, navigation }: Props) => {
     const color = theme === 'dark' ? 'white' : '#393533';
     const size = 24;
 
-    if (iconLibrary === 'Ionicons') {
-      return <Ionicons name={iconName} size={size} color={color}  />;
-    } else if (iconLibrary === 'FontAwesome') {
-      return <FontAwesome name={iconName} size={size} color={color}  />;
-    } else if (iconLibrary === 'FontAwesome5') {
-      return <FontAwesome5 name={iconName} size={size} color={color}  />;
-    } else {
-      return <Ionicons name="file-tray" size={size} color={color} />;
-    }
+    return (
+      <GetIcon
+        library={iconLibrary as 'Ionicons' | 'FontAwesome' | 'FontAwesome5'}
+        name={iconName}
+        color={color}
+        size={size}
+      />
+    );
 
   };
+
+  
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme === 'dark' ? '#444' : '#FDE6F6' }]}>
@@ -165,6 +164,7 @@ const AddExpensesCategory = ({ route, navigation }: Props) => {
             {confirmationMessage}
           </Text>
         ) : null}
+
          {/* Save button */}
         <TouchableOpacity
             style={[
@@ -181,6 +181,8 @@ const AddExpensesCategory = ({ route, navigation }: Props) => {
               Add
             </Text>
           </TouchableOpacity>
+
+          
 
       </ScrollView>   
         

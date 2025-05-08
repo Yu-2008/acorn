@@ -3,13 +3,11 @@ import { ExpensesCategoryStyles as styles } from '../src/styles/Styles';
 import { SafeAreaView, Text, View, TouchableOpacity, FlatList, Alert } from "react-native";
 import type { StackScreenProps } from '@react-navigation/stack';
 import { ExpensesCategoryParamList } from "../src/types/Types";
-import Ionicons from 'react-native-vector-icons/Ionicons'; 
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { useTheme } from '../src/contexts/ThemeContext';
 import { useUser } from "../src/contexts/UserContext";
 import { useFocusEffect } from "@react-navigation/native";
 import { getExpensesCategories } from "../src/database/database";
+import { GetIcon } from "../src/customComponent/CustomComponent";
 
 
 type Props = StackScreenProps<ExpensesCategoryParamList, 'ExpensesCategory'>;
@@ -58,18 +56,18 @@ const ExpensesCategory = ({ navigation }: Props) => {
     });
   }
 
-  const getIconForCategory = (iconName: string, iconLibrary: string) => {
-    const iconColor = theme === 'dark' ? 'white' : '#393533'; // Icon color based on theme
-    
-    if (iconLibrary === 'Ionicons') {
-      return <Ionicons name={iconName} size={24} color={iconColor} style={styles.icon} />;
-    } else if (iconLibrary === 'FontAwesome') {
-      return <FontAwesome name={iconName} size={24} color={iconColor} style={styles.icon} />;
-    } else if (iconLibrary === 'FontAwesome5') {
-      return <FontAwesome5 name={iconName} size={24} color={iconColor} style={styles.icon} />;
-    } else {
-      return <Ionicons name="file-tray" size={24} color={iconColor} style={styles.icon} />;
-    }
+  const renderIcon = (iconName: string, iconLibrary: string) => {
+    const color = theme === 'dark' ? 'white' : '#393533';
+    const size = 24;
+
+    return (
+      <GetIcon
+        library={iconLibrary as 'Ionicons' | 'FontAwesome' | 'FontAwesome5'}
+        name={iconName}
+        color={color}
+        size={size}
+      />
+    );
   };
 
   const renderItem = ({ item }: { item: ExpensesCategory }) => (
@@ -80,7 +78,7 @@ const ExpensesCategory = ({ navigation }: Props) => {
         { backgroundColor: theme === 'dark' ? '#444' : '#FFC1DA' }  // Dynamic background color
       ]}
     >
-      {getIconForCategory(item.icon, item.iconLibrary)}
+      {renderIcon(item.icon, item.iconLibrary)}
       <Text style={[styles.itemText, { color: theme === 'dark' ? 'white' : 'black' }]}>
         {item.title}
       </Text>

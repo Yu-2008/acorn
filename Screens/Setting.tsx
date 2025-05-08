@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { SafeAreaView, Text, View, TouchableOpacity, Animated, Switch,Image, Linking } from "react-native";
+import { SafeAreaView, Text, View, TouchableOpacity, Animated, Switch,Image, Linking, Alert } from "react-native";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Feather from 'react-native-vector-icons/Feather';
@@ -69,6 +69,43 @@ const Setting = ({ navigation }:Props) => {
       console.error("Error signing out:", error);
     }
   };
+
+  const handleDeleteAccount = () => {
+    Alert.alert(
+      "Delete Account",
+      "Are you sure you want to delete your account? This action cannot be undone.",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            const user = FIREBASE_AUTH.currentUser;
+            if (!user) {
+              console.warn("No user is currently signed in.");
+              return;
+            }
+  
+            try {
+              await user.delete();
+              console.log("User account deleted successfully.");
+              // Optionally navigate to login or show a success message
+            } catch (error: any) {
+              if (error.code === 'auth/requires-recent-login') {
+                Alert.alert("Re-authentication Required", "Please sign in again to delete your account.");
+              } else {
+                console.error("Error deleting user account:", error);
+              }
+            }
+          },
+        },
+      ]
+    );
+  };
+  
 
   useEffect(() => {
     const startColorAnimation = () => {
@@ -173,7 +210,15 @@ const handleContactUs = () => {
               <Ionicons name="log-out" size={24} color={theme === 'dark' ? 'white' : '#393533'} style={styles.icon} />
               <Text style={[styles.rowText, { color: theme === 'dark' ? 'white' : 'black' }]}>Sign Out</Text>
             </TouchableOpacity>
+
+            <TouchableOpacity 
+              style={[styles.row, { backgroundColor: theme === 'dark' ? '#444' : '#FFC1DA' }]}
+              onPress={handleDeleteAccount}>
+              <Ionicons name="trash-outline" size={24} color={theme === 'dark' ? 'white' : '#393533'} style={styles.icon} />
+              <Text style={[styles.rowText, { color: theme === 'dark' ? 'white' : 'black' }]}>Delete Account</Text>
+            </TouchableOpacity>
           </View>
+         
           {/* Toggle Dark Mode */}
             <View style={styles.toggleContainer}>
               <Text style={[styles.toggleText, { color: theme === 'dark' ? 'white' : 'black' }]}>
@@ -187,6 +232,10 @@ const handleContactUs = () => {
               />
             </View>
         </View>
+
+
+        
+
 
         {/* Second Page - Geolocation */}
         <View key="2">

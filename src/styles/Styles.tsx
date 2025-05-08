@@ -318,14 +318,14 @@ export const AddExpensesStyles = StyleSheet.create({
     fontFamily: 'WinkySans-VariableFont_wght', 
     fontSize: 16,
   },
-  doneButton: {
+  saveButton: {
     marginTop: 30,
     backgroundColor: '#E69DB8',
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
   },
-  doneButtonText: {
+  saveButtonText: {
     fontSize: 16,
     fontWeight: '500',
     color: '#393533',
@@ -421,6 +421,7 @@ export const AddIncomeStyles = StyleSheet.create({
     backgroundColor: '#FDE6F6',
     padding: 20,
     paddingHorizontal: 12,
+    paddingTop: 20,
   },
   formContainer: {
     marginTop: 10,
@@ -429,7 +430,7 @@ export const AddIncomeStyles = StyleSheet.create({
     fontSize: 20,
     color: 'black',
     marginBottom: 5,
-    fontFamily: 'WinkySans-VariableFont_wght', 
+    fontFamily: 'WinkySans-VariableFont_wght',
   },
   pickerContainer: {
     marginTop: 10,
@@ -437,18 +438,6 @@ export const AddIncomeStyles = StyleSheet.create({
     borderColor: '#DBABA1',
     borderRadius: 10,
     marginBottom: 15,
-  },
-  itemRow: {
-    width: '45%',
-    padding: 10,
-    borderRadius: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    marginBottom: 10,
-    borderBottomColor: '#ccc',
   },
   inputContainer: {
     marginTop: 10,
@@ -479,21 +468,27 @@ export const AddIncomeStyles = StyleSheet.create({
   },
   dateText: {
     color: 'black',
-    fontFamily: 'WinkySans-VariableFont_wght',
-    fontSize :16
+    fontFamily: 'WinkySans-VariableFont_wght', 
+    fontSize: 16,
   },
-  doneButton: {
+  saveButton: {
     marginTop: 30,
     backgroundColor: '#E69DB8',
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
   },
-  doneButtonText: {
-    fontSize :16,
+  saveButtonText: {
+    fontSize: 16,
     fontWeight: '500',
     color: '#393533',
-    fontFamily: 'WinkySans-VariableFont_wght',
+    fontFamily: 'WinkySans-VariableFont_wght', 
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 15,
+    marginBottom: 15,
   },
 });
 
