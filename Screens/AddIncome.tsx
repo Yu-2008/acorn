@@ -12,15 +12,12 @@ import { usePubNub } from "pubnub-react";
 import { useLocationPermission } from "../src/hooks/useLocationPermission";
 import { reverseGeocode } from "../src/services/reverseGeocode";
 import { CalenderPicker, CategoryPicker } from "../src/customComponent/CustomComponent";
+import { useLocationTracking } from "../src/hooks/useLocationTracking";
 
-// PubNub channel for location updates
-const CHANNEL = "location-channel";
 
 const AddIncome = ({ navigation }: any) => {
- // Retrieve user ID and theme from context
   const { userID } = useUser();
   const { theme } = useTheme();
-  // State variables for handling income details and location
   const [categories, setCategories] = useState<{ id: number; title: string }[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [transTitle, setTransTitle] = useState("");
@@ -29,126 +26,7 @@ const AddIncome = ({ navigation }: any) => {
   const [transDescription, setTransDescription] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [locationCheckbox, setLocationCheckbox] = useState(false);
-  const [location, setLocation] = useState<string>("Not showing location.");
-  const { granted: hasLocationPerm, requestPermission } = useLocationPermission();
-  const watchId = useRef<number | null>(null);
-  const [ loading, setLoading ] = useState(false);
-
-  const pubnub = usePubNub();
-
-  // Handle received location data from PubNub
-  const handlePubNubMessage = async (message: string) => {
-      try {
-        const match = message.match(/Lat:([\d.-]+),Lon:([\d.-]+)/);
-        if (!match) {
-          console.warn("Invalid message format:", message);
-          setLocation("Unknown location");
-          return;
-        }
-    
-        const lat = parseFloat(match[1]);
-        const lon = parseFloat(match[2]);
-        const locationName = await reverseGeocode(lat, lon);
-    
-        if (!locationName) {
-          console.warn("Reverse geocoding failed for:", lat, lon);
-          setLocation("Unknown location");
-        } else {
-          console.log("User location:", locationName);
-          setLocation(locationName);
-        }
-      } catch (error) {
-        console.log("Error handling PubNub message:", error);
-        setLocation("Unknown location");
-      } finally {
-        setLoading(false);
-      }
-    };
-  // Subscribe to location updates via PubNub
-  useEffect(() => {
-    pubnub.subscribe({ channels: [CHANNEL], withPresence: false });
-
-    const listener = {
-      message: (m: any) => {
-        try {
-          const rawLocation = m?.message?.locationName ?? "Unknown location";
-          console.log("Received via PubNub:", rawLocation);
-          handlePubNubMessage(rawLocation);
-        } catch (error) {
-          console.log("PubNub listener error:", error);
-        }
-      },
-    };
-
-    pubnub.addListener(listener);
-
-    return () => {
-      pubnub.removeListener(listener);
-      pubnub.unsubscribe({ channels: [CHANNEL] });
-    };
-  }, [pubnub]);
-
-
-  const onToggleLocation = async (checked: boolean) => {
-    setLocationCheckbox(checked);
-  
-    if (!checked) {
-      stopWatchingLocation();
-      setLocation("Not showing location.");
-      return;
-    }
-  
-    const permissionGranted = await requestPermission();
-    if (!permissionGranted) {
-      Alert.alert("Permission required", "Location permission not granted.");
-      setLocationCheckbox(false);
-      return;
-    }
-  
-    setLoading(true);
-    startWatchingLocation();
-  };
-
-  const startWatchingLocation = () => {
-    watchId.current = Geolocation.watchPosition(
-      async ({ coords }) => {
-        try {
-          const formatted = `Lat:${coords.latitude.toFixed(4)},Lon:${coords.longitude.toFixed(4)}`;
-          await pubnub.publish({
-            channel: CHANNEL,
-            message: { locationName: formatted },
-          });
-          console.log("Published location:", formatted);
-        } catch (err) {
-          console.log("PubNub publish error:", err);
-        }
-      },
-      (error) => {
-        console.log("Geolocation watch error:", error);
-        setLoading(false);
-      },
-      {
-        enableHighAccuracy: true,
-        distanceFilter: 10,
-        interval: 5000,
-      }
-    );
-  };
-    
-  
-  const stopWatchingLocation = () => {
-    if (watchId.current !== null) {
-      Geolocation.clearWatch(watchId.current);
-      watchId.current = null;
-    }
-  };
-  
-  useEffect(() => {
-    return () => {
-      stopWatchingLocation(); // Clear on unmount
-    };
-  }, []);
-  
+  const { location, loading, locationEnabled, toggleLocation } = useLocationTracking();
   
 
   // Handle onPress
@@ -196,8 +74,8 @@ const AddIncome = ({ navigation }: any) => {
       setTransAmount("");
       setTransDescription("");
       setTransDate(new Date());
-      setLocation("");
       setLocationCheckbox(false);
+      toggleLocation(false);
 
       if (Platform.OS === 'android') {
         ToastAndroid.show("Transaction added successfully", ToastAndroid.SHORT);
@@ -208,29 +86,38 @@ const AddIncome = ({ navigation }: any) => {
       navigation.goBack();
     } catch (error) {
       console.log("Add income transaction error: ", error);
-      Alert.alert("Add expenses category failed", "Please try again.")
+      Alert.alert("Add income transaction failed", "Please try again.")
     }
   };
 
   useEffect(() => {
     if (!userID) {
-      console.log("Get user ID failed", "User is not signed in. Cannot get income category.\nPlease sign in again.");
+      console.error("Get user ID failed.\nPlease sign in again.");
       return;
     }
     const loadCategories = async () => {
       const data = await getIncomeCategories(userID);
-      console.log("Fetched income categories:", data);
       setCategories(data);
       if (data.length > 0) setSelectedCategory(data[0].id);
     };
     loadCategories();
   }, [userID]);
+
    // Handle date changes
   const onChangeDate = (event: any, selectedDate?: Date) => {
     setShowDatePicker(Platform.OS === 'ios');
     if (selectedDate) {
       setTransDate(selectedDate);
     }
+  };
+
+  const onToggleLocation = async (checked: boolean) => {
+    setLocationCheckbox(checked);
+    if (!checked) {
+      toggleLocation(false);  // stop
+      return;
+    }
+    toggleLocation(true);  // start
   };
 
   return (
@@ -330,14 +217,12 @@ const AddIncome = ({ navigation }: any) => {
           {/* Location Toggle */}
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <CheckBox value={locationCheckbox} onValueChange={onToggleLocation} />
-            <Text style={[styles.label, { color: theme === 'dark' ? '#fff' : '#000' }]}>
-              Record Current Location
-            </Text>
+            <Text style={[styles.label, { color: theme === 'dark' ? '#fff' : '#000' }]}>Record Current Location</Text>
           </View>
-          {loading ? (
+          {(loading) ? (
             <ActivityIndicator size="small" color={theme === 'dark' ? '#fff' : '#000'} />
           ) : (
-            <Text style={{ color: theme === 'dark' ? '#fff' : '#000' }}>{locationCheckbox ? `Current Location: ${location}` : "Not showing location."}</Text>
+            <Text style={{ color: theme === 'dark' ? '#fff' : '#000' }}>{locationCheckbox ? `Current Location: ${location}\n(Location cannot be edited once saved)` : "Not showing location."}</Text>
           )}
 
           {/* Save Button */}

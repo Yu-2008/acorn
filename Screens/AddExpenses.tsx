@@ -1,20 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import { SafeAreaView, Text, View, TextInput, TouchableOpacity, Platform, Alert, ScrollView, ActivityIndicator, ToastAndroid} from "react-native";
 import { AddExpensesStyles as styles } from '../src/styles/Styles';
-import { Picker } from "@react-native-picker/picker";
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { useTheme } from '../src/contexts/ThemeContext';
 import { getExpensesCategories, insertTransactionHistory } from "../src/database/database";
 import { useUser } from "../src/contexts/UserContext";
 import CheckBox from '@react-native-community/checkbox';
-import Geolocation from "@react-native-community/geolocation";
-import { usePubNub } from "pubnub-react";
-import { useLocationPermission } from "../src/hooks/useLocationPermission";
-import { reverseGeocode } from "../src/services/reverseGeocode";
 import { CalenderPicker, CategoryPicker } from "../src/customComponent/CustomComponent";
+import { useLocationTracking } from "../src/hooks/useLocationTracking";
 
-
-const CHANNEL = "location-channel";
 
 // Declare state variables for form inputs and location tracking
 const AddExpenses = ({ navigation }: any) => {
@@ -28,130 +21,8 @@ const AddExpenses = ({ navigation }: any) => {
   const [transDescription, setTransDescription] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [locationCheckbox, setLocationCheckbox] = useState(false);
-  const [location, setLocation] = useState<string>("Not showing location.");
-  const { granted: hasLocationPerm, requestPermission } = useLocationPermission();
-  const watchId = useRef<number | null>(null);
-  const [ loading, setLoading ] = useState(false);
-  
-  // PubNub channel for location updates
-  const pubnub = usePubNub();
-
-   // Function to handle incoming messages with location data from PubNub
-  const handlePubNubMessage = async (message: string) => {
-    try {
-      const match = message.match(/Lat:([\d.-]+),Lon:([\d.-]+)/);
-      if (!match) {
-        console.warn("Invalid message format:", message);
-        setLocation("Unknown location");
-        return;
-      }
-  
-      const lat = parseFloat(match[1]);
-      const lon = parseFloat(match[2]);
-      const locationName = await reverseGeocode(lat, lon);
-  
-      if (!locationName) {
-        console.warn("Reverse geocoding failed for:", lat, lon);
-        setLocation("Unknown location");
-      } else {
-        console.log("User location:", locationName);
-        setLocation(locationName);
-      }
-    } catch (error) {
-      console.log("Error handling PubNub message:", error);
-      setLocation("Unknown location");
-    } finally {
-      setLoading(false);
-    }
-  };
-  // Effect hook to subscribe to location updates from PubNub
-  useEffect(() => {
-    pubnub.subscribe({ channels: [CHANNEL], withPresence: false });
-  
-    const listener = {
-      message: (m: any) => {
-        try {
-          const rawLocation = m?.message?.locationName ?? "Unknown location";
-          console.log("Received via PubNub:", rawLocation);
-          handlePubNubMessage(rawLocation);
-        } catch (error) {
-          console.log("PubNub listener error:", error);
-        }
-      },
-    };
-  
-    pubnub.addListener(listener);
-  
-    return () => {
-      pubnub.removeListener(listener);
-      pubnub.unsubscribe({ channels: [CHANNEL] });
-    };
-  }, [pubnub]);
-  
-
-    // Function to check location tracking on or off
-  const onToggleLocation = async (checked: boolean) => {
-    setLocationCheckbox(checked);
-  
-    if (!checked) {
-      stopWatchingLocation();
-      setLocation("Not showing location.");
-      return;
-    }
-  
-    const permissionGranted = await requestPermission();
-    if (!permissionGranted) {
-      Alert.alert("Permission required", "Location permission not granted.");
-      setLocationCheckbox(false);
-      return;
-    }
-  
-    setLoading(true);
-    startWatchingLocation();
-  };
-
-  // Function to start watching the location in real-time
-  const startWatchingLocation = () => {
-  watchId.current = Geolocation.watchPosition(
-    async ({ coords }) => {
-      try {
-        const formatted = `Lat:${coords.latitude.toFixed(4)},Lon:${coords.longitude.toFixed(4)}`;
-        await pubnub.publish({
-          channel: CHANNEL,
-          message: { locationName: formatted },
-        });
-        console.log("Published location:", formatted);
-      } catch (err) {
-        console.log("PubNub publish error:", err);
-      }
-    },
-    (error) => {
-      console.log("Geolocation watch error:", error);
-      setLoading(false);
-    },
-    {
-      enableHighAccuracy: true,
-      distanceFilter: 10,
-      interval: 5000,
-    }
-  );
-};
-
-  // Function to stop watching the location
-  const stopWatchingLocation = () => {
-    if (watchId.current !== null) {
-      Geolocation.clearWatch(watchId.current);
-      watchId.current = null;
-    }
-  };
-  
-  useEffect(() => {
-    return () => {
-      stopWatchingLocation(); // Clear on unmount
-    };
-  }, []);
-  
-  
+  const { location, loading, locationEnabled, toggleLocation } = useLocationTracking();
+ 
 
   {/**handle onPress */}
   const handleSave = async() => {
@@ -205,19 +76,26 @@ const AddExpenses = ({ navigation }: any) => {
       setTransAmount("");
       setTransDescription("");
       setTransDate(new Date());
-      setLocation("");
       setLocationCheckbox(false);
+      toggleLocation(false);
+      
+      if (Platform.OS === 'android') {
+        ToastAndroid.show("Transaction added successfully", ToastAndroid.SHORT);
+      } else {
+        Alert.alert("Add success", "Transaction added successfully");
+      }
+
       navigation.goBack(); 
     } catch (error) {
-      console.log("Add expenses transaction error: ", error);
+      console.error("Add expenses transaction error: ", error);
       Alert.alert("Add expenses transaction failed", "Please try again.");
     }
   };
 
-
+  // load categories
   useEffect(() => {
     if (!userID) {
-      console.log("Get user ID failed.\nPlease sign in again.");
+      console.error("Get user ID failed.\nPlease sign in again.");
       return;
     }
     const loadCategories = async () => {
@@ -228,12 +106,23 @@ const AddExpenses = ({ navigation }: any) => {
     loadCategories();
   }, [userID]);
 
+  // Handle date changes
   const onChangeDate = (event: any, selectedDate?: Date) => {
     setShowDatePicker(Platform.OS === 'ios');
     if (selectedDate) {
       setTransDate(selectedDate);
     }
   };
+
+  const onToggleLocation = async (checked: boolean) => {
+    setLocationCheckbox(checked);
+    if (!checked) {
+      toggleLocation(false);  // stop
+      return;
+    }
+    toggleLocation(true);  // start
+  };
+
 
   return (
     <SafeAreaView
@@ -327,23 +216,17 @@ const AddExpenses = ({ navigation }: any) => {
             dateText: styles.dateText
             }}
           />
-
-
-
           
-          {/* Location Toggle */}
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+           {/* Location Toggle */}
+           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <CheckBox value={locationCheckbox} onValueChange={onToggleLocation} />
-            <Text style={[styles.label, { color: theme === 'dark' ? '#fff' : '#000' }]}>
-              Record Current Location
-            </Text>
+            <Text style={[styles.label, { color: theme === 'dark' ? '#fff' : '#000' }]}>Record Current Location</Text>
           </View>
-          {loading ? (
+          {(loading) ? (
             <ActivityIndicator size="small" color={theme === 'dark' ? '#fff' : '#000'} />
           ) : (
-            <Text style={{ color: theme === 'dark' ? '#fff' : '#000' }}>{locationCheckbox ? `Current Location: ${location} \n (Location are not editable once saved)` : "Not showing location."}</Text>
+            <Text style={{ color: theme === 'dark' ? '#fff' : '#000' }}>{locationCheckbox ? `Current Location: ${location}\n(Location cannot be edited once saved)` : "Not showing location."}</Text>
           )}
-
 
           {/* Save Button */}
           <TouchableOpacity

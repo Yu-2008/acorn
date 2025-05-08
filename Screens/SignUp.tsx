@@ -9,6 +9,7 @@ import { FIREBASE_AUTH } from '../src/config/FirebaseConfig';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { insertUser } from '../src/database/database';
 import LinearGradient from 'react-native-linear-gradient'; 
+import { validateEmail } from '../src/services/emailValiadtion';
 
 type Props = StackScreenProps<SignInUpStackParamList, "SignUp">;
 
@@ -22,22 +23,6 @@ const SignUp = ({ route, navigation }: Props) => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const auth = FIREBASE_AUTH;
-
-  const validateEmail = async (email: string): Promise<boolean> => {
-    try {
-      const url = `https://emailvalidation.abstractapi.com/v1/?api_key=711372f9b8114ed1a7a52568bdbd0c16&email=${email}`;
-      const response = await fetch(url);
-      const data = await response.json();
-
-      const isValidFormat = data.is_valid_format?.value;
-      const isMxFound = data.is_mx_found?.value;
-
-      return isValidFormat && isMxFound;
-    } catch (error) {
-      console.log("Error validating email:", error);
-      return false;
-    }
-  };
 
   // handle onPress
   const handleSignUp = async () => {
@@ -58,7 +43,6 @@ const SignUp = ({ route, navigation }: Props) => {
 
   
     const isValid = await validateEmail(email);
-
     if (!isValid) {
       Alert.alert("Sign up failed", "Email are invalied.\nPlease enter a valid email address.\n(E.g. gmail).");
       setLoading(false);

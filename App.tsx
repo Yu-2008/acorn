@@ -40,13 +40,9 @@ import { onAuthStateChanged, User } from 'firebase/auth';
 import { FIREBASE_AUTH } from './src/config/FirebaseConfig';
 import { initDB } from './src/database/database';
 import { PubNubProvider } from 'pubnub-react';
-import PubNub from 'pubnub';
+import { pubnub } from './src/config/pubnubConfig';
 
-const pubnub = new PubNub({
-  publishKey: 'pub-c-cf0b55ea-29d2-4169-96ec-90dbc6245c27',
-  subscribeKey: 'sub-c-249e82b7-53f8-4399-b070-8fbea7f745c2',
-  uuid: PubNub.generateUUID(),
-});
+
 
 const RootStack = createStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<TabParamList>();
