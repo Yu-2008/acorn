@@ -1038,6 +1038,51 @@ export const SettingStyles = StyleSheet.create({
     marginTop: 30,
     borderRadius: 170,
   },
+  // Styles for Android Re-authentication Input
+  androidReauthContainer: {
+    marginTop: 20,
+    marginBottom: 20,
+    padding: 15,
+    borderWidth: 1,
+    borderColor: '#ddd', // Neutral border color
+    borderRadius: 10,
+    backgroundColor: '#f9f9f9', // Light background for the container
+    alignItems: 'center', // Center content like buttons
+  },
+  androidReauthInput: {
+    height: 50,
+    borderWidth: 1,
+    // borderColor will be set dynamically based on theme in Setting.tsx
+    borderRadius: 8,
+    paddingHorizontal: 15,
+    marginBottom: 15,
+    fontFamily: 'WinkySans-VariableFont_wght',
+    width: '100%', // Make input take full width of its container
+    fontSize: 16,
+  },
+  androidReauthButton: {
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 10,
+    width: '100%', // Make button take full width
+  },
+  androidReauthButtonText: {
+    color: 'white', // Default text color for buttons
+    fontSize: 16,
+    fontWeight: 'bold',
+    fontFamily: 'WinkySans-VariableFont_wght',
+  },
+  androidReauthCancelButton: {
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 10,
+    width: '100%', // Make button take full width
+    // backgroundColor will be set dynamically based on theme in Setting.tsx
+  },
 });
 
 export const SignInStyles = StyleSheet.create({
