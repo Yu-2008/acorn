@@ -1,6 +1,6 @@
 import React, { useEffect, useState} from "react";
 import { BackUpCloudStyles as styles } from '../src/styles/Styles';
-import { SafeAreaView, Text, View, TouchableOpacity, Platform, Alert, ActivityIndicator } from "react-native";
+import { SafeAreaView, Text, View, TouchableOpacity, Alert, ActivityIndicator } from "react-native";
 import { StackScreenProps } from '@react-navigation/stack';
 import { SettingStackParamList } from "../src/types/Types";
 import Ionicons from "react-native-vector-icons/Ionicons";

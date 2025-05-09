@@ -1,16 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { SafeAreaView, Text, View, TextInput, TouchableOpacity, Platform, Alert, ScrollView, ActivityIndicator, ToastAndroid } from "react-native";
 import { AddIncomeStyles as styles } from '../src/styles/Styles';
-import { Picker } from "@react-native-picker/picker";
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { useTheme } from '../src/contexts/ThemeContext';
 import { getIncomeCategories, insertTransactionHistory } from "../src/database/database";
 import { useUser } from "../src/contexts/UserContext";
 import CheckBox from '@react-native-community/checkbox';
-import Geolocation from "@react-native-community/geolocation";
-import { usePubNub } from "pubnub-react";
-import { useLocationPermission } from "../src/hooks/useLocationPermission";
-import { reverseGeocode } from "../src/services/reverseGeocode";
 import { CalendarPicker, CategoryPicker } from "../src/customComponent/CustomComponent";
 import { useLocationTracking } from "../src/hooks/useLocationTracking";
 
