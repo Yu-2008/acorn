@@ -87,7 +87,7 @@ const AddExpenses = ({ navigation }: any) => {
 
       navigation.goBack(); 
     } catch (error) {
-      console.error("Add expenses transaction error: ", error);
+      console.log("Add expenses transaction error: ", error);
       Alert.alert("Add expenses transaction failed", "Please try again.");
     }
   };
@@ -95,7 +95,7 @@ const AddExpenses = ({ navigation }: any) => {
   // load categories
   useEffect(() => {
     if (!userID) {
-      console.error("Get user ID failed.\nPlease sign in again.");
+      console.log("Get user ID failed.\nPlease sign in again.");
       return;
     }
     const loadCategories = async () => {

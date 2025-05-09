@@ -11,7 +11,7 @@ export const reverseGeocode = async (lat: number, lon: number): Promise<string> 
     }
     return 'Unknown location';
   } catch (error) {
-    console.error('Reverse geocoding failed:', error);
+    console.log('Reverse geocoding failed:', error);
     return 'Location lookup failed';
   }
 };

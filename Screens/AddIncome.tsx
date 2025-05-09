@@ -92,7 +92,7 @@ const AddIncome = ({ navigation }: any) => {
 
   useEffect(() => {
     if (!userID) {
-      console.error("Get user ID failed.\nPlease sign in again.");
+      console.log("Get user ID failed.\nPlease sign in again.");
       return;
     }
     const loadCategories = async () => {

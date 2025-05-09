@@ -45,7 +45,7 @@ export const useLocationTracking = () => {
         }
       },
       error => {
-        console.error('Geolocation error:', error);
+        console.log('Geolocation error:', error);
         setLoading(false);
       },
       { enableHighAccuracy: true, distanceFilter: 10, interval: 5000 }
@@ -72,7 +72,7 @@ export const useLocationTracking = () => {
       const name = await reverseGeocode(lat, lon);
       setLocation(name || 'Unknown location');
     } catch (error) {
-      console.error('Error in PubNub message handler:', error);
+      console.log('Error in PubNub message handler:', error);
       setLocation('Unknown location');
     } finally {
       setLoading(false);

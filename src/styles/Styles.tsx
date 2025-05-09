@@ -760,7 +760,7 @@ export const EditTransactionStyles = StyleSheet.create({
     borderWidth: 2,
     borderColor: '#DBABA1',
     borderRadius: 5,
-    paddingHorizontal: 10,
+    paddingHorizontal: 10, 
     marginTop: 5,
     marginBottom: 20,
     fontFamily: 'WinkySans-VariableFont_wght',
@@ -791,7 +791,7 @@ export const EditTransactionStyles = StyleSheet.create({
     fontFamily: 'WinkySans-VariableFont_wght',
   },
   detailBox: {
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: '#DBABA1',
     borderRadius: 8,
     padding: 10,

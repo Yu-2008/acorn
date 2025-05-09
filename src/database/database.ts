@@ -171,7 +171,7 @@ export const insertTransactionHistory = async ({
       );
       console.log("Transaction inserted successfully.");
     } catch (error) {
-      console.error("INSERT TRANSACTION ERROR: ", error);
+      console.log("INSERT TRANSACTION ERROR: ", error);
     }
   };
   
@@ -300,7 +300,7 @@ export const getUsernameById = async (userID: string): Promise<string | null> =>
         }
         return null;
     } catch (error) {
-        console.error("GET USERNAME ERROR: ", error);
+        console.log("GET USERNAME ERROR: ", error);
         return null;
     }
 };
@@ -338,7 +338,7 @@ export const getTransactionByTransId = async (transID: number) => {
         userID: row.userID,
       };
     } catch (error) {
-      console.error("GET TRANSACTION BY ID ERROR:", error);
+      console.log("GET TRANSACTION BY ID ERROR:", error);
       return null;
     }
   };
@@ -427,7 +427,7 @@ export const getTransactionHistoryById = async (
       }
       return transactions;
     } catch (error) {
-      console.error("GET TRANSACTIONS ERROR", error);
+      console.log("GET TRANSACTIONS ERROR", error);
       return [];
     }
   };
@@ -464,7 +464,7 @@ export const updateTransactionById = async ({
       );
       console.log("Transaction updated successfully.");
     } catch (error) {
-      console.error("UPDATE TRANSACTION ERROR:", error);
+      console.log("UPDATE TRANSACTION ERROR:", error);
     }
   };
   
@@ -486,7 +486,7 @@ export const updateIncomeCategory = async ({
             [title, description, id]
         );
     }catch(error){
-        console.error("UPDATE INCOME CATEGORY error: ", error);
+        console.log("UPDATE INCOME CATEGORY error: ", error);
     }
     
 };
@@ -509,7 +509,7 @@ export const updateExpensesCategory = async ({
             [title, description, id]
         );
     }catch(error){
-        console.error("UPDATE EXPENSES CATEGORY error: ", error);
+        console.log("UPDATE EXPENSES CATEGORY error: ", error);
     }
     
 };
@@ -525,7 +525,7 @@ export const deleteTransactionById = async (transID: number) => {
         );
         console.log("Transaction deleted successfully.");
     } catch (error) {
-        console.error("DELETE TRANSACTION ERROR:", error);
+        console.log("DELETE TRANSACTION ERROR:", error);
     }
 };
   
@@ -538,7 +538,7 @@ export const deleteIncomeCategory = async (id: number) => {
             [id]
         );
     }catch(error){
-        console.error("DELETE INCOME CATEGORY error: ", error);
+        console.log("DELETE INCOME CATEGORY error: ", error);
     }
     
 };
@@ -551,7 +551,7 @@ export const deleteExpensesCategory = async (id: number) => {
             [id]
         );
     }catch(error){
-        console.error("DELETE EXPENSES CATEGORY error: ", error);
+        console.log("DELETE EXPENSES CATEGORY error: ", error);
     }
     
 };
@@ -576,7 +576,7 @@ export const exportAllTablesToJson = async (): Promise<string> => {
 
     return JSON.stringify(result, null, 2); // prettified JSON
   } catch (error) {
-    console.error('EXPORT DB TO JSON ERROR: ', error);
+    console.log('EXPORT DB TO JSON ERROR: ', error);
     return '{}';
   }
 };
@@ -599,6 +599,6 @@ export const restoreFromJson = async (data: Record<string, any[]>) => {
 
     console.log("Database restored from JSON.");
   } catch (error) {
-    console.error("RESTORE DB FROM JSON ERROR: ", error);
+    console.log("RESTORE DB FROM JSON ERROR: ", error);
   }
 };

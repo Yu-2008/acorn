@@ -251,12 +251,16 @@ const EditTransaction = ({ route, navigation }: Props) => {
             />
             {/* Location */}
             <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Location (Not editable)</Text>
-            <TextInput
-              value={transLocation ?? "No location"}
-              editable={false}
-              style={[styles.input, { backgroundColor: theme === 'dark' ? '#444' : '#fff', color: theme === 'dark' ? 'white' : 'black' }]}
-              placeholder="No location"
-            />
+            <View style={[styles.detailBox, { backgroundColor: theme === 'dark' ? '#444' : '#fff' }]}>
+              <TextInput
+                value={transLocation ?? "No location"}
+                editable={false}
+                multiline={true} 
+                numberOfLines={3}
+                style={[{textAlignVertical: 'top', backgroundColor: theme === 'dark' ? '#444' : '#fff', color: theme === 'dark' ? 'white' : 'black' }]}
+                placeholder="No location"
+              />
+            </View>
             
              {/* Save Button */}
             <TouchableOpacity

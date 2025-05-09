@@ -40,7 +40,7 @@ const ThemeProvider = ({ children }: { children: ReactNode }) => {
           await AsyncStorage.setItem('userTheme', systemTheme);
         }
       } catch (error) {
-        console.error("Failed to load theme:", error);
+        console.log("Failed to load theme:", error);
         setTheme(Appearance.getColorScheme() || 'light');
       } finally {
         setIsLoading(false);

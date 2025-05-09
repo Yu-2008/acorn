@@ -10,7 +10,7 @@ export const validateEmail = async (email: string): Promise<boolean> => {
     const isMxFound = data.is_mx_found?.value;
     return Boolean(isValidFormat && isMxFound);
   } catch (error) {
-    console.error('Error validating email:', error);
+    console.log('Error validating email:', error);
     return false;
   }
 };
