@@ -35,7 +35,7 @@ export const GetIcon = ({
   };
 
 
-//  shows the calender to let user selected date
+//  shows the calendar to let user selected date
 type CalendarProps = {
   date: Date;
   show: boolean;

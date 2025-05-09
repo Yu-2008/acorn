@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect,  useState } from "react";
 import { SafeAreaView, Text, View, TextInput, TouchableOpacity, Platform, Alert, ScrollView, ActivityIndicator, ToastAndroid} from "react-native";
 import { AddExpensesStyles as styles } from '../src/styles/Styles';
 import { useTheme } from '../src/contexts/ThemeContext';
@@ -21,7 +21,7 @@ const AddExpenses = ({ navigation }: any) => {
   const [transDescription, setTransDescription] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [locationCheckbox, setLocationCheckbox] = useState(false);
-  const { location, loading, locationEnabled, toggleLocation } = useLocationTracking();
+  const { location, loading, toggleLocation } = useLocationTracking();
  
 
   {/**handle onPress */}
