@@ -14,6 +14,7 @@ import { getUsernameById } from "../src/database/database";
 import { useFocusEffect } from "@react-navigation/native";
 import { createMapLink } from 'react-native-open-maps';
 import { deleteUserAccById } from "../src/database/database";
+import { EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
 
 
 
@@ -71,6 +72,22 @@ const Setting = ({ navigation }:Props) => {
     }
   };
 
+  const promptForPassword = async (): Promise<string | null> => {
+  return new Promise((resolve, reject) => {
+    Alert.prompt(
+      'Enter your password',
+      'Please enter your password to confirm the deletion',
+      [
+        { text: 'Cancel', 
+          onPress: () => resolve(null), style: 'cancel' },
+        { text: 'OK', 
+          onPress: (password) => resolve(password || null) }
+      ],
+      'secure-text'
+    );
+  });
+};
+
   const handleDeleteAccount = () => {
     Alert.alert(
       "Delete Account",
@@ -85,17 +102,27 @@ const Setting = ({ navigation }:Props) => {
           style: "destructive",
           onPress: async () => {
             const user = FIREBASE_AUTH.currentUser;
-            if (!user || !userID) {
+            if (!user || !userID || !user.email) {
               console.warn("No user is currently signed in.");
               return;
             }
   
             try {
+              const password = await promptForPassword();
+
+              if (password) {
+              const credential = EmailAuthProvider.credential(user.email, password);
+              await reauthenticateWithCredential(user, credential); // Re-authenticate the user
+
+              // Now delete the account
               await user.delete();
               console.log("User account deleted successfully in Firebase.");
-              
+
+              // delete user data from your local database
               await deleteUserAccById(userID);
               console.log("User data deleted successfully in local.");
+              }
+
             } catch (error: any) {
               if (error.code === 'auth/requires-recent-login') {
                 Alert.alert("Re-authentication Required", "Please sign in again to delete your account.");
