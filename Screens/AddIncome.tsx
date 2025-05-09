@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect,useState } from "react";
 import { SafeAreaView, Text, View, TextInput, TouchableOpacity, Platform, Alert, ScrollView, ActivityIndicator, ToastAndroid } from "react-native";
 import { AddIncomeStyles as styles } from '../src/styles/Styles';
 import { useTheme } from '../src/contexts/ThemeContext';

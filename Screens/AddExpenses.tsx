@@ -21,7 +21,7 @@ const AddExpenses = ({ navigation }: any) => {
   const [transDescription, setTransDescription] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [locationCheckbox, setLocationCheckbox] = useState(false);
-  const { location, loading, locationEnabled, toggleLocation } = useLocationTracking();
+  const { location, loading, toggleLocation } = useLocationTracking();
  
 
   {/**handle onPress */}
