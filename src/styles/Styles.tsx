@@ -365,7 +365,7 @@ export const AddExpensesCategoryStyles = StyleSheet.create({
   },
   itemRow: {
     width: '45%',
-    padding: 10,
+    padding: 13,
     borderRadius: 10,
     flexDirection: 'row',
     alignItems: 'center',
@@ -518,7 +518,7 @@ export const AddIncomeCategoryStyles = StyleSheet.create({
   },
   itemRow: {
     width: '45%',
-    padding: 10,
+    padding: 13,
     borderRadius: 10,
     flexDirection: 'row',
     alignItems: 'center',
