@@ -23,6 +23,7 @@ const BackUpCloud = ({ navigation }: Props) => {
   const [lastBackupTime, setLastBackupTime] = useState("Not yet backed up");
   const [loading1, setLoading1] = useState(false);
   const [loading2, setLoading2] = useState(false);
+  const [loading3, setLoading3] = useState(false);
  
   {/**handle onPress */}
   // Backup function
@@ -45,7 +46,7 @@ const BackUpCloud = ({ navigation }: Props) => {
         data: JSON.parse(jsonData), // Parse the JSON data to Firebase
       });
 
-      // ✅ Save to local file
+      // Save to local file
       const path = `${RNFS.DocumentDirectoryPath}/backup_${userID}.json`;
       await RNFS.writeFile(path, jsonData, 'utf8');
       console.log("Backup saved locally at:", path);
@@ -84,8 +85,7 @@ const BackUpCloud = ({ navigation }: Props) => {
 
 
   // Restore function
-
-  const handleRestore = async () => {
+  const handleRestoreFromCloud = async () => {
     
     setLoading2(true);
     if (!userID) {
@@ -124,6 +124,44 @@ const BackUpCloud = ({ navigation }: Props) => {
       setLoading2(false);
     }
   }
+  
+  const handleRestoreFromLocal = async () => {
+  setLoading3(true);
+
+  if (!userID) {
+    Alert.alert("Get user ID failed", "User is not signed in. Cannot restore local file.\nPlease sign in again.");
+    setLoading3(false);
+    return;
+  }
+
+  const path = `${RNFS.DocumentDirectoryPath}/backup_${userID}.json`;
+
+  try {
+    // Check if file exists
+    const fileExists = await RNFS.exists(path);
+    if (!fileExists) {
+      Alert.alert("Restore failed", "Local backup file not found.");
+      setLoading3(false);
+      return;
+    }
+
+    // Read JSON data from local file
+    const fileContent = await RNFS.readFile(path, 'utf8');
+    const parsedData = JSON.parse(fileContent);
+
+    // Restore data to SQLite database
+    await restoreFromJson(userID, parsedData);
+
+    Alert.alert("Restore successful", "Your data has been restored from the local backup file.");
+    console.log("Restored from local file:", parsedData);
+  } catch (error) {
+    console.log("Local Restore Error:", error);
+    Alert.alert("Restore failed", "An error occurred while restoring the local backup.");
+  } finally {
+    setLoading3(false);
+  }
+};
+
 
 
   return (
@@ -159,16 +197,25 @@ const BackUpCloud = ({ navigation }: Props) => {
         (
             <TouchableOpacity style={[styles.button,{ backgroundColor: theme === 'dark' ? '#444' : '#E69DB8' }]} onPress={handleBackup}>
               <Ionicons name="cloud-upload" size={24} color={theme === 'dark' ? 'white' : '#393533'}/>
-              <Text style={[styles.buttonText, { color: theme === 'dark' ? 'white' : 'black' }]}>Backup</Text>
+              <Text style={[styles.buttonText, { color: theme === 'dark' ? 'white' : 'black' }]}>Backup to Cloud and Local</Text>
             </TouchableOpacity>
         )}
          {/* Restore button */}
         {loading2 ? (<ActivityIndicator size="large" color="#0000ff" /> )
         : 
         (
-          <TouchableOpacity style={[styles.button,{ backgroundColor: theme === 'dark' ? '#444' : '#E69DB8' }]} onPress={handleRestore}>
+          <TouchableOpacity style={[styles.button,{ backgroundColor: theme === 'dark' ? '#444' : '#E69DB8' }]} onPress={handleRestoreFromCloud}>
             <MaterialIcons name="cloud-download" size={24} color={theme === 'dark' ? 'white' : '#393533'} />
             <Text style={[styles.buttonText, { color: theme === 'dark' ? 'white' : 'black' }]}>Restore from Cloud</Text>
+          </TouchableOpacity>
+        )}
+   
+        {loading3 ? (<ActivityIndicator size="large" color="#0000ff" /> )
+        : 
+        (
+          <TouchableOpacity style={[styles.button,{ backgroundColor: theme === 'dark' ? '#444' : '#E69DB8' }]} onPress={handleRestoreFromLocal}>
+            <MaterialIcons name="cloud-download" size={24} color={theme === 'dark' ? 'white' : '#393533'} />
+            <Text style={[styles.buttonText, { color: theme === 'dark' ? 'white' : 'black' }]}>Restore from local backup file</Text>
           </TouchableOpacity>
         )}
         
