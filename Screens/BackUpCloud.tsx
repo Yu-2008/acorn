@@ -11,7 +11,7 @@ import { exportAllTablesToJson, restoreFromJson } from "../src/database/database
 import { FIREBASE_DB } from "../src/config/FirebaseConfig";
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import RNFS from 'react-native-fs';
 
 type Props = StackScreenProps<SettingStackParamList, 'GoBackUpCloud'>;
 
@@ -44,6 +44,11 @@ const BackUpCloud = ({ navigation }: Props) => {
         timestamp: new Date().toISOString(),
         data: JSON.parse(jsonData), // Parse the JSON data to Firebase
       });
+
+      // ✅ Save to local file
+      const path = `${RNFS.DocumentDirectoryPath}/backup_${userID}.json`;
+      await RNFS.writeFile(path, jsonData, 'utf8');
+      console.log("Backup saved locally at:", path);
   
       setLastBackupTime(new Date().toLocaleString());
       // Update last backup time and store it in AsyncStorage
