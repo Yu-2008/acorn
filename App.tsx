@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
+import { Alert } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -241,10 +242,27 @@ const ExpensesCategoryStackNavigator = () => {
 // Stack navigation for settings page and related screens
 const SettingStackNavigator = () => {
   const { theme } = useTheme();
+
+  // Sign out handler function
+  const handleOnSignOut = async () => {
+    console.log("Sign Out pressed");
+    try {
+      await FIREBASE_AUTH.signOut();
+      console.log("Sign out successfully");
+      Alert.alert("Sign out successful", "You have already signed out.");
+    } catch (error) {
+      console.log("Error signing out:", error);
+    }
+  };
+
   return (
     <SettingStack.Navigator initialRouteName="Settings" screenOptions={{ headerShown: false }}>
-      <SettingStack.Screen name="Settings" options={{ headerShown: true, ...defaultHeaderOptions(theme) }}>
-        {(props: any) => <SettingScreen {...props} />}
+      {/* Pass handleOnSignOut function to SettingScreen */}
+      <SettingStack.Screen 
+        name="Settings" 
+        options={{ headerShown: true, ...defaultHeaderOptions(theme) }}
+      >
+        {(props: any) => <SettingScreen {...props} onSignOut={handleOnSignOut} />}
       </SettingStack.Screen>
       <SettingStack.Screen name="GoIncomeCategory">
         {(props: any) => <IncomeCategoryStackNavigator {...props} />}
@@ -264,6 +282,7 @@ const SettingStackNavigator = () => {
     </SettingStack.Navigator>
   );
 };
+
 // Handling authentication logic
 const AuthLogic = () => {
   const [user, setUser] = useState<User | null>(null);

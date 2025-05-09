@@ -25,7 +25,7 @@ userName: string;
 };
 
 // Settings Component
-const Setting = ({ navigation }:Props) => {
+const Setting = ({ onSignOut, navigation }: { onSignOut: () => void; navigation: any }) => {
   const { userID } = useUser();
   const [username, setUsername] = useState('');
   const [colorAnim] = useState(new Animated.Value(0)); 
@@ -59,16 +59,6 @@ const Setting = ({ navigation }:Props) => {
   const handleBackupCloud =()=> {
     console.log("Backup Cloud pressed");
     navigation.navigate('GoBackUpCloud');
-  };
-
-  const handleOnSignOut = async () => {
-    console.log("Sign Out pressed");
-    try {
-      await FIREBASE_AUTH.signOut();
-      console.log(`Sign out successfully for user ${username}.`);
-    } catch (error) {
-      console.log("Error signing out:", error);
-    }
   };
 
   const handleDeleteAccount = () => {
@@ -209,7 +199,7 @@ const handleContactUs = () => {
 
             <TouchableOpacity 
               style={[styles.row, { backgroundColor: theme === 'dark' ? '#444' : '#FFC1DA' }]}
-              onPress={handleOnSignOut}>
+              onPress={onSignOut}>
               <Ionicons name="log-out" size={24} color={theme === 'dark' ? 'white' : '#393533'} style={styles.icon} />
               <Text style={[styles.rowText, { color: theme === 'dark' ? 'white' : 'black' }]}>Sign Out</Text>
             </TouchableOpacity>
