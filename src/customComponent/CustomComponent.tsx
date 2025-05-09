@@ -36,7 +36,7 @@ export const GetIcon = ({
 
 
 //  shows the calender to let user selected date
-type CalenderProps = {
+type CalendarProps = {
   date: Date;
   show: boolean;
   setShow: (val: boolean) => void;
@@ -48,14 +48,14 @@ type CalenderProps = {
   };
 };
 
-export const CalenderPicker = ({
+export const CalendarPicker = ({
   date,
   show,
   setShow,
   onChange,
   theme,
   style,
-}: CalenderProps) => {
+}: CalendarProps) => {
   return (
     <>
       <TouchableOpacity style={style.datePickerButton} onPress={() => setShow(true)}>

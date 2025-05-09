@@ -18,7 +18,7 @@ import { useTheme } from '../src/contexts/ThemeContext';
 import { useUser } from "../src/contexts/UserContext";
 import { updateTransactionById, getIncomeCategories, getExpensesCategories } from "../src/database/database";
 import { Picker } from "@react-native-picker/picker";
-import { CalenderPicker } from "../src/customComponent/CustomComponent";
+import { CalendarPicker } from "../src/customComponent/CustomComponent";
 
 
 type Props = StackScreenProps<MainStackParamList, "EditTransaction">;
@@ -215,7 +215,7 @@ const EditTransaction = ({ route, navigation }: Props) => {
             </View>
              {/* Date Picker */}
             <Text style={[styles.label, { color: theme === 'dark' ? 'white' : 'black' }]}>Date</Text>
-            <CalenderPicker
+            <CalendarPicker
               date={date}
               show={showDatePicker}
               setShow={setShowDatePicker}

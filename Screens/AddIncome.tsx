@@ -11,7 +11,7 @@ import Geolocation from "@react-native-community/geolocation";
 import { usePubNub } from "pubnub-react";
 import { useLocationPermission } from "../src/hooks/useLocationPermission";
 import { reverseGeocode } from "../src/services/reverseGeocode";
-import { CalenderPicker, CategoryPicker } from "../src/customComponent/CustomComponent";
+import { CalendarPicker, CategoryPicker } from "../src/customComponent/CustomComponent";
 import { useLocationTracking } from "../src/hooks/useLocationTracking";
 
 
@@ -202,7 +202,7 @@ const AddIncome = ({ navigation }: any) => {
           >
             Date
           </Text>
-          <CalenderPicker
+          <CalendarPicker
             date={transDate}
             show={showDatePicker}
             setShow={setShowDatePicker}

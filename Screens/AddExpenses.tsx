@@ -5,7 +5,7 @@ import { useTheme } from '../src/contexts/ThemeContext';
 import { getExpensesCategories, insertTransactionHistory } from "../src/database/database";
 import { useUser } from "../src/contexts/UserContext";
 import CheckBox from '@react-native-community/checkbox';
-import { CalenderPicker, CategoryPicker } from "../src/customComponent/CustomComponent";
+import { CalendarPicker, CategoryPicker } from "../src/customComponent/CustomComponent";
 import { useLocationTracking } from "../src/hooks/useLocationTracking";
 
 
@@ -205,7 +205,7 @@ const AddExpenses = ({ navigation }: any) => {
           >
             Date
           </Text>
-          <CalenderPicker
+          <CalendarPicker
             date={transDate}
             show={showDatePicker}
             setShow={setShowDatePicker}
