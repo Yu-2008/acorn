@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { SafeAreaView, Text, View, TouchableOpacity, Animated, Switch,Image, Linking, Alert, Platform, TextInput } from "react-native";
+import { SafeAreaView, Text, View, TouchableOpacity, Animated, Switch,Image, Linking, Alert } from "react-native";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Feather from 'react-native-vector-icons/Feather';
@@ -10,7 +10,6 @@ import PagerView from 'react-native-pager-view';
 import { useTheme } from '../src/contexts/ThemeContext';
 import { useUser } from "../src/contexts/UserContext";
 import { FIREBASE_AUTH } from "../src/config/FirebaseConfig";
-import { EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth"; // Added imports
 import { getUsernameById } from "../src/database/database";
 import { useFocusEffect } from "@react-navigation/native";
 import { createMapLink } from 'react-native-open-maps';
@@ -98,79 +97,10 @@ const Setting = ({ navigation }:Props) => {
               await deleteUserAccById(userID);
               console.log("User data deleted successfully in local.");
             } catch (error: any) {
-            if (error.code === 'auth/requires-recent-login') {
-                Alert.alert(
-                  "Re-authentication Required",
-                  "To protect your account, please re-enter your password to confirm deletion.",
-                  [
-                    { text: "Cancel", style: "cancel" },
-                    {
-                      text: "Re-authenticate",
-                      onPress: async () => {
-                        const user = FIREBASE_AUTH.currentUser;
-                        if (!user || !user.email) {
-                          Alert.alert("Error", "Could not retrieve user details for re-authentication.");
-                          return;
-                        }
-
-                        // Simplified password prompt - A custom modal is recommended for production
-                        let password = '';
-                        if (Platform.OS === 'ios') {
-                          await new Promise<void>((resolve) => {
-                            Alert.prompt(
-                              "Enter Password",
-                              "Please enter your current password to continue.",
-                              [
-                                { text: "Cancel", onPress: () => resolve(), style: "cancel" },
-                                { text: "OK", onPress: (pwd) => { password = pwd || ''; resolve(); }},
-                              ],
-                              "secure-text"
-                            );
-                          });
-                        } else {
-                          Alert.alert(
-                            "Enter Password ",
-                            "Android requires a custom input for password re-authentication. This feature is not fully implemented in this basic prompt. Please implement a custom modal.",
-                            [{text: "OK"}]
-                          );
-                          // For demonstration, we'll allow proceeding without password on Android,
-                          // but this is NOT secure and for testing purposes only.
-                          // In a real app, you must get the password.
-                          // password = "TEMPORARY_ANDROID_PASSWORD_PLACEHOLDER"; // REMOVE THIS IN PRODUCTION
-                          console.warn("ANDROID PASSWORD PROMPT: Using placeholder or no password. Implement a secure custom modal.");
-                          // To actually test re-auth on Android, you'd need to manually provide a password here
-                          // or build the custom modal. For now, re-auth will likely fail on Android.
-                        }
-
-                        // Only check if password was expected (iOS)
-                        if (!password && Platform.OS === 'ios') { 
-                          Alert.alert("Cancelled", "Password entry cancelled. Account deletion aborted.");
-                          return;
-                        }
-                        // If on Android and no password mechanism, re-auth will fail.
-                        // If you added a placeholder password for Android testing, it will proceed.
-
-                        const credential = EmailAuthProvider.credential(user.email, password);
-                        try {
-                          await reauthenticateWithCredential(user, credential);
-                          console.log("User re-authenticated successfully.");
-                          // Try deleting again
-                          await user.delete();
-                          console.log("User account deleted successfully in Firebase after re-authentication.");
-                          await deleteUserAccById(userID);
-                          console.log("User data deleted successfully in local after re-authentication.");
-                          Alert.alert("Success", "Your account has been deleted.");
-                        } catch (reauthError: any) {
-                          console.error("Error during re-authentication or subsequent deletion:", reauthError);
-                          Alert.alert("Re-authentication Failed", `Could not re-authenticate or delete account. Error: ${reauthError.message}. Please sign out, sign back in, and try again.`);
-                        }
-                      },
-                    },
-                  ]
-                );
+              if (error.code === 'auth/requires-recent-login') {
+                Alert.alert("Re-authentication Required", "Please sign in again to delete your account.");
               } else {
                 console.log("Error deleting user account:", error);
-                Alert.alert("Error", `An error occurred while trying to delete your account: ${error.message}`);
               }
             }
           },
