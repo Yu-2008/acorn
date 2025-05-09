@@ -13,6 +13,7 @@ import { FIREBASE_AUTH } from "../src/config/FirebaseConfig";
 import { getUsernameById } from "../src/database/database";
 import { useFocusEffect } from "@react-navigation/native";
 import { createMapLink } from 'react-native-open-maps';
+import { deleteUserAccById } from "../src/database/database";
 
 
 
@@ -84,15 +85,17 @@ const Setting = ({ navigation }:Props) => {
           style: "destructive",
           onPress: async () => {
             const user = FIREBASE_AUTH.currentUser;
-            if (!user) {
+            if (!user || !userID) {
               console.warn("No user is currently signed in.");
               return;
             }
   
             try {
               await user.delete();
-              console.log("User account deleted successfully.");
-              // Optionally navigate to login or show a success message
+              console.log("User account deleted successfully in Firebase.");
+              
+              await deleteUserAccById(userID);
+              console.log("User data deleted successfully in local.");
             } catch (error: any) {
               if (error.code === 'auth/requires-recent-login') {
                 Alert.alert("Re-authentication Required", "Please sign in again to delete your account.");

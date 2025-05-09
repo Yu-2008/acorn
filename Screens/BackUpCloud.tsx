@@ -37,7 +37,7 @@ const BackUpCloud = ({ navigation }: Props) => {
 
     try {
       // Export all tables as JSON
-      const jsonData = await exportAllTablesToJson();
+      const jsonData = await exportAllTablesToJson(userID);
       // Upload backup data to Firebase Cloud
       const docRef = doc(FIREBASE_DB, "backups", userID);
       await setDoc(docRef, {
@@ -105,7 +105,7 @@ const BackUpCloud = ({ navigation }: Props) => {
       if (docSnap.exists()) {
         const backupData = docSnap.data();
         const tables = backupData.data;
-        await restoreFromJson(tables);
+        await restoreFromJson(userID, tables);
 
         Alert.alert("Restore successful", "Your data already replace with your last backup.");
         console.log("Restored data:", tables);

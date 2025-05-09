@@ -516,6 +516,21 @@ export const updateExpensesCategory = async ({
 
 
 //delete
+export const deleteUserAccById = async (userID: string) => {
+  try {
+    const database = await db;
+    
+    // Delete the user’s data from the userAcc table
+    // also delete related data because of the ON DELETE CASCADE in the foreign keys
+    await database.executeSql(`DELETE FROM userAcc WHERE userID = ?`, [userID]);
+    
+    console.log(`User with ID ${userID} and all related data deleted.`);
+  } catch (error) {
+    console.log("DELETE USER ACCOUNT ERROR: ", error);
+  }
+};
+
+
 export const deleteTransactionById = async (transID: number) => {
     try {
         const database = await db;
@@ -559,14 +574,14 @@ export const deleteExpensesCategory = async (id: number) => {
 
 
 //for back up JSON file
-export const exportAllTablesToJson = async (): Promise<string> => {
+export const exportAllTablesToJson = async (userId: string): Promise<string> => {
   try {
     const database = await db;
     const result: Record<string, any[]> = {};
     const tables = ['userAcc', 'incomeCategory', 'expensesCategory', 'transactionHistory'];
 
     for (const table of tables) {
-      const [res] = await database.executeSql(`SELECT * FROM ${table}`);
+      const [res] = await database.executeSql(`SELECT * FROM ${table} WHERE userID=?`, [userId]);
       const arr: any[] = [];
       for (let i = 0; i < res.rows.length; i++) {
         arr.push(res.rows.item(i));
@@ -582,14 +597,20 @@ export const exportAllTablesToJson = async (): Promise<string> => {
 };
 
 
-export const restoreFromJson = async (data: Record<string, any[]>) => {
+export const restoreFromJson = async (userId: string, data: Record<string, any[]>) => {
   try {
     const database = await db;
 
     for (const [table, rows] of Object.entries(data)) {
       for (const row of rows) {
-        const keys = Object.keys(row);
-        const values = keys.map(key => row[key]);
+
+        // Ensure userID matches the current user for tables besides userAcc
+        if (table !== 'userAcc') {
+          row.userID = userId;
+        }
+
+        const keys = Object.keys(row);    //col name
+        const values = keys.map(key => row[key]);   //value to insert
         const placeholders = keys.map(() => '?').join(', ');
 
         const sql = `INSERT OR REPLACE INTO ${table} (${keys.join(', ')}) VALUES (${placeholders})`;
