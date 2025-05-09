@@ -89,6 +89,8 @@ const Setting = ({ onSignOut, navigation }: { onSignOut: () => void; navigation:
             } catch (error: any) {
               if (error.code === 'auth/requires-recent-login') {
                 Alert.alert("Re-authentication Required", "Please sign in again to delete your account.");
+                await FIREBASE_AUTH.signOut();
+                console.log("User signed out successfully.");
               } else {
                 console.log("Error deleting user account:", error);
               }
