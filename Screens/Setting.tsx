@@ -13,6 +13,9 @@ import { FIREBASE_AUTH } from "../src/config/FirebaseConfig";
 import { getUsernameById } from "../src/database/database";
 import { useFocusEffect } from "@react-navigation/native";
 import { createMapLink } from 'react-native-open-maps';
+import { deleteUserAccById } from "../src/database/database";
+import { EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
+import Dialog from "react-native-dialog";
 
 
 
@@ -29,6 +32,9 @@ const Setting = ({ navigation }:Props) => {
   const [username, setUsername] = useState('');
   const [colorAnim] = useState(new Animated.Value(0)); 
   const { theme, toggleTheme } = useTheme();
+  const [showPasswordDialog, setShowPasswordDialog] = useState(false);
+  const [passwordInput, setPasswordInput] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -70,42 +76,42 @@ const Setting = ({ navigation }:Props) => {
     }
   };
 
-  const handleDeleteAccount = () => {
-    Alert.alert(
-      "Delete Account",
-      "Are you sure you want to delete your account? This action cannot be undone.",
+  const promptForPassword = async (): Promise<string | null> => {
+  return new Promise((resolve, reject) => {
+    Alert.prompt(
+      'Enter your password',
+      'Please enter your password to confirm the deletion',
       [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-        {
-          text: "Delete",
-          style: "destructive",
-          onPress: async () => {
-            const user = FIREBASE_AUTH.currentUser;
-            if (!user) {
-              console.warn("No user is currently signed in.");
-              return;
-            }
-  
-            try {
-              await user.delete();
-              console.log("User account deleted successfully.");
-              // Optionally navigate to login or show a success message
-            } catch (error: any) {
-              if (error.code === 'auth/requires-recent-login') {
-                Alert.alert("Re-authentication Required", "Please sign in again to delete your account.");
-              } else {
-                console.log("Error deleting user account:", error);
-              }
-            }
-          },
-        },
-      ]
+        { text: 'Cancel', 
+          onPress: () => resolve(null), style: 'cancel' },
+        { text: 'OK', 
+          onPress: (password) => resolve(password || null) }
+      ],
+      'secure-text'
     );
-  };
-  
+  });
+};
+
+  const handleDeleteAccount = () => {
+  Alert.alert(
+    "Delete Account",
+    "Are you sure you want to delete your account? This action cannot be undone.",
+    [
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+      {
+        text: "Delete",
+        style: "destructive",
+        onPress: () => {
+          setShowPasswordDialog(true);
+        },
+      },
+    ]
+  );
+};
+
 
   useEffect(() => {
     const startColorAnimation = () => {
@@ -217,6 +223,52 @@ const handleContactUs = () => {
               <Ionicons name="trash-outline" size={24} color={theme === 'dark' ? 'white' : '#393533'} style={styles.icon} />
               <Text style={[styles.rowText, { color: theme === 'dark' ? 'white' : 'black' }]}>Delete Account</Text>
             </TouchableOpacity>
+
+            <Dialog.Container visible={showPasswordDialog}>
+              <Dialog.Title>Confirm Deletion</Dialog.Title>
+              <Dialog.Description>
+                Enter your password to confirm account deletion
+              </Dialog.Description>
+              <Dialog.Input
+                placeholder="Password"
+                secureTextEntry
+                onChangeText={setPasswordInput}
+                value={passwordInput}
+              />
+              <Dialog.Button label="Cancel" onPress={() => {
+                setShowPasswordDialog(false);
+                setPasswordInput('');
+              }} />
+              <Dialog.Button
+                label={isDeleting ? "Deleting..." : "Delete"}
+                onPress={async () => {
+                  setIsDeleting(true);
+                  const user = FIREBASE_AUTH.currentUser;
+
+                  if (!user || !userID || !user.email) {
+                    console.warn("No user is currently signed in.");
+                    setIsDeleting(false);
+                    return;
+                  }
+
+                  try {
+                    const credential = EmailAuthProvider.credential(user.email, passwordInput);
+                    await reauthenticateWithCredential(user, credential);
+                    await user.delete(); // Firebase
+                    await deleteUserAccById(userID); // Local DB
+                    console.log("Account deleted successfully in firebase and local.");
+                    setShowPasswordDialog(false);
+                    setPasswordInput('');
+                  } catch (error: any) {
+                    console.log("Error deleting account:", error);
+                    Alert.alert("Error", error.message);
+                  } finally {
+                    setIsDeleting(false);
+                  }
+                }}
+              />
+            </Dialog.Container>
+
           </View>
          
           {/* Toggle Dark Mode */}

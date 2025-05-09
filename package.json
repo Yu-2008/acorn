@@ -31,6 +31,7 @@
     "react": "18.2.0",
     "react-native": "^0.73.11",
     "react-native-asset": "^2.1.1",
+    "react-native-dialog": "^9.3.0",
     "react-native-floating-action": "^1.22.0",
     "react-native-fs": "^2.20.0",
     "react-native-geolocation-service": "^5.3.1",
