@@ -68,10 +68,14 @@ const SignIn = ({ route, navigation }: Props) => {
 
     } catch (error: any) {
       console.log("Login error:", error);
-      let message = "Something went wrong. Please try again.";
+      let message = `Something went wrong. Please try again.\n${error}.`;
 
-      if (error.code === "auth/invalid-credential") {
-          message = "Invalid email or password.";
+      if (error.code === "auth/invalid-email") {
+        message = "Invalid email format. Please enter a valid email address.";
+      } else if (error.code === "auth/user-not-found") {
+        message = "No account found with this email. Please sign up first.";
+      }else if (error.code === "auth/invalid-credential") {
+        message = "Invalid email or password.";
       }
 
       Alert.alert("Sign in failed", message);

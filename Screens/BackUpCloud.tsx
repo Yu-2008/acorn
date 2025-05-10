@@ -58,7 +58,7 @@ const BackUpCloud = ({ navigation }: Props) => {
       await AsyncStorage.setItem('lastBackupTime', currentTime);
       console.log("Backup successful:", currentTime); 
       console.log("Backup uploaded:", jsonData);
-      Alert.alert("Backup successful", "Your backup already upload to cloud.");
+      Alert.alert("Backup successful", "Your backup already upload to cloud and local.");
     } catch (error) {
       console.log("Backup Error:", error);
       Alert.alert("Backup failed", "Please try again.");
@@ -119,7 +119,7 @@ const BackUpCloud = ({ navigation }: Props) => {
       }
     } catch (error) {
       console.log("Restore Error:", error);
-      Alert.alert("Restore failed", "Please try again.");
+      Alert.alert("Restore failed", "An error occurred while restoring the Cloud backup.");
     } finally {
       setLoading2(false);
     }
@@ -155,7 +155,7 @@ const BackUpCloud = ({ navigation }: Props) => {
     Alert.alert("Restore successful", "Your data has been restored from the local backup file.");
     console.log("Restored from local file:", parsedData);
   } catch (error) {
-    console.log("Local Restore Error:", error);
+    console.log("Restore Error:", error);
     Alert.alert("Restore failed", "An error occurred while restoring the local backup.");
   } finally {
     setLoading3(false);

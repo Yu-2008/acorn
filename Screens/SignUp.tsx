@@ -66,8 +66,16 @@ const SignUp = ({ route, navigation }: Props) => {
       console.log("Insert new user success. UID:", userID);
       Alert.alert("Sign Up successful.", "Auto sign in for you.\nKindly enjoy our app.");
     } catch (error: any) {
-      console.log(error);
-      Alert.alert("Sign Up failed: " + error.message);
+      console.log("Sign up error:", error);
+      let message = `Something went wrong. Please try again.\n${error.message}.`;
+
+      if (error.code === 'auth/email-already-in-use') {
+        message = "This email is already registered.\nPlease try signing in or use a different email.";
+      } else if (error.code === 'auth/weak-password') {
+        message = "Weak password. Password must be at least 6 characters.";
+      }
+
+      Alert.alert("Sign Up failed: " + message);
     } finally {
       setLoading(false);
     }
