@@ -252,6 +252,7 @@ const SettingStackNavigator = () => {
       Alert.alert("Sign out successful", "You have already signed out.");
     } catch (error: any) {
       console.log("Error signing out:", error.message);
+      Alert.alert("Sign out failed", error.message)
     }
   };
 
