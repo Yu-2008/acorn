@@ -75,7 +75,7 @@ const SignUp = ({ route, navigation }: Props) => {
         message = "Weak password. Password must be at least 6 characters.";
       }
 
-      Alert.alert("Sign Up failed: " + message);
+      Alert.alert("Sign Up failed: " , message);
     } finally {
       setLoading(false);
     }
