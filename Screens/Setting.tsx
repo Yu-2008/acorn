@@ -86,6 +86,7 @@ const Setting = ({ onSignOut, navigation }: { onSignOut: () => void; navigation:
               
               await deleteUserAccById(userID);
               console.log("User data deleted successfully in local.");
+              Alert.alert("Delete account success", "Your user account has been deleted permanently. Thank you for using our App.")
             } catch (error: any) {
               if (error.code === 'auth/requires-recent-login') {
                 Alert.alert("Re-authentication Required", "Please sign in again to delete your account.");
@@ -93,6 +94,7 @@ const Setting = ({ onSignOut, navigation }: { onSignOut: () => void; navigation:
                 console.log("User signed out successfully.");
               } else {
                 console.log("Error deleting user account:", error);
+                Alert.alert("Delete account failed", error.message)
               }
             }
           },
