@@ -250,8 +250,8 @@ const SettingStackNavigator = () => {
       await FIREBASE_AUTH.signOut();
       console.log("Sign out successfully");
       Alert.alert("Sign out successful", "You have already signed out.");
-    } catch (error) {
-      console.log("Error signing out:", error);
+    } catch (error: any) {
+      console.log("Error signing out:", error.message);
     }
   };
 
