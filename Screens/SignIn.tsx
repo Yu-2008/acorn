@@ -68,7 +68,7 @@ const SignIn = ({ route, navigation }: Props) => {
 
     } catch (error: any) {
       console.log("Login error:", error);
-      let message = `Something went wrong. Please try again.\n${error}.`;
+      let message = `Something went wrong. Please try again.\n${error.message}.`;
 
       if (error.code === "auth/invalid-email") {
         message = "Invalid email format. Please enter a valid email address.";
