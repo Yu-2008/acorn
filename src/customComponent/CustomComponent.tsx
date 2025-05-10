@@ -1,12 +1,10 @@
 import React from "react";
-import { ActivityIndicator, Text, TouchableOpacity, View, } from "react-native";
+import {  Text, TouchableOpacity, View, } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from "@react-native-picker/picker";
-import CheckBox from "@react-native-community/checkbox";
-
 
 // get icon
 export const GetIcon = ({
